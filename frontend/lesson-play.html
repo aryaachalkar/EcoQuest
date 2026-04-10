@@ -156,19 +156,49 @@
 <script>
 // Content Dictionary for multiple lessons
 const DB = {
-  forests: [
-    { type: 'video', title: "1. What is a Forest?", vid: "https://www.youtube.com/embed/al-do-HGuIk?autoplay=0" },
-    { type: 'quiz', q: "Which layer of the soil contains the most humus?", opts: ["Bedrock", "Topsoil", "Subsoil"], ans: 1, exp: "Topsoil is rich in decaying organic matter (humus) making it fertile." }
-  ],
-  water: [
-    { type: 'video', title: "1. The Wastewater Story", vid: "https://www.youtube.com/embed/ncORPosM0RQ?autoplay=0" },
-    { type: 'quiz', q: "What is the first step in wastewater treatment?", opts: ["Aeration", "Bar Screening", "Chlorination"], ans: 1, exp: "Bar screens physically remove large objects like rags, plastics, and cans before anything else." }
-  ],
-  soil: [
-    { type: 'video', title: "2. Soil Microbes & Worms", vid: "https://www.youtube.com/embed/m92o-yLq79U?autoplay=0" },
-    { type: 'quiz', q: "Why are earthworms famous as 'farmers' friends'?", opts: ["They eat insect pests", "They help loosen soil and add humus", "They protect crops from birds"], ans: 1, exp: "As they move, they aerate the soil and their castings provide rich nutrients." },
-    { type: 'quiz', q: "What role do bacteria and fungi play in soil?", opts: ["Decomposers", "Producers", "Consumers"], ans: 0, exp: "They decompose dead plants and animals into humus, enriching the soil." }
-  ]
+  forests: {
+    '1': [
+      { type: 'video', title: "1. What is a Forest?", vid: "https://www.youtube-nocookie.com/embed/al-do-HGuIk?autoplay=0" },
+      { type: 'quiz', q: "Which layer of the soil contains the most humus?", opts: ["Bedrock", "Topsoil", "Subsoil"], ans: 1, exp: "Topsoil is rich in decaying organic matter (humus) making it fertile." }
+    ],
+    '2': [
+      { type: 'video', title: "2. The Water Cycle", vid: "https://www.youtube-nocookie.com/embed/ncORPosM0RQ?autoplay=0" },
+      { type: 'quiz', q: "How do forests contribute to the water cycle?", opts: ["By transpiring water vapor into the air", "By absorbing sunlight", "By producing rocks"], ans: 0, exp: "Trees absorb water from the soil and release it into the atmosphere via transpiration." }
+    ],
+    '3': [
+      { type: 'video', title: "3. Deforestation", vid: "https://www.youtube-nocookie.com/embed/Ic-J6hcSKa8?autoplay=0" },
+      { type: 'quiz', q: "What is a major consequence of deforestation?", opts: ["Increased biodiversity", "Loss of habitat and soil erosion", "Colder global temperatures"], ans: 1, exp: "Removing trees destroys animal habitats and leads to soil washing away." }
+    ]
+  },
+  water: {
+    '1': [
+      { type: 'video', title: "1. Water Basics", vid: "https://www.youtube-nocookie.com/embed/ncORPosM0RQ?autoplay=0" },
+      { type: 'quiz', q: "Why is water called a universal solvent?", opts: ["It freezes fast", "It dissolves more substances than any other liquid", "It is always visible"], ans: 1, exp: "Water's chemical composition allows it to dissolve many different chemicals and nutrients." }
+    ],
+    '2': [
+      { type: 'video', title: "2. Sewage Treatment", vid: "https://www.youtube-nocookie.com/embed/bXvA4sA4iYI?autoplay=0" },
+      { type: 'quiz', q: "What is the first step in wastewater treatment?", opts: ["Aeration", "Bar Screening", "Chlorination"], ans: 1, exp: "Bar screens physically remove large objects like rags, plastics, and cans before anything else." }
+    ],
+    '3': [
+      { type: 'video', title: "3. Better Housekeeping", vid: "https://www.youtube-nocookie.com/embed/m92o-yLq79U?autoplay=0" },
+      { type: 'quiz', q: "Which daily habit saves water?", opts: ["Leaving the tap running while brushing", "Fixing leaky faucets immediately", "Watering plants at noon"], ans: 1, exp: "Even a small drip can waste dozens of gallons of water over a week." }
+    ]
+  },
+  soil: {
+    '1': [
+      { type: 'video', title: "1. What is Soil?", vid: "https://www.youtube-nocookie.com/embed/if29mjcd5bc?autoplay=0" },
+      { type: 'quiz', q: "Which layer contains the most organic matter?", opts: ["Topsoil", "Subsoil", "Bedrock"], ans: 0, exp: "Topsoil is rich in humus and organic matter, making it the most fertile layer." }
+    ],
+    '2': [
+      { type: 'video', title: "2. Soil Microbes & Worms", vid: "https://www.youtube-nocookie.com/embed/m92o-yLq79U?autoplay=0" },
+      { type: 'quiz', q: "Why are earthworms famous as 'farmers' friends'?", opts: ["They eat insect pests", "They help loosen soil and add humus", "They protect crops from birds"], ans: 1, exp: "As they move, they aerate the soil and their castings provide rich nutrients." },
+      { type: 'quiz', q: "What role do bacteria and fungi play in soil?", opts: ["Decomposers", "Producers", "Consumers"], ans: 0, exp: "They decompose dead plants and animals into humus, enriching the soil." }
+    ],
+    '3': [
+      { type: 'video', title: "3. Soil Erosion", vid: "https://www.youtube-nocookie.com/embed/im4HVXMGI68?autoplay=0" },
+      { type: 'quiz', q: "What helps prevent soil erosion?", opts: ["Overgrazing", "Cutting down trees", "Planting trees with strong roots"], ans: 2, exp: "Plant roots clutch the soil tightly, preventing it from being washed away by rain or wind." }
+    ]
+  }
 };
 
 // State
@@ -182,11 +212,12 @@ const getParam = (p) => new URLSearchParams(window.location.search).get(p);
 const lessonKey = getParam('lesson') || 'forests';
 const nodeId = getParam('node') || '1';
 
-const totalSteps = DB[lessonKey] ? DB[lessonKey].length : 0;
+let totalSteps = 0;
 
 function initLesson() {
-  if (!DB[lessonKey]) { alert("Lesson not found!"); return quitLesson(); }
-  sequence = DB[lessonKey];
+  if (!DB[lessonKey] || !DB[lessonKey][nodeId]) { alert("Lesson node not found!"); return quitLesson(); }
+  sequence = DB[lessonKey][nodeId];
+  totalSteps = sequence.length;
   renderCurrentStep();
 }
 
@@ -223,9 +254,9 @@ function renderCurrentStep() {
     selectedAns = -1;
     answered = false;
     
-    let html = `<div class="q-title">\${step.q}</div><div class="opts-grid">`;
+    let html = `<div class="q-title">${step.q}</div><div class="opts-grid">`;
     step.opts.forEach((o, i) => {
-      html += `<div class="opt-card" id="opt-\${i}" onclick="selectOpt(\${i})">\${i+1}. \${o}</div>`;
+      html += `<div class="opt-card" id="opt-${i}" onclick="selectOpt(${i})">${i+1}. ${o}</div>`;
     });
     html += `</div>`;
     document.getElementById('quizWrap').innerHTML = html;
@@ -298,8 +329,11 @@ function showSuccessView() {
   
   setTimeout(() => {
     document.getElementById('successView').classList.add('active');
-    document.getElementById('sSubText').textContent = \`You mastered Level \${nodeId} of \${lessonKey.toUpperCase()}!\`;
+    document.getElementById('sSubText').textContent = `You mastered Level ${nodeId} of ${lessonKey.toUpperCase()}!`;
     document.getElementById('sXp').textContent = '+' + (totalSteps * 20); // arbitrary xp formula
+    
+    // Add Joy Conffeti Animation logic
+    createConfetti();
     
     // Save to localStorage
     let prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}');
@@ -311,13 +345,38 @@ function showSuccessView() {
 }
 
 function finishAndReturn() {
-  let paramUrl = \`lesson-\${lessonKey}-detail.html\`;
+  let paramUrl = `lesson-${lessonKey}-detail.html`;
   window.location.href = paramUrl;
 }
 
 function quitLesson() {
   if(confirm("Are you sure you want to quit? Your progress in this level will be lost.")) {
-    window.location.href = \`lesson-\${lessonKey}-detail.html\`;
+    window.location.href = `lesson-${lessonKey}-detail.html`;
+  }
+}
+
+// Joy Confetti Animation Generator
+function createConfetti() {
+  for (let i = 0; i < 50; i++) {
+    const conf = document.createElement('div');
+    conf.style.position = 'absolute';
+    conf.style.width = Math.random() * 10 + 5 + 'px';
+    conf.style.height = Math.random() * 10 + 5 + 'px';
+    conf.style.backgroundColor = ['#56c271', '#f59e0b', '#3b82f6', '#ef4444', '#a855f7'][Math.floor(Math.random() * 5)];
+    conf.style.left = Math.random() * 100 + 'vw';
+    conf.style.top = '-20px';
+    conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    conf.style.pointerEvents = 'none';
+    conf.style.zIndex = '9999';
+    conf.animate([
+      { transform: `translate3d(0,0,0) rotate(0deg)`, opacity: 1 },
+      { transform: `translate3d(${Math.random()*100 - 50}px, 100vh, 0) rotate(${Math.random()*720}deg)`, opacity: 0 }
+    ], {
+      duration: Math.random() * 1500 + 1500,
+      easing: 'cubic-bezier(.37,0,.63,1)'
+    });
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 3000);
   }
 }
 
