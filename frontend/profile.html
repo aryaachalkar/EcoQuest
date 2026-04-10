@@ -523,7 +523,7 @@
 
   <nav class="sb-nav">
     <div class="nav-label">Main</div>
-    <button class="nav-item active" onclick="window.location.href='page2.html'">
+    <button class="nav-item">
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Dashboard
     </button>
@@ -558,7 +558,7 @@
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Upload Proof
     </button>
-    <button class="nav-item" onclick="window.location.href='profile.html'">
+    <button class="nav-item active" onclick="window.location.href='profile.html'">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Profile
     </button>
@@ -577,425 +577,43 @@
 <div class="main">
 
   <!-- TOPBAR -->
+  
   <header class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-greeting">Good morning, Aarav!</div>
-      <div class="topbar-title">Your Eco Dashboard</div>
+    <div>
+      <div class="topbar-title">My Profile</div>
+      <div class="topbar-sub">Manage your account and view your progress</div>
     </div>
     <div class="topbar-right">
-      <button class="tb-btn">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Search
-      </button>
-      <div class="tb-notif">
-        <button class="tb-btn">
-          <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 2a5 5 0 00-5 5v2l-1 2h12l-1-2V7a5 5 0 00-5-5zM6.5 13a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          Alerts
-        </button>
-        <div class="notif-dot"></div>
-      </div>
-      <button class="tb-btn primary" onclick="window.location.href='tasks.html'">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        New Task
+      <button class="tb-btn primary" onclick="window.location.href='tasks-upload.html'">
+        Upload Proof
       </button>
     </div>
   </header>
-
-  <!-- CONTENT -->
   <div class="content">
+    <div class="rules-box animate d1" style="max-width: 600px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 3rem 2rem;">
+      <div id="profAvatar" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #2d7a38, #56c271); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 500; color: #fff; margin-bottom: 1rem; font-family: var(--font-d);">??</div>
+      <h2 id="profName" style="font-family: var(--font-d); font-size: 26px; color: var(--g-text); margin-bottom: 4px;">Loading...</h2>
+      <p id="profSchool" style="font-size: 14px; color: var(--g-muted); margin-bottom: 1.5rem;">Loading...</p>
+      
+      <div style="background: #f0fdf4; border: 1px solid #c8dcc8; border-radius: var(--r-md); padding: 1.25rem; width: 100%; margin-bottom: 2rem; display: flex; justify-content: space-around;">
+        <div>
+          <div style="font-size: 11px; color: var(--g-sub); text-transform: uppercase; letter-spacing: 0.5px;">Eco Points</div>
+          <div id="profPts" style="font-family: var(--font-d); font-size: 24px; color: var(--g-mid);">--</div>
+        </div>
+        <div style="width: 1px; background: #c8dcc8;"></div>
+        <div>
+          <div style="font-size: 11px; color: var(--g-sub); text-transform: uppercase; letter-spacing: 0.5px;">Role</div>
+          <div id="profRole" style="font-family: var(--font-d); font-size: 24px; color: var(--g-mid); text-transform: capitalize;">--</div>
+        </div>
+      </div>
 
-    <!-- HERO BANNER -->
-    <div class="hero-banner animate d1">
-      <div class="hero-left">
-        <div class="hero-eyebrow"><span></span> April 2025 — Gudi Padwa Month</div>
-        <h1 class="hero-title">Welcome back,<br><em>Eco Champion!</em></h1>
-        <p class="hero-sub">You're ranked #4 this month. Complete the Gudi Padwa task to climb to the top 3 and unlock the NGO badge!</p>
-        <div class="hero-actions">
-          <button class="h-btn solid" onclick="window.location.href='tasks.html'">View This Month's Task</button>
-          <button class="h-btn outline" onclick="window.location.href='ecoquest-leaderboard.html'">See Leaderboard</button>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="xp-ring">
-          <svg viewBox="0 0 130 130">
-            <circle cx="65" cy="65" r="56" stroke="rgba(86,194,113,0.12)" stroke-width="10" fill="none"/>
-            <circle cx="65" cy="65" r="56" stroke="#56c271" stroke-width="10" fill="none" stroke-dasharray="352" stroke-dashoffset="95" stroke-linecap="round"/>
-          </svg>
-          <div class="xp-inner">
-            <div class="xp-val">1240</div>
-            <div class="xp-label">Eco Points</div>
-          </div>
-        </div>
-      </div>
+      <button id="logoutBtn" style="padding: 12px 24px; border-radius: var(--r-sm); background: #ef4444; color: #fff; font-family: var(--font-b); font-size: 14px; font-weight: 500; border: none; cursor: pointer; transition: all var(--ease); width: 100%;">
+        Log Out
+      </button>
     </div>
-
-    <!-- STAT CARDS -->
-    <div class="stats-row animate d2">
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#eaf3de;">
-          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><path d="M9 2C9 2 3 6 3 11a6 6 0 0012 0C15 6 9 2 9 2z" fill="#3b6d11" opacity="0.8"/><path d="M9 7v6" stroke="#e8f5e9" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </div>
-        <div class="stat-val">1240</div>
-        <div class="stat-label">Total Eco Points</div>
-        <div class="stat-change up">
-          <svg viewBox="0 0 11 11" fill="none" width="11" height="11"><path d="M5.5 2v7M2 5l3.5-3L9 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          +180 this week
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#eff6ff;">
-          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><path d="M2 2h6l4 4v10H2z" stroke="#185fa5" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 2v4h6M5 10h6M5 13h4" stroke="#185fa5" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </div>
-        <div class="stat-val">6/9</div>
-        <div class="stat-label">Lessons Done</div>
-        <div class="stat-change up">
-          <svg viewBox="0 0 11 11" fill="none" width="11" height="11"><path d="M5.5 2v7M2 5l3.5-3L9 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          3 new this month
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#fef3c7;">
-          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><path d="M9 2l1.5 4.5h4.5l-3.5 2.5 1.5 4.5L9 11l-3.5 2.5 1.5-4.5L3.5 6.5H8z" stroke="#b45309" stroke-width="1.3" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="stat-val">#4</div>
-        <div class="stat-label">School Rank</div>
-        <div class="stat-change up">
-          <svg viewBox="0 0 11 11" fill="none" width="11" height="11"><path d="M5.5 2v7M2 5l3.5-3L9 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Up 2 spots
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="background:#f5f3ff;">
-          <svg viewBox="0 0 18 18" fill="none" width="18" height="18"><path d="M9 3a6 6 0 100 12A6 6 0 009 3z" stroke="#7c3aed" stroke-width="1.3"/><path d="M9 6v4l2.5 2.5" stroke="#7c3aed" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </div>
-        <div class="stat-val">5</div>
-        <div class="stat-label">Tasks Completed</div>
-        <div class="stat-change up">
-          <svg viewBox="0 0 11 11" fill="none" width="11" height="11"><path d="M5.5 2v7M2 5l3.5-3L9 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          2 pending
-        </div>
-      </div>
-    </div>
-
-    <!-- FESTIVAL TASK + LEADERBOARD -->
-    <div class="grid-two animate d3">
-
-      <!-- FESTIVAL TASK -->
-      <div class="festival-card">
-        <div class="fc-badge">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#fbbf24" stroke-width="1.2"/><path d="M6 3v3.5l2 2" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round"/></svg>
-          April Task — Gudi Padwa
-        </div>
-        <div class="fc-title">Make an Eco-Friendly Gudi</div>
-        <div class="fc-festival">Festival: Gudi Padwa (Maharashtra New Year)</div>
-        <div class="fc-desc">
-          Traditionally, a Gudi is made using a silk cloth on a bamboo stick. This year, instead of buying a new synthetic cloth, use old sarees or cotton dupatta from home. Make your own natural dye using turmeric and hibiscus flowers, and learn how natural pigments work (Chemistry Ch. 4 — Acids, Bases & Salts).
-        </div>
-        <div class="fc-meta">
-          <div class="fc-meta-item">
-            <svg viewBox="0 0 13 13" fill="none" width="13" height="13"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 3.5v3l1.5 1.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-            Due: April 30
-          </div>
-          <div class="fc-meta-item">
-            <svg viewBox="0 0 13 13" fill="none" width="13" height="13"><path d="M2 10V4a1 1 0 011-1h7a1 1 0 011 1v6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M1 10h11" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-            Class 6–8
-          </div>
-          <div class="fc-meta-item">
-            <svg viewBox="0 0 13 13" fill="none" width="13" height="13"><path d="M6.5 1.5L8 5h3.5l-2.5 2 1 3.5L6.5 9l-3.5 1.5 1-3.5L1.5 5H5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
-            Photo + Video
-          </div>
-        </div>
-        <div class="fc-points">
-          <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" fill="#56c271"/></svg>
-          +150 Eco Points on completion
-        </div>
-        <button class="fc-btn" onclick="window.location.href='tasks-upload.html'">
-          Start Task & Upload Proof →
-        </button>
-      </div>
-
-      <!-- LEADERBOARD PREVIEW -->
-      <div class="lb-card">
-        <div class="section-head" style="margin-bottom:0.5rem;">
-          <div>
-            <div class="section-title">Leaderboard</div>
-            <div class="section-sub">Top performers — April 2025</div>
-          </div>
-          <button class="see-all" onclick="window.location.href='ecoquest-leaderboard.html'">
-            Full board →
-          </button>
-        </div>
-
-        <!-- Top 3 podium -->
-        <div class="lb-top3">
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:44px;height:44px;background:#378add;font-size:14px;">PS</div>
-            <div class="lb-podium-name">Priya S.</div>
-            <div class="lb-podium-pts">980 pts</div>
-            <div class="lb-block" style="width:56px;height:28px;background:#b5d4f4;color:#0c447c;">#2</div>
-          </div>
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:54px;height:54px;background:#2d7a38;font-size:16px;position:relative;">
-              <span class="lb-crown">👑</span>RK
-            </div>
-            <div class="lb-podium-name">Rohan K.</div>
-            <div class="lb-podium-pts">1380 pts</div>
-            <div class="lb-block" style="width:56px;height:38px;background:#c0dd97;color:#27500a;">#1</div>
-          </div>
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:44px;height:44px;background:#d85a30;font-size:14px;">AM</div>
-            <div class="lb-podium-name">Ananya M.</div>
-            <div class="lb-podium-pts">910 pts</div>
-            <div class="lb-block" style="width:56px;height:22px;background:#f5c4b3;color:#712b13;">#3</div>
-          </div>
-        </div>
-
-        <!-- List -->
-        <div class="lb-list">
-          <div class="lb-row lb-you">
-            <div class="lb-rank" style="color:#2d7a38;font-weight:600;">4</div>
-            <div class="lb-mini-avatar" style="background:linear-gradient(135deg,#2d7a38,#56c271);">AS</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Aarav S. <span style="font-size:10px;color:#2d7a38;background:#eaf3de;padding:1px 7px;border-radius:8px;margin-left:4px;">You</span></div>
-              <div class="lb-info-school">Class 7 · Pune Municipal</div>
-            </div>
-            <div class="lb-pts-badge">1240 pts</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">5</div>
-            <div class="lb-mini-avatar" style="background:#8b5cf6;">VN</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Vidya N.</div>
-              <div class="lb-info-school">Class 7 · Deccan English</div>
-            </div>
-            <div class="lb-pts-badge">1100 pts</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">6</div>
-            <div class="lb-mini-avatar" style="background:#ef4444;">SK</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Sneha K.</div>
-              <div class="lb-info-school">Class 8 · Bishops School</div>
-            </div>
-            <div class="lb-pts-badge">980 pts</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LESSONS SECTION -->
-    <div class="section-head animate d4">
-      <div>
-        <div class="section-title">Your Lessons — Class 7</div>
-        <div class="section-sub">NCERT-aligned environmental chapters</div>
-      </div>
-      <button class="see-all" onclick="window.location.href='page3.html'">All lessons →</button>
-    </div>
-
-    <div class="lessons-grid animate d4">
-      <div class="lesson-card" onclick="window.location.href='page3.html'">
-        <div class="lesson-icon" style="background:#eaf3de;">
-          <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><path d="M11 3C11 3 4 8 4 14a7 7 0 0014 0C18 8 11 3 11 3z" stroke="#3b6d11" stroke-width="1.4" fill="#c0dd97" opacity="0.5"/><path d="M11 10v7" stroke="#3b6d11" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div class="lesson-class" style="color:#3b6d11;">Class 7 · Ch. 17</div>
-        <div class="lesson-title">Forests: Our Lifeline</div>
-        <div class="lesson-desc">Why forests are vital ecosystems — producers, consumers, decomposers and the water cycle.</div>
-        <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:85%;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>85%</span></div>
-        </div>
-        <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eaf3de;color:#27500a;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">2 tasks linked</span>
-        </div>
-      </div>
-
-      <div class="lesson-card" onclick="window.location.href='page3.html'">
-        <div class="lesson-icon" style="background:#eff6ff;">
-          <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><path d="M11 4C11 4 5 10 5 14a6 6 0 0012 0C17 10 11 4 11 4z" stroke="#185fa5" stroke-width="1.4" fill="#85b7eb" opacity="0.4"/></svg>
-        </div>
-        <div class="lesson-class" style="color:#185fa5;">Class 7 · Ch. 18</div>
-        <div class="lesson-title">Wastewater Story</div>
-        <div class="lesson-desc">How sewage is treated, water conservation methods, and preventing water pollution in cities.</div>
-        <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#378add;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>60%</span></div>
-        </div>
-        <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eff6ff;color:#0c447c;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">1 task linked</span>
-        </div>
-      </div>
-
-      <div class="lesson-card" onclick="window.location.href='page3.html'">
-        <div class="lesson-icon" style="background:#faeeda;">
-          <svg viewBox="0 0 22 22" fill="none" width="22" height="22"><rect x="3" y="11" width="16" height="8" rx="2" fill="#ef9f27" opacity="0.35" stroke="#854f0b" stroke-width="1.4"/><path d="M7 11C7 7 10 4 11 4c1 0 4 3 4 7" stroke="#854f0b" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div class="lesson-class" style="color:#854f0b;">Class 7 · Ch. 9</div>
-        <div class="lesson-title">Soil — Our Natural Resource</div>
-        <div class="lesson-desc">Types of soil, soil erosion, how microbes keep soil fertile — linked to composting tasks.</div>
-        <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#ef9f27;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>100%</span></div>
-        </div>
-        <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#faeeda;color:#633806;">Completed ✓</span>
-          <span style="font-size:11px;color:#7a9a7c;">3 tasks linked</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- QUIZZES + NGO -->
-    <div class="section-head animate d5">
-      <div>
-        <div class="section-title">Quizzes & NGO Challenge</div>
-        <div class="section-sub">Test your knowledge and earn bonus points</div>
-      </div>
-    </div>
-
-    <div class="bottom-grid animate d5">
-
-      <!-- QUIZZES -->
-      <div class="quiz-card">
-        <div class="section-head" style="margin-bottom:1rem;">
-          <div>
-            <div class="section-title" style="font-size:17px;">Recent Quizzes</div>
-          </div>
-          <button class="see-all" onclick="window.location.href='page4.html'">All quizzes →</button>
-        </div>
-        <div class="quiz-item">
-          <div class="quiz-num" style="background:#eaf3de;color:#27500a;">Q1</div>
-          <div class="quiz-info">
-            <div class="quiz-name">Forests & Biodiversity</div>
-            <div class="quiz-meta">10 questions · Ch. 17 · Completed</div>
-          </div>
-          <div class="quiz-score">9/10</div>
-        </div>
-        <div class="quiz-item">
-          <div class="quiz-num" style="background:#eff6ff;color:#0c447c;">Q2</div>
-          <div class="quiz-info">
-            <div class="quiz-name">Water Cycle & Conservation</div>
-            <div class="quiz-meta">10 questions · Ch. 18 · Completed</div>
-          </div>
-          <div class="quiz-score">7/10</div>
-        </div>
-        <div class="quiz-item">
-          <div class="quiz-num" style="background:#faeeda;color:#633806;">Q3</div>
-          <div class="quiz-info">
-            <div class="quiz-name">Soil & Microorganisms</div>
-            <div class="quiz-meta">10 questions · Ch. 9 · Pending</div>
-          </div>
-          <div style="font-size:12px;color:#ef4444;font-weight:500;">Start →</div>
-        </div>
-        <div class="quiz-item">
-          <div class="quiz-num" style="background:#f5f3ff;color:#5b21b6;">Q4</div>
-          <div class="quiz-info">
-            <div class="quiz-name">Acid Rain & Air Pollution</div>
-            <div class="quiz-meta">8 questions · Ch. 13 · Locked</div>
-          </div>
-          <div style="font-size:12px;color:#9ab89c;">🔒</div>
-        </div>
-        <button style="width:100%;margin-top:1rem;padding:10px;border-radius:8px;border:1px solid #c8dcc8;background:#fff;font-family:var(--font-b);font-size:13.5px;color:#2d7a38;font-weight:500;cursor:pointer;" onclick="window.location.href='page4.html'">
-          View All Quizzes →
-        </button>
-      </div>
-
-      <!-- NGO TASK -->
-      <div class="ngo-card">
-        <div class="ngo-logo">
-          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 3C12 3 4 8 4 15a8 8 0 0016 0C20 8 12 3 12 3z" fill="#639922" opacity="0.5" stroke="#3b6d11" stroke-width="1.4"/><path d="M12 9v9M9 15c1.5-2.5 3-3.5 3-3.5" stroke="#3b6d11" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div class="ngo-name">River Clean-Up Campaign</div>
-        <div class="ngo-org">by Pune Rivers Trust (NGO Partner)</div>
-        <div class="ngo-task">
-          Join the Mula-Mutha river bank clean-up drive this April. Collect plastic waste near your local riverbank, weigh it, and document the types of waste found. Connect this to your lesson on wastewater and pollution (Ch. 18).
-        </div>
-        <div class="ngo-pts">
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" fill="#b45309"/></svg>
-          <div class="ngo-pts-text">NGO Bonus Points</div>
-          <div class="ngo-pts-val">+350 pts</div>
-        </div>
-        <button class="ngo-btn" onclick="window.location.href='tasks-upload.html'">
-          Accept NGO Challenge →
-        </button>
-      </div>
-    </div>
-
-    <!-- MONTHLY TASKS STRIP -->
-    <div class="section-head">
-      <div>
-        <div class="section-title">Festival Tasks — All Months</div>
-        <div class="section-sub">Unique eco-tasks linked to Indian festivals</div>
-      </div>
-      <button class="see-all" onclick="window.location.href='tasks.html'">All tasks →</button>
-    </div>
-
-    <div class="tasks-strip">
-      <div class="task-chip active-task">
-        <div class="tc-month">April</div>
-        <div class="tc-festival">Gudi Padwa</div>
-        <div class="tc-task">Make eco Gudi with natural dyes from turmeric & hibiscus</div>
-        <div class="tc-pts">+150 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">January</div>
-        <div class="tc-festival">Makar Sankranti</div>
-        <div class="tc-task">Build a kite from recycled newspaper instead of plastic</div>
-        <div class="tc-pts">+120 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">February</div>
-        <div class="tc-festival">Vasant Panchami</div>
-        <div class="tc-task">Plant a native flowering shrub and document its growth weekly</div>
-        <div class="tc-pts">+130 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">March</div>
-        <div class="tc-festival">Holi</div>
-        <div class="tc-task">Make natural colours from beet, turmeric, and spinach</div>
-        <div class="tc-pts">+140 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">May</div>
-        <div class="tc-festival">Buddha Purnima</div>
-        <div class="tc-task">Create a silence garden — a small plant corner for mindfulness</div>
-        <div class="tc-pts">+120 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">June</div>
-        <div class="tc-festival">Eid / Monsoon Start</div>
-        <div class="tc-task">Build a rainwater harvesting jar using a plastic bottle</div>
-        <div class="tc-pts">+160 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">August</div>
-        <div class="tc-festival">Ganesh Chaturthi</div>
-        <div class="tc-task">Make a seed-paper Ganesh idol that dissolves in water and grows</div>
-        <div class="tc-pts">+200 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">October</div>
-        <div class="tc-festival">Navratri / Dussehra</div>
-        <div class="tc-task">Upcycle old cloth into dandiya sticks — no new plastic</div>
-        <div class="tc-pts">+130 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">November</div>
-        <div class="tc-festival">Diwali</div>
-        <div class="tc-task">Make clay diyas at home and use mustard oil — no Chinese lights</div>
-        <div class="tc-pts">+180 pts</div>
-      </div>
-      <div class="task-chip">
-        <div class="tc-month">December</div>
-        <div class="tc-festival">Christmas / Solstice</div>
-        <div class="tc-task">Make Christmas ornaments from orange peel and cinnamon sticks</div>
-        <div class="tc-pts">+120 pts</div>
-      </div>
-    </div>
-
   </div>
-</div>
 
+</div>
 <script>
   document.querySelectorAll('.progress-fill').forEach(el => {
     const w = el.style.width;

@@ -341,7 +341,7 @@
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Dashboard
     </button>
-    <button class="nav-item" onclick="window.location.href='ngo-tasks.html'">
+    <button class="nav-item active" onclick="window.location.href='ngo-tasks.html'">
       <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Lessons
     </button>
@@ -350,7 +350,7 @@
       Quizzes
       <span class="nav-badge">2</span>
     </button>
-    <button class="nav-item active">
+    <button class="nav-item">
       <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Tasks
     </button>
@@ -365,7 +365,7 @@
       <span class="nav-badge" style="background:#f59e0b;">2</span>
     </button>
     <div class="nav-label" style="margin-top:1rem;">My Account</div>
-    <button class="nav-item" onclick="window.location.href='ngo-tasks.html'">
+    <button class="nav-item active" onclick="window.location.href='ngo-tasks.html'">
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Upload Proof
     </button>
@@ -385,347 +385,20 @@
 
 <!-- ═══ MAIN ═══ -->
 <div class="main">
+  
   <header class="topbar">
     <div>
-      <div class="topbar-title">Festival Eco-Tasks</div>
-      <div class="topbar-sub">Unique tasks linked to Indian festivals — every month</div>
+      <div class="topbar-title">Community & NGO Challenge Tasks</div>
+      <div class="topbar-sub">Partner with real NGOs — earn 2× bonus points for community action</div>
     </div>
     <div class="topbar-right">
-      <button class="tb-btn">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Filter: Class 7
-      </button>
-      <button class="tb-btn primary">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      <button class="tb-btn primary" onclick="window.location.href='tasks-upload.html'">
         Upload Proof
       </button>
     </div>
   </header>
-
   <div class="content">
-
-    <!-- MONTH FILTER STRIP -->
-    <div class="month-strip animate d1">
-      <div class="month-pill active" onclick="filterMonth('all', this)">
-        <span>All Months</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('jan', this)">
-        <span>January</span><span class="festival-name">Sankranti</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('feb', this)">
-        <span>February</span><span class="festival-name">Vasant Panchami</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('mar', this)">
-        <span>March</span><span class="festival-name">Holi</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('apr', this)">
-        <span>April ★</span><span class="festival-name">Gudi Padwa</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('may', this)">
-        <span>May</span><span class="festival-name">Buddha Purnima</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('jun', this)">
-        <span>June</span><span class="festival-name">Eid + Monsoon</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('jul', this)">
-        <span>July</span><span class="festival-name">Guru Purnima</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('aug', this)">
-        <span>August</span><span class="festival-name">Ganesh Chaturthi</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('sep', this)">
-        <span>September</span><span class="festival-name">Onam</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('oct', this)">
-        <span>October</span><span class="festival-name">Navratri</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('nov', this)">
-        <span>November</span><span class="festival-name">Diwali</span>
-      </div>
-      <div class="month-pill" onclick="filterMonth('dec', this)">
-        <span>December</span><span class="festival-name">Christmas</span>
-      </div>
-    </div>
-
-    <!-- FEATURED / ACTIVE TASK -->
-    <div class="featured-task animate d2">
-      <div class="ft-left">
-        <div class="ft-eyebrow"><span></span> Active This Month — April 2025</div>
-        <div class="ft-title">Make an Eco-Friendly Gudi</div>
-        <div class="ft-festival">Festival: Gudi Padwa — Maharashtra New Year</div>
-        <div class="ft-desc">
-          Traditionally, a Gudi (a decorated bamboo stick with silk cloth) is hoisted on Gudi Padwa. This year, instead of buying new synthetic cloth, use an old saree or cotton dupatta from home. Make natural dyes from turmeric (yellow), hibiscus flowers (pink/red), and spinach (green). Document how natural pigments differ from synthetic ones — this connects directly to your <strong style="color:#a8d5b0;">Science Ch. 4 (Acids, Bases & Salts)</strong> and <strong style="color:#a8d5b0;">Art & Craft</strong> crossover!
-        </div>
-        <div class="ft-concept">
-          <svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5C6.5 1.5 2 4.5 2 8a4.5 4.5 0 009 0C11 4.5 6.5 1.5 6.5 1.5z" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 5v4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
-          Concepts Linked: Acids & Bases, Natural Pigments, Decomposition, Upcycling
-        </div>
-        <div class="ft-meta">
-          <div class="ft-meta-item">
-            <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            Due: 30 April 2025
-          </div>
-          <div class="ft-meta-item">
-            <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="12" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M7 1L1 6h12L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            Classes 6, 7 & 8
-          </div>
-          <div class="ft-meta-item">
-            <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
-            Photo + Short Video Required
-          </div>
-          <div class="ft-meta-item">
-            <svg viewBox="0 0 14 14" fill="none"><path d="M7 2l1.5 4h4l-3.5 2.5 1.5 4L7 10l-3.5 2.5 1.5-4L1.5 6H5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            150 Eco Points
-          </div>
-        </div>
-        <div class="ft-actions">
-          <button class="ft-btn solid">Start Task & Upload Proof →</button>
-          <button class="ft-btn ghost">View Lesson: Ch. 4</button>
-        </div>
-      </div>
-      <div class="ft-right">
-        <div class="pts-bubble">
-          <div class="pts-val">+150</div>
-          <div class="pts-label">Eco Points</div>
-          <div class="pts-type">on completion</div>
-        </div>
-        <div class="ngo-bonus-pill">
-          <div class="ngo-bonus-val">+350</div>
-          <div class="ngo-bonus-label">NGO Bonus Pts</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ALL TASKS GRID -->
-    <div class="section-head animate d3">
-      <div>
-        <div class="section-title">All Festival Tasks — 2025</div>
-        <div class="section-sub">12 unique eco-challenges across the year</div>
-      </div>
-    </div>
-
-    <div class="tasks-grid animate d3" id="tasks-grid">
-
-      <!-- JAN -->
-      <div class="task-card completed" data-month="jan">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#eaf3de;color:#27500a;">January</span>
-          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Makar Sankranti</div>
-          <div class="tc-title">Newspaper Kite — No Plastic!</div>
-          <div class="tc-desc">Build a kite from recycled newspaper pages, old cloth strips, and bamboo sticks instead of plastic. Test aerodynamics — apply Science Ch. 13 (Motion & Time) concepts to measure how high your kite flies.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Air Resistance, Aerodynamics</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+120 pts earned</div>
-          <button class="tc-action done">Done ✓</button>
-        </div>
-      </div>
-
-      <!-- FEB -->
-      <div class="task-card completed" data-month="feb">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#eff6ff;color:#0c447c;">February</span>
-          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Vasant Panchami</div>
-          <div class="tc-title">Plant a Native Flowering Shrub</div>
-          <div class="tc-desc">On the festival of spring, plant a native shrub like Hibiscus or Jasmine (not an exotic species). Track its growth weekly in a journal. Learn pollination and ecosystems — Science Ch. 12 (Reproduction in Plants).</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Pollination, Ecosystems</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+130 pts earned</div>
-          <button class="tc-action done">Done ✓</button>
-        </div>
-      </div>
-
-      <!-- MAR -->
-      <div class="task-card completed" data-month="mar">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#faeeda;color:#633806;">March</span>
-          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Holi</div>
-          <div class="tc-title">Natural Colour Lab at Home</div>
-          <div class="tc-desc">Skip chemical colours this Holi. Extract pigments from beet (red), turmeric (yellow), spinach (green), and marigold (orange). Compare pH using lemon juice — linking to Ch. 5 (Acids, Bases & Salts). Document each colour's source.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Acids & Bases, Pigments</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+140 pts earned</div>
-          <button class="tc-action done">Done ✓</button>
-        </div>
-      </div>
-
-      <!-- APR — ACTIVE -->
-      <div class="task-card active-now" data-month="apr">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#dcfce7;color:#15803d;">April</span>
-          <span class="tc-status-badge" style="background:#fef3c7;color:#b45309;">Active Now ★</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Gudi Padwa</div>
-          <div class="tc-title">Eco-Friendly Gudi with Natural Dyes</div>
-          <div class="tc-desc">Use old saree / dupatta as the Gudi cloth. Make natural dyes from turmeric, hibiscus, and spinach. Understand natural vs synthetic pigments (Ch. 4). Document your process in a short 2-minute video.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Natural Pigments, Upcycling</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+150 pts</div>
-          <button class="tc-action start">Start Task →</button>
-        </div>
-      </div>
-
-      <!-- MAY -->
-      <div class="task-card" data-month="may">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#f5f3ff;color:#5b21b6;">May</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Buddha Purnima</div>
-          <div class="tc-title">Create a Silence & Mindfulness Garden</div>
-          <div class="tc-desc">Set up a small corner at home or school with 3 native plants, pebbles, and a water bowl for birds. Link to the concept of interdependence in ecosystems (Ch. 17 — Forests). Document the birds or insects that visit.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Ecosystems, Biodiversity</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+120 pts</div>
-          <button class="tc-action view">Preview</button>
-        </div>
-      </div>
-
-      <!-- JUN -->
-      <div class="task-card" data-month="jun">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#eff6ff;color:#185fa5;">June</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Eid ul-Adha + Monsoon Begins</div>
-          <div class="tc-title">DIY Rainwater Harvesting Jar</div>
-          <div class="tc-desc">Build a working rainwater harvester from a large plastic bottle, gravel, sand, and charcoal (natural filter layers). Collect and measure rainfall for 2 weeks. Connects to Ch. 18 (Wastewater Story) and the Water Cycle concept.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Water Cycle, Filtration</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+160 pts</div>
-          <button class="tc-action view">Preview</button>
-        </div>
-      </div>
-
-      <!-- JUL -->
-      <div class="task-card" data-month="jul">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#eaf3de;color:#3b6d11;">July</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Guru Purnima</div>
-          <div class="tc-title">Teach a Neighbour to Compost</div>
-          <div class="tc-desc">In the spirit of Guru Purnima (passing on knowledge), teach one neighbour or family member how to compost kitchen waste. Set up a small compost bin together from a plastic container. Link to decomposers — Ch. 17.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Decomposers, Nutrient Cycle</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+140 pts</div>
-          <button class="tc-action view">Preview</button>
-        </div>
-      </div>
-
-      <!-- AUG -->
-      <div class="task-card" data-month="aug">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#faeeda;color:#854f0b;">August</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Ganesh Chaturthi</div>
-          <div class="tc-title">Seed-Paper Ganesh Idol That Grows!</div>
-          <div class="tc-desc">Make a small Ganesh idol from seed-embedded handmade paper (newspaper pulp + tomato/marigold seeds). After visarjan in a pot of soil, it dissolves and grows into plants — zero water pollution! Links to soil and decomposition.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Decomposition, Soil, Germination</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+200 pts</div>
-          <button class="tc-action locked-btn">🔒 Locked</button>
-        </div>
-      </div>
-
-      <!-- SEP -->
-      <div class="task-card locked" data-month="sep">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#fbeaf0;color:#72243e;">September</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Onam</div>
-          <div class="tc-title">Pookalam with Wild & Native Flowers Only</div>
-          <div class="tc-desc">Create a traditional Onam flower carpet (Pookalam) using only wild, native flowers found near your home — no bought or exotic flowers. Document the species, their local names, and what insects they attract.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Native Biodiversity, Pollinators</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+130 pts</div>
-          <button class="tc-action locked-btn">🔒 Locked</button>
-        </div>
-      </div>
-
-      <!-- OCT -->
-      <div class="task-card locked" data-month="oct">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#f5f3ff;color:#5b21b6;">October</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Navratri / Dussehra</div>
-          <div class="tc-title">Upcycle Old Cloth into Dandiya Sticks</div>
-          <div class="tc-desc">Wrap old cloth strips in bright colours around wooden sticks to make Dandiya sticks — zero plastic, zero new material. Learn about fibre types, natural vs synthetic (Ch. 3 — Fibre to Fabric). Also document how much waste you saved.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Natural Fibres, Upcycling</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+130 pts</div>
-          <button class="tc-action locked-btn">🔒 Locked</button>
-        </div>
-      </div>
-
-      <!-- NOV -->
-      <div class="task-card locked" data-month="nov">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#faeeda;color:#854f0b;">November</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Diwali</div>
-          <div class="tc-title">Hand-Made Clay Diyas with Mustard Oil</div>
-          <div class="tc-desc">Make clay diyas at home from local clay (or mud + straw). Use mustard or groundnut oil as fuel — both biodegradable, no chemical smoke. Compare pollution levels (CO2, particulate matter) from Chinese lights vs clay diyas. Science: Ch. 18.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Air Pollution, Combustion</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+180 pts</div>
-          <button class="tc-action locked-btn">🔒 Locked</button>
-        </div>
-      </div>
-
-      <!-- DEC -->
-      <div class="task-card locked" data-month="dec">
-        <div class="tc-header">
-          <span class="tc-month-badge" style="background:#eff6ff;color:#185fa5;">December</span>
-          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
-        </div>
-        <div class="tc-body">
-          <div class="tc-festival">Christmas / Winter Solstice</div>
-          <div class="tc-title">Orange Peel & Cinnamon Room Freshener</div>
-          <div class="tc-desc">After eating oranges, collect the peels. Dry them, add cloves and cinnamon sticks, and make a natural aromatic sachet or simmer pot. This uses microorganism science (decomposition if peels are left vs. when dried) — Ch. 2 Microorganisms.</div>
-          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Microorganisms, Decomposition</div>
-        </div>
-        <div class="tc-footer">
-          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+120 pts</div>
-          <button class="tc-action locked-btn">🔒 Locked</button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- NGO TASKS SECTION -->
-    <div class="ngo-section animate d4">
+    <div class="ngo-section animate d1">
       <div class="ngo-header">
         <div class="ngo-icon">
           <svg viewBox="0 0 26 26" fill="none" width="26" height="26"><path d="M13 3C13 3 5 8 5 15a8 8 0 0016 0C21 8 13 3 13 3z" fill="#639922" opacity="0.5" stroke="#3b6d11" stroke-width="1.5"/><path d="M13 9v10M10 15c1.5-2.5 3-3.5 3-3.5" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -838,10 +511,9 @@
           <div class="rule-desc">Once verified, points are added to your account and your rank on the leaderboard updates automatically.</div>
         </div>
       </div>
+    
     </div>
-
   </div>
-</div>
 
 <script>
   function filterMonth(month, el) {

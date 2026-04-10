@@ -174,4 +174,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Failed to fetch Leaderboard stats', err);
         }
     }
+
+    // ─── 4. PROFILE (profile.html) SPECIFIC ───
+    if (window.location.pathname.endsWith('profile.html')) {
+        const profName = document.getElementById('profName');
+        const profSchool = document.getElementById('profSchool');
+        const profPts = document.getElementById('profPts');
+        const profRole = document.getElementById('profRole');
+        const profAvatar = document.getElementById('profAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (profName) profName.textContent = `${user.firstName} ${user.lastName}`;
+        if (profSchool) profSchool.textContent = `Class ${user.classStandard} · ${user.schoolName}`;
+        if (profPts) profPts.textContent = `${user.totalPoints}`;
+        if (profRole) profRole.textContent = user.role || 'student';
+        if (profAvatar) profAvatar.textContent = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        
+        try {
+            const res = await fetch(`${API_URL}/users/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (data.success && profPts) {
+                profPts.textContent = `${data.user.totalPoints}`;
+            }
+        } catch (err) {}
+    }
 });
