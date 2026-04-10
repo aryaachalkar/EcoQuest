@@ -247,13 +247,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // NGO Accept Buttons -> route to NGO Portal
-    document.querySelectorAll('.ngo-accept-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            window.location.href = 'ngo-detail.html';
-        });
-    });
-    
     // Future / Preview Tasks
     document.querySelectorAll('.tc-action.view').forEach(btn => {
         btn.addEventListener('click', () => {

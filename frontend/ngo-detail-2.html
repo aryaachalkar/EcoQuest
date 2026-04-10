@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest — NGO Campaign</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g-dark:   #0d1f0f;
+      --g-deep:   #132b15;
+      --g-mid:    #2d7a38;
+      --g-bright: #56c271;
+      --g-light:  #e8f5e9;
+      --g-pale:   #f4f9f4;
+      --g-border: #c8dcc8;
+      --g-muted:  #7a9a7c;
+      --g-text:   #1a3d1c;
+      --g-sub:    #5a7a5c;
+      --font-d:   'Playfair Display', Georgia, serif;
+      --font-b:   'DM Sans', sans-serif;
+      --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
+      --ease: 0.22s ease;
+
+      /* Override theme specifically for this NGO */
+      --ngo-dark: #0f172a;
+      --ngo-mid: #3b82f6;
+      --ngo-bright: #60a5fa;
+    }
+    body { font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh; }
+    
+    /* SIDEBAR (STRICT THEME) */
+    .sidebar { width: 240px; background: var(--g-dark); display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top:0; bottom:0; left:0; z-index:100; }
+    .sb-brand { display: flex; align-items: center; gap: 12px; padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(86,194,113,.12); }
+    .sb-logo { width: 40px; height: 40px; background: linear-gradient(135deg,#56c271,#2d7a38); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
+    .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: .8px; text-transform: uppercase; }
+    .sb-nav { flex: 1; padding: 1rem .75rem; overflow-y: auto; }
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: .5rem .5rem .35rem; margin-top: .5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); color: #7a9a7c; font-size: 14px; cursor: pointer; transition: all .22s ease; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-b); }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .nav-item:hover { background: rgba(86,194,113,.08); color: #c8e6c9; }
+    .nav-item.active { background: rgba(86,194,113,.14); color: var(--g-bright); font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+    .sb-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,.12); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#2d7a38,#56c271); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
+    .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
+    .sb-user-class { font-size: 11px; color: #5a7a5c; }
+
+    /* MAIN CONTENT */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .topbar { background: #fff; border-bottom: 1px solid var(--g-border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .back-btn { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--r-sm); border: 1px solid var(--g-border); background: #fff; color: var(--g-sub); font-family: var(--font-b); font-size: 13px; cursor: pointer; transition: all .22s; }
+    .back-btn:hover { border-color: var(--ngo-bright); color: var(--ngo-mid); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .tb-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .22s; border: 1px solid var(--g-border); background: #fff; color: var(--g-sub); }
+    .tb-btn:hover { border-color: var(--ngo-bright); color: var(--ngo-mid); }
+
+    .content { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    /* NGO HERO (GLASSMORPHISM INSPIRED) */
+    .ngo-hero {
+      position: relative; border-radius: var(--r-xl); overflow: hidden;
+      background: var(--ngo-dark); padding: 3rem; margin-bottom: 2rem;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      min-height: 280px; box-shadow: 0 15px 35px rgba(15,23,42,0.15);
+    }
+    .ngo-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0C62 0 80 18 80 40C80 62 62 80 40 80C18 80 0 62 0 40C0 18 18 0 40 0ZM40 20C29 20 20 29 20 40C20 51 29 60 40 60C51 60 60 51 60 40C60 29 51 20 40 20Z' fill='%2360a5fa' fill-opacity='0.04'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+    .ngo-hero-content { position: relative; z-index: 2; max-width: 600px; }
+    .ngo-tag { display: inline-block; background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3); color: var(--ngo-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 6px 14px; border-radius: 20px; margin-bottom: 1rem; backdrop-filter: blur(4px); }
+    .ngo-title { font-family: var(--font-d); font-size: 42px; color: #fff; line-height: 1.1; margin-bottom: 0.5rem; }
+    .ngo-org { font-size: 16px; color: #bfdbfe; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+    
+    .ngo-stats-glass {
+      position: relative; z-index: 2;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px); border-radius: var(--r-lg);
+      padding: 1.5rem 2rem; display: flex; gap: 2.5rem;
+    }
+    .n-stat { display: flex; flex-direction: column; gap: 4px; }
+    .n-stat-val { font-family: var(--font-d); font-size: 28px; color: #fff; }
+    .n-stat-lbl { font-size: 11px; color: #bfdbfe; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* LAYOUT GRID */
+    .ngo-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+
+    /* LEFT COL */
+    .col-left { display: flex; flex-direction: column; gap: 2rem; }
+    
+    .ngo-card { background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl); padding: 2rem; }
+    .card-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+    .card-title svg { color: var(--ngo-mid); }
+    .card-text { font-size: 14.5px; color: var(--g-sub); line-height: 1.6; }
+
+    /* CHECKLIST */
+    .checklist-group { display: flex; flex-direction: column; gap: 12px; margin-top: 1.5rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 14px; padding: 1.25rem; border-radius: var(--r-md); border: 1.5px solid var(--g-border); cursor: pointer; transition: all var(--ease); background: var(--g-pale); }
+    .check-item:hover { border-color: var(--ngo-bright); background: #eff6ff; }
+    .check-item.checked { border-color: var(--ngo-mid); background: #eff6ff; }
+    .check-box { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--g-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--ease); }
+    .check-item.checked .check-box { background: var(--ngo-mid); border-color: var(--ngo-mid); }
+    .check-box svg { width: 14px; height: 14px; color: #fff; opacity: 0; }
+    .check-item.checked .check-box svg { opacity: 1; }
+    .check-label { font-size: 15px; color: var(--g-text); font-weight: 500; margin-bottom: 4px; }
+    .check-sub { font-size: 13px; color: var(--g-muted); }
+
+    /* UPLOAD ZONE */
+    .drop-zone { border: 2px dashed var(--g-border); border-radius: var(--r-lg); padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all var(--ease); background: #fafcfa; position: relative; margin-top: 2rem; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--ngo-bright); background: #eff6ff; }
+    .drop-zone.has-file { border-color: var(--ngo-mid); border-style: solid; background: #eff6ff; }
+    .dz-icon { width: 60px; height: 60px; background: #eff6ff; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .dz-icon svg { width: 28px; height: 28px; color: var(--ngo-mid); }
+    .dz-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .file-preview { display: none; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--ngo-bright); border-radius: var(--r-md); padding: 1rem 1.25rem; margin-top: 1rem; }
+
+    /* RIGHT COL */
+    .col-right { display: flex; flex-direction: column; gap: 2rem; }
+
+    /* IMPACT METER */
+    .meter-card { background: var(--ngo-mid); border-radius: var(--r-xl); padding: 2rem; color: #fff; text-align: center; box-shadow: 0 10px 20px rgba(59,130,246,0.2); }
+    .meter-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #bfdbfe; margin-bottom: 1rem; }
+    .meter-gauge { width: 140px; height: 140px; border-radius: 50%; border: 8px solid rgba(255,255,255,0.2); margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+    .meter-gauge::after { content:''; position: absolute; inset: -8px; border-radius: 50%; border: 8px solid #fff; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(135deg); display: block; }
+    .mg-val { font-family: var(--font-d); font-size: 32px; line-height: 1; }
+    .mg-lbl { font-size: 11px; color: #bfdbfe; }
+    .meter-sub { font-size: 13px; color: #eff6ff; margin-top: 1.5rem; line-height: 1.5; }
+
+    /* KNOWLEDGE BINDING (LESSON LINK) */
+    .kb-card { background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl); padding: 2rem; position: relative; overflow: hidden; }
+    .kb-card::after { content:''; position: absolute; top:0; right:0; background: var(--ngo-bright); width: 6px; height: 100%; }
+    .kb-pill { display: inline-block; background: #eef2ff; color: #4f46e5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 12px; margin-bottom: 1rem; }
+    .kb-title { font-family: var(--font-d); font-size: 18px; color: var(--g-text); margin-bottom: 8px; }
+    .kb-sub { font-size: 13px; color: var(--g-sub); margin-bottom: 1.5rem; line-height: 1.5; }
+    .kb-btn { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--ngo-mid); color: var(--ngo-mid); padding: 8px 16px; border-radius: var(--r-sm); font-size: 13px; font-family: var(--font-b); font-weight: 500; cursor: pointer; transition: all .2s; }
+    .kb-btn:hover { background: #eff6ff; }
+
+    .submit-bar { display: flex; justify-content: flex-end; margin-top: 2rem; }
+    .submit-btn { background: var(--ngo-mid); color: #fff; border: none; padding: 14px 32px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 16px; font-weight: 500; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+    .submit-btn:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(59,130,246,0.4); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .animate { animation: fadeUp 0.45s ease both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.15s} .d3{animation-delay:.25s}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sb-name">EcoQuest</div>
+        <div class="sb-tagline">Eco Learning</div>
+      </div>
+    </div>
+  
+    <nav class="sb-nav">
+      <div class="nav-label">Main</div>
+      <button class="nav-item" onclick="window.location.href='page2.html'">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="window.location.href='page3.html'">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Lessons
+      </button>
+      <button class="nav-item" onclick="window.location.href='page4.html'">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
+        Quizzes
+      </button>
+      <button class="nav-item" onclick="window.location.href='tasks.html'">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Tasks
+      </button>
+  
+      <div class="nav-label" style="margin-top:1rem;">Community</div>
+      <button class="nav-item" onclick="window.location.href='ecoquest-leaderboard.html'">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        Leaderboard
+      </button>
+      <button class="nav-item active" onclick="window.location.href='ngo-tasks.html'">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        NGO Tasks
+        <span class="nav-badge" style="background:#f59e0b;">2</span>
+      </button>
+  
+      <div class="nav-label" style="margin-top:1rem;">My Account</div>
+      <button class="nav-item" onclick="window.location.href='tasks-upload.html'">
+        <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+        Upload Proof
+      </button>
+      <button class="nav-item" onclick="window.location.href='profile.html'">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Profile
+      </button>
+    </nav>
+  
+    <div class="sb-user">
+      <div class="sb-avatar">..</div>
+      <div>
+        <div class="sb-user-name">Loading...</div>
+        <div class="sb-user-class">Loading...</div>
+      </div>
+    </div>
+  </aside>
+
+<div class="main">
+  <header class="topbar">
+    <button class="back-btn" onclick="window.location.href='ngo-tasks.html'">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to NGO Hub
+    </button>
+    <div class="topbar-right">
+       <button class="tb-btn" onclick="alert('Share link copied to clipboard!')">
+         <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M12 4a2 2 0 100-4 2 2 0 000 4zM4 10a2 2 0 100-4 2 2 0 000 4zM12 16a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.8l5 3M5.5 7.2l5-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+         Share Campaign
+       </button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="ngo-hero animate d1">
+      <div class="ngo-hero-content">
+        <div class="ngo-tag">Mega-Challenge Active</div>
+        <div class="ngo-title">Plastic-Free School Campaign</div>
+        <div class="ngo-org">
+          <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 15A7 7 0 108 1a7 7 0 000 14z" stroke="currentColor" stroke-width="1.5"/><path d="M8 8V4M8 11.5v-.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Partner: Green India Foundation
+        </div>
+      </div>
+      
+      <div class="ngo-stats-glass">
+        <div class="n-stat">
+          <div class="n-stat-val">400</div>
+          <div class="n-stat-lbl">EcoPoints</div>
+        </div>
+        <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
+        <div class="n-stat">
+          <div class="n-stat-val">May 15</div>
+          <div class="n-stat-lbl">Deadline</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ngo-grid">
+      
+      <!-- LEFT COL: DETAILS & CHECKLIST -->
+      <div class="col-left">
+        
+        <div class="ngo-card animate d2">
+          <div class="card-title">
+            <svg viewBox="0 0 20 20" fill="none" width="22" height="22"><path d="M10 2l3.09 6.26L20 9.27l-5 4.87 1.18 6.88L10 17.77l-6.18 3.25L5 14.14 0 9.27l6.91-1.01L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            The Mission Brief
+          </div>
+          <div class="card-text">
+            Schools generate massive amounts of single-use plastic waste every day. <strong>Green India Foundation</strong> wants to make campuses 100% plastic-free zones. <br><br>
+            Your mission is to initiate a campaign at your school. Create 3 hand-made educational posters, run a plastic-usage survey with 10 classmates, and present the findings to your teacher!
+          </div>
+
+          <div class="checklist-group">
+            <div class="check-item" id="chk1" onclick="this.classList.toggle('checked')">
+              <div class="check-box"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <div class="check-label">Design & Hang Posters</div>
+                <div class="check-sub">Create 3 posters and put them in hallways.</div>
+              </div>
+            </div>
+            
+            <div class="check-item" id="chk2" onclick="this.classList.toggle('checked')">
+              <div class="check-box"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <div class="check-label">Survey 10 Classmates</div>
+                <div class="check-sub">Ask what plastics they bring daily.</div>
+              </div>
+            </div>
+
+            <div class="check-item" id="chk3" onclick="this.classList.toggle('checked')">
+              <div class="check-box"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <div class="check-label">Present to Teacher</div>
+                <div class="check-sub">Show teacher your survey results safely.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INTEGRATED UPLOADER -->
+          <div class="drop-zone" id="mainDrop" onclick="document.getElementById('ngoInput').click()">
+            <input type="file" class="dz-input" id="ngoInput" accept="image/*,video/*" onchange="const f = this.files[0]; if(f) { document.getElementById('mainDrop').innerHTML = `<div style='font-size:18px; font-weight:700; color:var(--ngo-mid);'>✓ File Ready: ${f.name}</div><div style='font-size:13px; color:#5a7a5c; margin-top:8px;'>Beautiful! Our team will verify this manually.</div>`; document.getElementById('mainDrop').classList.add('has-file'); }">
+            <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div style="font-size:16px; font-weight:500; color:var(--g-text); margin-bottom: 4px;">Drop your Proof of Action Here</div>
+            <div style="font-size:13px; color:var(--g-muted);">Required: JPG, PNG (Photos of posters/survey)</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COL: METRICS & KNOWLEDGE -->
+      <div class="col-right animate d3">
+        
+        <div class="meter-card">
+           <div class="meter-title">Schools Impacted</div>
+           <div class="meter-gauge">
+             <div class="mg-val">76%</div>
+             <div class="mg-lbl">Participating</div>
+           </div>
+           <div class="meter-sub">
+             <strong>41 schools</strong> in the district have completely removed single-use plastics! Keep the momentum going!
+           </div>
+        </div>
+
+        <div class="kb-card">
+          <div class="kb-pill">Science Link</div>
+          <div class="kb-title">Ch. 16: Garbage In, Garbage Out</div>
+          <div class="kb-sub">Understand why non-biodegradable plastics pose a permanent threat to landfills and how segregation works at scale.</div>
+          <button class="kb-btn" onclick="window.location.href='page3.html'">
+            <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Read Chapter
+          </button>
+        </div>
+
+        <div class="kb-card" style="padding: 0; display: flex; flex-direction: column;">
+          <div style="padding: 1.5rem 1.5rem 1rem;">
+             <div class="kb-pill" style="background:#fef3c7; color:#d97706;">Action Zone</div>
+             <div class="kb-title" style="font-size:17px; margin-bottom:2px;">Deccan Schools Zone</div>
+             <div class="kb-sub" style="margin-bottom:0;">Pune Educational District</div>
+          </div>
+          <iframe width="100%" height="220" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=73.81%2C18.52%2C73.84%2C18.55&layer=mapnik&marker=18.535,73.825"></iframe>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="submit-bar animate d3">
+       <button class="submit-btn" onclick="alert('Submission received! Green India Foundation will review your impact within 48 hours. You just earned +400 EcoPoints Pending!'); window.location.href='page2.html';">
+         Submit Campaign Data
+         <svg viewBox="0 0 16 16" fill="none" width="18" height="18"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="api.js"></script>
+</body>
+</html>
