@@ -635,6 +635,11 @@ let currentIdx = 0;
 let selectedAns = -1;
 let answered = false;
 
+// Performance Tracking
+let videoEnterTime = 0;
+let totalVideoTime = 0;
+let totalMistakes = 0;
+
 // Helpers
 const getParam = (p) => new URLSearchParams(window.location.search).get(p);
 const lessonKey = getParam('lesson') || 'forests';
@@ -669,6 +674,9 @@ function renderCurrentStep() {
     
     nextBtn.textContent = 'Continue to Quiz';
     nextBtn.className = 'action-btn primary';
+    
+    // Start tracking video time
+    videoEnterTime = Date.now();
   } 
   else if (step.type === 'quiz') {
     document.getElementById('vidPlayer').src = ""; // stop video
@@ -710,6 +718,11 @@ function handleNext() {
   const nextBtn = document.getElementById('nextBtn');
   
   if (step.type === 'video') {
+    // Record time spent on video before advancing
+    if (videoEnterTime > 0) {
+       totalVideoTime += (Date.now() - videoEnterTime) / 1000;
+       videoEnterTime = 0;
+    }
     currentIdx++;
     renderCurrentStep();
   } 
@@ -733,6 +746,7 @@ function handleNext() {
       nextBtn.textContent = 'Continue';
       
       if (!isCorrect) {
+        totalMistakes++;
         let h = parseInt(document.getElementById('heartCount').textContent);
         if (h>0) document.getElementById('heartCount').textContent = h-1;
       }
@@ -758,7 +772,24 @@ function showSuccessView() {
   setTimeout(() => {
     document.getElementById('successView').classList.add('active');
     document.getElementById('sSubText').textContent = `You mastered Level ${nodeId} of ${lessonKey.toUpperCase()}!`;
-    document.getElementById('sXp').textContent = '+' + (totalSteps * 20); // arbitrary xp formula
+    
+    // Calculate dynamic XP based on performance
+    let baseXP = 50;
+    if (totalVideoTime < 10) {
+      baseXP -= 20; // Penalty for skipping video
+    } else if (totalVideoTime > 30) {
+      baseXP += 10; // Bonus for thorough watching
+    }
+    
+    if (totalMistakes === 0) {
+      baseXP += 40; // Flawless bonus
+    } else {
+      baseXP -= (totalMistakes * 10);
+    }
+    
+    let finalXP = Math.max(baseXP, 10); // Minimum 10 XP floor
+    document.getElementById('sXp').textContent = '+' + finalXP;
+    
     
     // Add Joy Conffeti Animation logic
     createConfetti();
