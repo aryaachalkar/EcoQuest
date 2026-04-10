@@ -427,7 +427,59 @@
     .d4 { animation-delay: 0.20s; }
     .d5 { animation-delay: 0.25s; }
 
-    /* ── RESPONSIVE ── */
+    /* ── GAMIFIED PATH STYLES ── */
+    .journey-container { 
+      position: relative; max-width: 600px; margin: 0 auto 3rem; 
+      display: flex; flex-direction: column; align-items: center; 
+    }
+    .path-node {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: #fff; border: 4px solid var(--g-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1);
+      position: relative; z-index: 2; margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .path-node:hover { transform: scale(1.1); border-color: var(--g-bright); }
+    .path-node.active { 
+      background: var(--g-mid); border-color: var(--g-mid); color: #fff;
+      animation: bounce 2s infinite; box-shadow: 0 8px 24px rgba(45,122,56,0.3);
+    }
+    .path-node.locked { background: #f0f4f0; opacity: 0.6; cursor: not-allowed; border-style: dashed; }
+    
+    .path-connector {
+      position: absolute; width: 4px; background: var(--g-border);
+      z-index: 1; border-radius: 2px;
+    }
+    .path-connector.active { background: var(--g-bright); }
+
+    .node-label {
+      position: absolute; left: 90px; top: 50%; transform: translateY(-50%);
+      white-space: nowrap; font-family: var(--font-d); font-size: 18px; color: var(--g-text);
+      background: #fff; padding: 10px 18px; border-radius: var(--r-md);
+      border: 1px solid var(--g-border); box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+      pointer-events: none;
+    }
+    .node-status { font-size: 11px; color: var(--g-muted); font-family: var(--font-b); display: block; margin-top: 2px; }
+
+    /* ── VIDEO SECTION ── */
+    .video-hero {
+      background: #000; border-radius: var(--r-xl); overflow: hidden;
+      margin-bottom: 2.5rem; position: relative; aspect-ratio: 16/9;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+    .video-hero iframe { width: 100%; height: 100%; border: none; }
+
+    /* ── CREDITS SECTION ── */
+    .credits-footer {
+      margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--g-border);
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;
+    }
+    .credit-box h4 { font-family: var(--font-d); font-size: 16px; margin-bottom: 0.5rem; color: var(--g-text); }
+    .credit-box p { font-size: 13px; color: var(--g-muted); line-height: 1.5; }
+
+    @keyframes bounce { 0%, 100% { transform: translateY(0) scale(1.05); } 50% { transform: translateY(-8px) scale(1.1); } }
+    
     @media (max-width: 1024px) {
       .lessons-grid { grid-template-columns: repeat(2,1fr); }
       .featured-lesson { flex-direction: column; }
@@ -441,6 +493,7 @@
       .lessons-grid { grid-template-columns: 1fr; }
       .hero-right { display: none; }
       .quiz-prompt { flex-direction: column; gap: 1rem; }
+      .node-label { display: none; }
     }
   </style>
 </head>
@@ -628,27 +681,27 @@
       </div>
     </div>
 
-    <!-- ALL LESSONS GRID -->
+    <!-- VIDEO LESSON OF THE DAY -->
     <div class="section-head animate d3">
       <div>
-        <div class="section-title" id="grid-heading">All Lessons — Class 6 to 10</div>
-        <div class="section-sub" id="grid-sub">NCERT-aligned chapters with linked eco-tasks and quizzes</div>
+        <div class="section-title">Video Lesson of the Day</div>
+        <div class="section-sub">NCERT Class 7 · Forests: Our Lifeline (Part 1)</div>
       </div>
-      <button class="see-all">Filter by subject →</button>
+    </div>
+    <div class="video-hero animate d3">
+      <iframe src="https://www.youtube.com/embed/K3oUTKr25ic" title="Forests Our Lifeline NCERT Class 7 Science" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
-    <div class="lessons-grid animate d3" id="lessonsGrid"></div>
-
-    <!-- FULL CHAPTER LIST -->
-    <div class="section-head animate d4">
+    <!-- LEARNING JOURNEY PATH -->
+    <div class="section-head animate d3">
       <div>
-        <div class="section-title">Chapter Breakdown</div>
-        <div class="section-sub" id="chapter-sub">All NCERT environmental topics in sequence</div>
+        <div class="section-title" id="grid-heading">Your learning Journey</div>
+        <div class="section-sub" id="grid-sub">Sequential path to master Environmental Science</div>
       </div>
     </div>
 
-    <div class="topics-strip animate d4">
-      <div class="topic-list" id="topicList"></div>
+    <div class="journey-container animate d3" id="journeyContainer">
+      <!-- Path nodes will be injected by JS -->
     </div>
 
     <!-- QUIZ PROMPT BANNER -->
@@ -666,6 +719,28 @@
         <button class="qp-btn">Retake Quiz →</button>
       </div>
     </div>
+
+    </div>
+
+    <!-- CREDITS & SOURCES -->
+    <footer class="credits-footer animate d5">
+      <div class="credit-box">
+        <h4>Content Partners</h4>
+        <p>NCERT (National Council of Educational Research and Training) for providing the environmental science curriculum.</p>
+      </div>
+      <div class="credit-box">
+        <h4>Educational Logic</h4>
+        <p>Inspired by the gamification frameworks of Byju's, Duolingo, and Brilliant to make eco-learning addictive.</p>
+      </div>
+      <div class="credit-box">
+        <h4>Video Content</h4>
+        <p>Relevant educational videos curated from open-access educational YouTube creators for every chapter.</p>
+      </div>
+      <div class="credit-box">
+        <h4>Open Data</h4>
+        <p>Maps powered by OpenStreetMap. Impact data provided by our NGO partners (Pune Rivers Trust, TF Maharashtra).</p>
+      </div>
+    </footer>
 
   </div>
 </div>
@@ -766,43 +841,39 @@ function renderPage(grade) {
   document.getElementById('grid-sub').textContent = d.gridSub;
   document.getElementById('chapter-sub').textContent = d.chapterSub;
 
-  // Lesson cards
-  document.getElementById('lessonsGrid').innerHTML = d.cards.map(c => `
-    <div class="lesson-card${c.locked ? ' locked' : ''}">
-      <div class="lesson-icon" style="background:${c.iconBg};">${getIcon(c.icon, c.iconColor)}</div>
-      <div class="lesson-class" style="color:${c.classColor};">${c.classLabel}</div>
-      <div class="lesson-title">${c.title}</div>
-      <div class="lesson-desc">${c.desc}</div>
-      <div class="lesson-progress">
-        <div class="progress-bar"><div class="progress-fill" style="width:0%;background:${c.progColor};" data-target="${c.prog}%"></div></div>
-        <div class="progress-label"><span>Progress</span><span>${c.prog === 0 ? (c.locked ? 'Locked' : 'Not started') : c.prog + '%'}</span></div>
-      </div>
-      <div class="lesson-footer">
-        <span class="lesson-tag" style="background:${c.tagBg};color:${c.tagColor};">${c.tag}</span>
-        <span style="font-size:11px;color:#7a9a7c;">${c.tasks}</span>
-      </div>
-    </div>
-  `).join('');
+  // JOURNEY PATH RENDERING
+  const journeyContainer = document.getElementById('journeyContainer');
+  journeyContainer.innerHTML = '';
+  
+  d.cards.forEach((c, idx) => {
+    // Add connector line if not first
+    if (idx > 0) {
+      const line = document.createElement('div');
+      line.className = `path-connector ${!c.locked ? 'active' : ''}`;
+      // Basic positioning for vertical path
+      line.style.height = '40px';
+      line.style.top = `${(idx * 110) - 20}px`;
+      journeyContainer.appendChild(line);
+    }
 
-  // Topics
-  document.getElementById('topicList').innerHTML = d.topics.map(t => `
-    <div class="topic-row">
-      <div class="topic-num" style="background:${t.numBg};color:${t.numColor};">${t.num}</div>
-      <div class="topic-info">
-        <div class="topic-name">${t.name}</div>
-        <div class="topic-meta">${t.meta}</div>
+    const node = document.createElement('div');
+    node.className = `path-node ${c.locked ? 'locked' : (idx === 0 ? 'active' : '')}`;
+    node.innerHTML = `
+      ${c.icon === 'tree' ? '🌲' : c.icon === 'water' ? '💧' : c.icon === 'soil' ? '🌱' : c.icon === 'leaf' ? '🍃' : c.icon === 'air' ? '🌬️' : '🔒'}
+      <div class="node-label">
+        <div class="ln-title">${c.title}</div>
+        <div class="node-status">${c.tag} · ${c.tasks}</div>
       </div>
-      <span class="topic-tag" style="background:${t.tagBg};color:${t.tagColor};">${t.tag}</span>
-      <div class="topic-pts">${t.pts}</div>
-    </div>
-  `).join('');
+    `;
 
-  // Animate progress bars
-  setTimeout(() => {
-    document.querySelectorAll('.progress-fill[data-target]').forEach(el => {
-      el.style.width = el.getAttribute('data-target');
-    });
-  }, 300);
+    if (!c.locked) {
+      node.onclick = () => {
+        window.location.href = c.title === 'Forests: Our Lifeline' ? 'lesson-forests-detail.html' : 'page3.html';
+      };
+    }
+    
+    journeyContainer.appendChild(node);
+  });
 }
 
 function switchGrade(grade, el) {

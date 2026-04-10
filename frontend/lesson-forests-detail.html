@@ -1,987 +1,509 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Forests: Our Lifeline — EcoQuest</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest — Forests: Our Lifeline</title>
+  <meta name="description" content="Learn about forest ecosystems, food chains and biodiversity through an interactive gamified lesson on EcoQuest.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --g-dark:    #0d1f0f;
-      --g-deep:    #132b15;
-      --g-mid:     #2d7a38;
-      --g-bright:  #56c271;
-      --g-light:   #e8f5e9;
-      --g-pale:    #f4f9f4;
-      --g-border:  #c8dcc8;
-      --g-muted:   #7a9a7c;
-      --g-text:    #1a3d1c;
-      --g-sub:     #5a7a5c;
-      --amber:     #f59e0b;
-      --amber-bg:  #fffbeb;
-      --amber-bdr: #fde68a;
-      --blue:      #3b82f6;
-      --blue-bg:   #eff6ff;
-      --blue-bdr:  #bfdbfe;
-      --coral:     #ef4444;
-      --coral-bg:  #fef2f2;
-      --coral-bdr: #fecaca;
-      --font-d: 'Playfair Display', Georgia, serif;
-      --font-b: 'DM Sans', sans-serif;
-      --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
-      --ease: 0.22s ease;
+      --g-dark:   #0d1f0f; --g-deep: #132b15; --g-mid: #2d7a38;
+      --g-bright: #56c271; --g-light: #e8f5e9; --g-pale: #f4f9f4;
+      --g-border: #c8dcc8; --g-muted: #7a9a7c; --g-text: #1a3d1c; --g-sub: #5a7a5c;
+      --font-d: 'Playfair Display', Georgia, serif; --font-b: 'DM Sans', sans-serif;
+      --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px; --ease: 0.22s ease;
     }
+    body { font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh; }
 
-    html, body { height: 100%; font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; }
-
-    /* ══════════════════════════════════
-       SIDEBAR  (identical to lessons.html)
-    ══════════════════════════════════ */
-    .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
-      background: var(--g-dark);
-      display: flex; flex-direction: column; z-index: 100;
-    }
-    .sb-brand {
-      display: flex; align-items: center; gap: 12px;
-      padding: 1.5rem 1.25rem 1rem;
-      border-bottom: 1px solid rgba(86,194,113,0.12);
-    }
-    .sb-logo {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, #56c271, #2d7a38);
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .sb-logo svg { width: 22px; height: 22px; }
-    .sb-name  { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
+    /* ── SIDEBAR (theme-standard) ── */
+    .sidebar { width: 240px; background: var(--g-dark); display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top:0; bottom:0; left:0; z-index:100; }
+    .sb-brand { display: flex; align-items: center; gap: 12px; padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(86,194,113,.12); }
+    .sb-logo { width: 40px; height: 40px; background: linear-gradient(135deg,#56c271,#2d7a38); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
     .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: .8px; text-transform: uppercase; }
-
     .sb-nav { flex: 1; padding: 1rem .75rem; overflow-y: auto; }
-    .nav-label {
-      font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
-      color: #3d5c3f; padding: .5rem .5rem .35rem; margin-top: .5rem;
-    }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border-radius: var(--r-sm);
-      color: #7a9a7c; font-size: 14px; font-weight: 400;
-      cursor: pointer; transition: all var(--ease);
-      margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left;
-    }
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: .5rem .5rem .35rem; margin-top: .5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); color: #7a9a7c; font-size: 14px; cursor: pointer; transition: all .22s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-b); }
     .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .nav-item:hover  { background: rgba(86,194,113,.08); color: #c8e6c9; }
+    .nav-item:hover { background: rgba(86,194,113,.08); color: #c8e6c9; }
     .nav-item.active { background: rgba(86,194,113,.14); color: var(--g-bright); font-weight: 500; }
-    .nav-badge {
-      margin-left: auto; background: var(--g-mid);
-      color: #fff; font-size: 10px; font-weight: 500;
-      padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center;
-    }
-    .sb-user {
-      padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,.12);
-      display: flex; align-items: center; gap: 10px;
-    }
-    .sb-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, #2d7a38, #56c271);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0;
-    }
-    .sb-user-name  { font-size: 13px; color: #c8e6c9; font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+    .sb-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,.12); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#2d7a38,#56c271); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
+    .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
     .sb-user-class { font-size: 11px; color: #5a7a5c; }
 
-    /* ══════════════════════════════════
-       MAIN SHELL
-    ══════════════════════════════════ */
-    .main { margin-left: 240px; min-height: 100vh; }
-
-    .topbar {
-      background: #fff; border-bottom: 1px solid var(--g-border);
-      padding: 0 2rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 50;
-    }
-    .topbar-left { display: flex; flex-direction: column; }
-    .topbar-greeting { font-size: 13px; color: var(--g-muted); display: flex; align-items: center; gap: 6px; }
-    .topbar-greeting a { color: var(--g-mid); text-decoration: none; font-weight: 500; }
-    .topbar-greeting a:hover { text-decoration: underline; }
-    .topbar-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); line-height: 1.2; }
+    /* ── MAIN ── */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .topbar { background: #fff; border-bottom: 1px solid var(--g-border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .back-btn { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--r-sm); border: 1px solid var(--g-border); background: #fff; color: var(--g-sub); font-family: var(--font-b); font-size: 13px; cursor: pointer; transition: all .22s; }
+    .back-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
     .topbar-right { display: flex; align-items: center; gap: 10px; }
-    .tb-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease); border: 1px solid var(--g-border);
-      background: #fff; color: var(--g-sub);
-    }
-    .tb-btn svg { width: 14px; height: 14px; }
-    .tb-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
-    .tb-btn.primary { background: var(--g-bright); color: var(--g-dark); border-color: var(--g-bright); }
-    .tb-btn.primary:hover { background: #46b261; }
 
-    /* ══════════════════════════════════
-       CONTENT + LAYOUT
-    ══════════════════════════════════ */
-    .content { padding: 2rem; display: grid; grid-template-columns: 1fr 260px; gap: 1.75rem; max-width: 1200px; }
+    /* ── XP STREAK TOPBAR ── */
+    .xp-pill { display: flex; align-items: center; gap: 6px; background: #eaf3de; border: 1px solid #c0dd97; border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--g-mid); }
+    .streak-pill { display: flex; align-items: center; gap: 5px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: #d97706; }
 
-    /* ── LESSON HERO BANNER ── */
-    .lesson-hero {
-      background: var(--g-dark);
-      border-radius: var(--r-xl); padding: 2rem 2.5rem;
-      position: relative; overflow: hidden;
-      grid-column: 1 / -1;
-      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
-    }
-    .lesson-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.05' transform='rotate(30 40 40)'/%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.05' transform='rotate(90 40 40)'/%3E%3C/svg%3E");
-      background-size: 80px 80px;
-    }
-    .hero-left { position: relative; flex: 1; }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(86,194,113,.12); border: 1px solid rgba(86,194,113,.2);
-      border-radius: 20px; padding: 4px 12px;
-      font-size: 11px; color: var(--g-bright); letter-spacing: .8px;
-      text-transform: uppercase; margin-bottom: .75rem;
-    }
-    .hero-eyebrow span { width: 5px; height: 5px; border-radius: 50%; background: var(--g-bright); animation: pulse 2s infinite; }
-    .lesson-hero h1 { font-family: var(--font-d); font-size: 28px; color: #e8f5e9; line-height: 1.2; margin-bottom: .4rem; }
-    .lesson-hero h1 em { color: var(--g-bright); font-style: italic; }
-    .hero-chapter { font-size: 13px; color: var(--g-bright); font-weight: 500; margin-bottom: .75rem; }
-    .hero-desc { font-size: 13.5px; color: #7a9a7c; line-height: 1.65; max-width: 520px; margin-bottom: 1.25rem; }
-    .hero-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.25rem; }
-    .hero-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(86,194,113,.1); border: 1px solid rgba(86,194,113,.18);
-      border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--g-bright);
-    }
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .h-btn {
-      padding: 10px 20px; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease); border: none;
-    }
-    .h-btn.solid   { background: var(--g-bright); color: var(--g-dark); }
-    .h-btn.solid:hover { background: #46b261; }
-    .h-btn.outline { background: transparent; border: 1px solid rgba(86,194,113,.3); color: var(--g-bright); }
-    .h-btn.outline:hover { background: rgba(86,194,113,.08); }
+    /* ── LEVEL PROGRESS BAR (Duolingo-style) ── */
+    .level-track { background: #fff; border-bottom: 1px solid var(--g-border); padding: .75rem 2rem; display: flex; align-items: center; gap: 14px; }
+    .lev-label { font-size: 11px; font-weight: 700; color: var(--g-mid); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+    .lev-bar { flex: 1; height: 10px; background: #e8f5e9; border-radius: 5px; overflow: hidden; }
+    .lev-fill { height: 100%; background: linear-gradient(90deg, #56c271, #2d7a38); border-radius: 5px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .lev-pts { font-size: 12px; color: var(--g-muted); white-space: nowrap; }
 
-    /* Progress ring */
-    .hero-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative; z-index: 1; }
-    .prog-ring { width: 110px; height: 110px; position: relative; display: flex; align-items: center; justify-content: center; }
-    .prog-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-    .prog-inner { text-align: center; position: relative; z-index: 1; }
-    .prog-pct { font-family: var(--font-d); font-size: 24px; color: var(--g-bright); line-height: 1; }
-    .prog-lbl { font-size: 10px; color: #5a7a5c; text-transform: uppercase; letter-spacing: .7px; margin-top: 2px; }
-    .hero-stats { display: flex; flex-direction: column; gap: 7px; }
-    .h-stat {
-      background: rgba(86,194,113,.07); border: 1px solid rgba(86,194,113,.15);
-      border-radius: 10px; padding: .5rem .9rem;
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: #7a9a7c;
-    }
-    .h-stat strong { color: var(--g-bright); }
+    /* ── CONTENT ── */
+    .content { padding: 2rem; max-width: 960px; margin: 0 auto; width: 100%; }
 
-    /* ══════════════════════════════════
-       LEFT MAIN COLUMN
-    ══════════════════════════════════ */
-    .main-col { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+    /* ── LESSON HEADER ── */
+    .lesson-hero { background: var(--g-dark); border-radius: var(--r-xl); padding: 2rem 2.5rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+    .lesson-hero::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='22' fill='none' stroke='%2356c271' stroke-opacity='0.06' stroke-width='1'/%3E%3C/svg%3E"); background-size: 80px 80px; }
+    .lesson-hero-content { position: relative; z-index: 2; }
+    .lesson-breadcrumb { font-size: 12px; color: #5a7a5c; margin-bottom: .6rem; display: flex; align-items: center; gap: 6px; }
+    .lh-title { font-family: var(--font-d); font-size: 36px; color: #e8f5e9; line-height: 1.1; margin-bottom: .35rem; }
+    .lh-sub { font-size: 15px; color: #7a9a7c; margin-bottom: 1.25rem; }
+    .lh-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .lh-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5a7a5c; }
 
-    /* ── Section card ── */
-    .section-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-xl); padding: 1.75rem 2rem;
-      animation: fadeUp .45s ease both;
-    }
-    .section-card:nth-child(2) { animation-delay: .08s; }
-    .section-card:nth-child(3) { animation-delay: .14s; }
-    .section-card:nth-child(4) { animation-delay: .20s; }
-    .section-card:nth-child(5) { animation-delay: .26s; }
+    /* ── SECTION TABS (Byjus-inspired) ── */
+    .section-tabs { display: flex; gap: 4px; background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-md); padding: 4px; margin-bottom: 1.5rem; }
+    .stab { flex: 1; padding: 9px 16px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--g-muted); transition: all .22s; text-align: center; }
+    .stab.active { background: var(--g-mid); color: #fff; box-shadow: 0 2px 8px rgba(45,122,56,.25); }
+    .stab:not(.active):hover { background: var(--g-pale); color: var(--g-text); }
 
-    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
-    .card-icon {
-      width: 38px; height: 38px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .card-icon svg { width: 20px; height: 20px; }
-    .card-header h2 { font-family: var(--font-d); font-size: 18px; color: var(--g-text); }
-    .card-header h2 small { font-family: var(--font-b); font-size: 11px; font-weight: 400; color: var(--g-muted); display: block; margin-top: 1px; letter-spacing: .4px; }
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; } .tab-panel.active { display: block; }
 
-    /* Body text */
-    .prose p {
-      font-size: 13.5px; line-height: 1.8; color: #2e4830; margin-bottom: .9rem;
-    }
-    .prose p:last-child { margin-bottom: 0; }
-    .prose strong { color: var(--g-text); font-weight: 500; }
+    /* ── VIDEO PLAYER BLOCK ── */
+    .video-block { background: #000; border-radius: var(--r-xl); overflow: hidden; margin-bottom: 1.5rem; position: relative; aspect-ratio: 16/9; }
+    .video-block iframe { width: 100%; height: 100%; border: none; }
 
-    /* Sub-heading inside cards */
-    .sub-h {
-      font-family: var(--font-d); font-size: 15px; color: var(--g-text);
-      margin: 1.25rem 0 .5rem; border-left: 3px solid var(--g-bright);
-      padding-left: .75rem;
-    }
+    /* ── LESSON LEVEL PATH (Duolingo path) ── */
+    .level-path { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+    
+    .level-node { display: flex; align-items: center; gap: 1.25rem; }
+    .ln-connector { width: 3px; height: 40px; background: var(--g-border); border-radius: 2px; margin-left: 28px; }
+    .ln-connector.done { background: var(--g-bright); }
+    
+    .ln-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 3px solid var(--g-border); background: #fff; font-size: 24px; position: relative; cursor: pointer; transition: all .22s; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .ln-circle:hover { transform: scale(1.05); }
+    .ln-circle.done { border-color: var(--g-bright); background: #eaf3de; }
+    .ln-circle.active-node { border-color: var(--g-mid); background: var(--g-mid); animation: bounce 1.5s ease-in-out infinite; }
+    .ln-circle.locked { border-color: #ddd; background: #f5f5f5; opacity: .6; cursor: not-allowed; }
+    .ln-check { position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px; border-radius: 50%; background: var(--g-bright); border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    
+    .ln-info { flex: 1; }
+    .ln-title { font-size: 16px; font-weight: 600; color: var(--g-text); margin-bottom: 3px; }
+    .ln-sub { font-size: 12.5px; color: var(--g-muted); }
+    .ln-xp { font-size: 12px; font-weight: 700; color: var(--g-mid); background: #eaf3de; padding: 3px 10px; border-radius: 12px; margin-top: 5px; display: inline-block; }
 
-    /* Callout box */
-    .callout {
-      background: var(--g-pale); border: 1px solid var(--g-border);
-      border-left: 4px solid var(--g-bright);
-      border-radius: 0 var(--r-md) var(--r-md) 0;
-      padding: 1rem 1.25rem; margin: 1.1rem 0;
-      font-size: 13px; color: var(--g-sub); line-height: 1.7;
-    }
-    .callout strong { color: var(--g-text); }
-    .callout.amber { background: var(--amber-bg); border-color: var(--amber-bdr); border-left-color: var(--amber); color: #7a5a0a; }
-    .callout.amber strong { color: #4a3600; }
-    .callout.blue  { background: var(--blue-bg); border-color: var(--blue-bdr); border-left-color: var(--blue); color: #1a3d6a; }
-    .callout.blue strong { color: #0c2a52; }
+    /* ── FACT CARDS (Brilliantly-inspired) ── */
+    .facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .fact-card { background: #fff; border: 1.5px solid var(--g-border); border-radius: var(--r-lg); padding: 1.5rem; cursor: pointer; transition: all .22s; position: relative; overflow: hidden; }
+    .fact-card:hover { border-color: var(--g-bright); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45,122,56,.1); }
+    .fact-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+    .fact-card.green::before { background: var(--g-bright); }
+    .fact-card.blue::before { background: #3b82f6; }
+    .fact-card.amber::before { background: #f59e0b; }
+    .fact-card.purple::before { background: #8b5cf6; }
+    .fact-icon { font-size: 32px; margin-bottom: .75rem; }
+    .fact-stat { font-family: var(--font-d); font-size: 28px; color: var(--g-text); margin-bottom: .25rem; }
+    .fact-label { font-size: 13px; color: var(--g-muted); line-height: 1.5; }
 
-    /* Fact chips row */
-    .fact-row {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: .75rem; margin: 1rem 0;
-    }
-    .fact-chip {
-      background: var(--g-pale); border: 1px solid var(--g-border);
-      border-radius: var(--r-md); padding: .9rem .75rem; text-align: center;
-    }
-    .fact-chip .fc-val { font-family: var(--font-d); font-size: 1.4rem; color: var(--g-mid); display: block; }
-    .fact-chip .fc-lbl { font-size: 10.5px; color: var(--g-muted); margin-top: 3px; display: block; line-height: 1.4; }
+    /* ── QUIZ SECTION ── */
+    .quiz-section { background: #fff; border: 1.5px solid var(--g-border); border-radius: var(--r-xl); padding: 2rem; }
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--g-border); }
+    .quiz-title { font-family: var(--font-d); font-size: 22px; color: var(--g-text); }
+    .quiz-score-badge { background: var(--g-mid); color: #fff; padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
 
-    /* Forest types grid */
-    .forest-types { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin: 1rem 0; }
-    .ft-card {
-      border: 1px solid var(--g-border); border-radius: var(--r-md);
-      padding: 1rem 1.1rem; transition: border-color var(--ease), transform var(--ease);
-    }
-    .ft-card:hover { border-color: var(--g-bright); transform: translateY(-2px); }
-    .ft-card h4 {
-      font-family: var(--font-d); font-size: 14px; color: var(--g-text);
-      margin-bottom: .35rem; display: flex; align-items: center; gap: 7px;
-    }
-    .ft-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-    .ft-card p { font-size: 12.5px; color: var(--g-muted); line-height: 1.6; }
-    .ft-eg { font-size: 11.5px; color: var(--g-mid); margin-top: .4rem; font-weight: 500; }
+    .question-block { margin-bottom: 2rem; }
+    .q-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g-muted); margin-bottom: .5rem; }
+    .q-text { font-size: 17px; font-weight: 500; color: var(--g-text); margin-bottom: 1rem; line-height: 1.5; }
+    
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .opt { padding: 14px 18px; border-radius: var(--r-md); border: 2px solid var(--g-border); background: #fff; font-family: var(--font-b); font-size: 14px; color: var(--g-text); cursor: pointer; transition: all .2s; text-align: left; display: flex; align-items: center; gap: 10px; }
+    .opt:hover { border-color: var(--g-bright); background: #f0fdf4; }
+    .opt.selected { border-color: var(--g-mid); background: #eaf3de; }
+    .opt.correct { border-color: #22c55e; background: #f0fdf4; color: #166534; }
+    .opt.wrong { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+    .opt-letter { width: 28px; height: 28px; border-radius: 8px; background: var(--g-pale); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .opt.correct .opt-letter { background: #22c55e; color: #fff; }
+    .opt.wrong .opt-letter { background: #ef4444; color: #fff; }
 
-    /* Layers table */
-    .layer-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 13px; }
-    .layer-table th {
-      background: var(--g-deep); color: #c8e6c9;
-      padding: 10px 12px; text-align: left; font-weight: 500; font-size: 12px;
-    }
-    .layer-table th:first-child { border-radius: var(--r-sm) 0 0 0; }
-    .layer-table th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
-    .layer-table td { padding: 9px 12px; border-bottom: 1px solid #eef4ee; color: #2e4830; }
-    .layer-table tr:nth-child(even) td { background: var(--g-pale); }
-    .layer-table tr:last-child td { border-bottom: none; }
+    .q-feedback { padding: 12px 16px; border-radius: var(--r-md); margin-top: 1rem; font-size: 14px; display: none; }
+    .q-feedback.correct { background: #f0fdf4; border: 1px solid #22c55e; color: #166534; }
+    .q-feedback.wrong { background: #fef2f2; border: 1px solid #ef4444; color: #991b1b; }
 
-    /* Notes grid */
-    .notes-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: .9rem; margin-top: .75rem; }
-    .note-item {
-      background: var(--g-pale); border: 1px solid var(--g-border);
-      border-radius: var(--r-md); padding: .95rem 1rem;
-      position: relative; overflow: hidden;
-    }
-    .note-item::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 4px; background: var(--g-bright); border-radius: 4px 0 0 4px;
-    }
-    .note-item h4 { font-size: 12px; font-weight: 500; color: var(--g-mid); margin-bottom: 4px; }
-    .note-item p  { font-size: 12px; color: var(--g-sub); line-height: 1.6; }
-    .note-item.amber::before { background: var(--amber); }
-    .note-item.blue::before  { background: var(--blue); }
-    .note-item.coral::before { background: var(--coral); }
+    .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--g-border); }
+    .q-btn { padding: 11px 24px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all .22s; }
+    .q-btn.primary { background: var(--g-mid); color: #fff; box-shadow: 0 4px 12px rgba(45,122,56,.3); }
+    .q-btn.primary:hover { background: #236030; transform: translateY(-1px); }
+    .q-btn.secondary { background: #fff; border: 1px solid var(--g-border); color: var(--g-sub); }
+    .q-btn.secondary:hover { border-color: var(--g-bright); color: var(--g-mid); }
+    .q-progress-dots { display: flex; gap: 6px; }
+    .q-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--g-border); transition: all .3s; }
+    .q-dot.answered { background: var(--g-bright); }
+    .q-dot.current { background: var(--g-mid); }
 
-    /* ── VIDEO GRID ── */
-    .video-grid { display: flex; flex-direction: column; gap: .85rem; margin-top: .5rem; }
-    .video-card {
-      background: var(--g-dark); border: 1px solid rgba(86,194,113,.15);
-      border-radius: var(--r-lg); overflow: hidden;
-      display: flex; align-items: stretch;
-      text-decoration: none; transition: all var(--ease);
-    }
-    .video-card:hover { border-color: var(--g-bright); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13,31,15,.25); }
-    .video-thumb {
-      width: 120px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden;
-    }
-    .play-icon {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(255,255,255,.9);
-      display: flex; align-items: center; justify-content: center;
-      font-size: .9rem; color: var(--g-mid); flex-shrink: 0;
-      transition: transform var(--ease);
-    }
-    .video-card:hover .play-icon { transform: scale(1.12); }
-    .video-info { padding: .9rem 1rem; flex: 1; }
-    .vi-class  { font-size: 10.5px; color: var(--g-bright); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 3px; }
-    .vi-title  { font-size: 13.5px; color: #e8f5e9; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
-    .vi-meta   { font-size: 11.5px; color: #5a7a5c; }
-    .vi-tag    { display: inline-block; margin-top: 5px; background: rgba(86,194,113,.15); color: var(--g-bright); font-size: 10.5px; padding: 2px 8px; border-radius: 10px; }
+    /* ── CREDITS SECTION ── */
+    .credits-card { background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl); padding: 2rem; }
+    .credit-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f4f0; }
+    .credit-row:last-of-type { border-bottom: none; }
+    .credit-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .credit-info strong { display: block; font-size: 14px; color: var(--g-text); }
+    .credit-info span { font-size: 12px; color: var(--g-muted); }
 
-    /* ── QUIZ PROMPT ── */
-    .quiz-prompt {
-      background: linear-gradient(135deg, #0d2b10, #1a3d1c);
-      border: 1px solid rgba(86,194,113,.2);
-      border-radius: var(--r-xl); padding: 1.5rem 1.75rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-      flex-wrap: wrap; margin-top: .5rem;
-    }
-    .qp-label { font-size: 10.5px; color: var(--g-bright); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
-    .qp-title { font-family: var(--font-d); font-size: 17px; color: #e8f5e9; margin-bottom: 3px; }
-    .qp-sub   { font-size: 12.5px; color: #7a9a7c; }
-    .qp-btn {
-      padding: 11px 22px; background: var(--g-bright); color: var(--g-dark);
-      border: none; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease); white-space: nowrap;
-    }
-    .qp-btn:hover { background: #46b261; }
+    /* ── COMPLETION BANNER ── */
+    .completion-banner { background: linear-gradient(135deg, var(--g-mid), #236030); border-radius: var(--r-xl); padding: 2rem; color: #fff; text-align: center; display: none; }
+    .cb-emoji { font-size: 48px; margin-bottom: .75rem; }
+    .cb-title { font-family: var(--font-d); font-size: 28px; margin-bottom: .5rem; }
+    .cb-sub { font-size: 14px; color: #c8e6c9; margin-bottom: 1.5rem; }
+    .cb-actions { display: flex; gap: 10px; justify-content: center; }
+    .cb-btn { padding: 11px 24px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all .22s; }
+    .cb-btn.primary-cb { background: #fff; color: var(--g-mid); }
+    .cb-btn.secondary-cb { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #fff; }
 
-    /* ══════════════════════════════════
-       RIGHT SIDEBAR COLUMN
-    ══════════════════════════════════ */
-    .side-col { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 80px; align-self: start; }
-
-    .side-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-xl); padding: 1.25rem;
-    }
-    .side-title {
-      font-size: 10.5px; font-weight: 500; letter-spacing: 1.2px;
-      text-transform: uppercase; color: var(--g-muted); margin-bottom: 1rem;
-    }
-
-    /* TOC */
-    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-    .toc-list li a {
-      display: block; padding: 8px 10px; border-radius: var(--r-sm);
-      font-size: 13px; color: var(--g-sub); text-decoration: none;
-      border-left: 3px solid transparent; transition: all var(--ease);
-    }
-    .toc-list li a:hover  { background: var(--g-pale); border-left-color: var(--g-bright); color: var(--g-text); }
-    .toc-list li a.active { background: var(--g-light); border-left-color: var(--g-bright); color: var(--g-mid); font-weight: 500; }
-
-    /* XP card */
-    .xp-card {
-      background: var(--g-dark); border-radius: var(--r-lg);
-      padding: 1.25rem; text-align: center; border: 1px solid rgba(86,194,113,.2);
-    }
-    .xp-val   { font-family: var(--font-d); font-size: 2rem; color: var(--g-bright); }
-    .xp-label { font-size: 11px; color: #5a7a5c; margin-top: 3px; }
-    .xp-btn   {
-      margin-top: .9rem; width: 100%;
-      background: var(--g-bright); color: var(--g-dark);
-      border: none; padding: 9px; border-radius: var(--r-sm);
-      font-weight: 500; font-size: 13px; cursor: pointer;
-      transition: all var(--ease);
-    }
-    .xp-btn:hover { background: #46b261; transform: scale(1.02); }
-
-    /* Vocab list */
-    .vocab-list { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
-    .vocab-list li { font-size: 12.5px; display: flex; flex-direction: column; gap: 1px; padding-bottom: .6rem; border-bottom: 1px solid #f0f4f0; }
-    .vocab-list li:last-child { border-bottom: none; padding-bottom: 0; }
-    .vterm { font-weight: 500; color: var(--g-mid); }
-    .vdef  { color: var(--g-muted); font-size: 12px; line-height: 1.5; }
-
-    /* Linked task card */
-    .task-teaser {
-      background: var(--amber-bg); border: 1px solid var(--amber-bdr);
-      border-radius: var(--r-lg); padding: 1rem 1.1rem;
-    }
-    .task-teaser .tt-label { font-size: 10.5px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 5px; }
-    .task-teaser h4 { font-family: var(--font-d); font-size: 14px; color: #5a3a00; margin-bottom: 4px; }
-    .task-teaser p  { font-size: 12px; color: #7a5a10; line-height: 1.6; margin-bottom: .75rem; }
-    .task-teaser .tt-btn {
-      width: 100%; background: var(--amber); color: #fff; border: none;
-      padding: 8px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease);
-    }
-    .task-teaser .tt-btn:hover { background: #d97706; }
-
-    /* ── ANIMATIONS ── */
-    @keyframes pulse   { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-    @keyframes fadeUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1024px) {
-      .content { grid-template-columns: 1fr; }
-      .side-col { position: static; }
-      .fact-row { grid-template-columns: repeat(2,1fr); }
-      .hero-right { display: none; }
-    }
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .main { margin-left: 0; }
-      .content { padding: 1.25rem; }
-      .forest-types { grid-template-columns: 1fr; }
-      .notes-grid   { grid-template-columns: 1fr; }
-    }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .animate { animation: fadeUp 0.45s ease both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.12s} .d3{animation-delay:.2s}
   </style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
   <div class="sb-brand">
-    <div class="sb-logo">
-      <svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
-    </div>
-    <div>
-      <div class="sb-name">EcoQuest</div>
-      <div class="sb-tagline">Eco Learning</div>
-    </div>
+    <div class="sb-logo"><svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+    <div><div class="sb-name">EcoQuest</div><div class="sb-tagline">Eco Learning</div></div>
   </div>
-
   <nav class="sb-nav">
     <div class="nav-label">Main</div>
-    <button class="nav-item ${activeFilename === 'page2.html' ? 'active' : ''}" onclick="window.location.href='page2.html'">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
-      Dashboard
-    </button>
-    <button class="nav-item ${(activeFilename === 'page3.html' || activeFilename === 'lesson-forests-detail.html') ? 'active' : ''}" onclick="window.location.href='page3.html'">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Lessons
-    </button>
-    <button class="nav-item ${activeFilename === 'page4.html' ? 'active' : ''}" onclick="window.location.href='page4.html'">
-      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
-      Quizzes
-    </button>
-    <button class="nav-item ${activeFilename === 'tasks.html' ? 'active' : ''}" onclick="window.location.href='tasks.html'">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Tasks
-    </button>
-
+    <button class="nav-item" onclick="window.location.href='page2.html'"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Dashboard</button>
+    <button class="nav-item active" onclick="window.location.href='page3.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Lessons</button>
+    <button class="nav-item" onclick="window.location.href='page4.html'"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>Quizzes</button>
+    <button class="nav-item" onclick="window.location.href='tasks.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Tasks</button>
     <div class="nav-label" style="margin-top:1rem;">Community</div>
-    <button class="nav-item ${activeFilename === 'ecoquest-leaderboard.html' ? 'active' : ''}" onclick="window.location.href='ecoquest-leaderboard.html'">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-      Leaderboard
-    </button>
-    <button class="nav-item ${activeFilename === 'ngo-tasks.html' ? 'active' : ''}" onclick="window.location.href='ngo-tasks.html'">
-      <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      NGO Tasks
-      <span class="nav-badge" style="background:#f59e0b;">2</span>
-    </button>
-
+    <button class="nav-item" onclick="window.location.href='ecoquest-leaderboard.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Leaderboard</button>
+    <button class="nav-item" onclick="window.location.href='ngo-tasks.html'"><svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>NGO Tasks<span class="nav-badge" style="background:#f59e0b;">2</span></button>
     <div class="nav-label" style="margin-top:1rem;">My Account</div>
-    <button class="nav-item ${activeFilename === 'tasks-upload.html' ? 'active' : ''}" onclick="window.location.href='tasks-upload.html'">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
-      Upload Proof
-    </button>
-    <button class="nav-item ${activeFilename === 'profile.html' ? 'active' : ''}" onclick="window.location.href='profile.html'">
-      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Profile
-    </button>
+    <button class="nav-item" onclick="window.location.href='tasks-upload.html'"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>Upload Proof</button>
+    <button class="nav-item" onclick="window.location.href='profile.html'"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Profile</button>
   </nav>
-
   <div class="sb-user">
     <div class="sb-avatar">..</div>
-    <div>
-      <div class="sb-user-name">Loading...</div>
-      <div class="sb-user-class">Loading...</div>
-    </div>
+    <div><div class="sb-user-name">Loading...</div><div class="sb-user-class">Loading...</div></div>
   </div>
 </aside>
 
-<!-- ═══ MAIN ═══ -->
 <div class="main">
-  <!-- TOPBAR -->
   <header class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-greeting">
-        <a href="#">Lessons</a>
-        <svg viewBox="0 0 12 12" width="10" height="10" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        <span>Forests: Our Lifeline</span>
-      </div>
-      <div class="topbar-title">Chapter 17 — NCERT Science Class 7</div>
-    </div>
+    <button class="back-btn" onclick="window.location.href='page3.html'">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All Lessons
+    </button>
     <div class="topbar-right">
-      <button class="tb-btn">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Download Notes
-      </button>
-      <button class="tb-btn primary" onclick="markComplete()">Mark Complete +100 XP</button>
+      <div class="streak-pill">🔥 5-day streak</div>
+      <div class="xp-pill">⚡ 1,240 XP</div>
     </div>
   </header>
 
+  <!-- LEVEL PROGRESS BAR -->
+  <div class="level-track">
+    <div class="lev-label">Level 3 · Explorer</div>
+    <div class="lev-bar"><div class="lev-fill" id="mainLevFill" style="width:0%"></div></div>
+    <div class="lev-pts">640 / 1,000 XP to Level 4</div>
+  </div>
+
   <div class="content">
 
-    <!-- ═══ HERO BANNER ═══ -->
-    <div class="lesson-hero">
-      <div class="hero-left">
-        <div class="hero-eyebrow"><span></span> Chapter 17 · NCERT Science</div>
-        <h1>Forests: <em>Our Lifeline</em></h1>
-        <div class="hero-chapter">NCERT Science · Class 7 · Chapter 17 &nbsp;|&nbsp; SSC Maharashtra · Class 7 Science</div>
-        <p class="hero-desc">Forests are among Earth's most vital ecosystems, supporting millions of species and regulating the climate. This chapter explores the layered structure of forests, food webs, the water cycle, decomposers, and the urgent crisis of deforestation — all mapped to your NCERT and SSC textbooks.</p>
-        <div class="hero-pills">
-          <span class="hero-pill">🌳 Ecosystems</span>
-          <span class="hero-pill">🔗 Food Chains</span>
-          <span class="hero-pill">💧 Water Cycle</span>
-          <span class="hero-pill">🦠 Decomposers</span>
-          <span class="hero-pill">🌿 Biodiversity</span>
-          <span class="hero-pill">⚠️ Deforestation</span>
+    <!-- LESSON HERO -->
+    <div class="lesson-hero animate d1">
+      <div class="lesson-hero-content">
+        <div class="lesson-breadcrumb">
+          <svg viewBox="0 0 14 14" fill="none" width="12"><path d="M2 2h6l3 3v7H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          Class 7 · NCERT Science · Chapter 17
         </div>
-        <div class="hero-actions">
-          <button class="h-btn solid" onclick="document.getElementById('sec-intro').scrollIntoView({behavior:'smooth'})">Start Reading ↓</button>
-          <button class="h-btn outline" onclick="document.getElementById('sec-videos').scrollIntoView({behavior:'smooth'})">Watch Videos 🎥</button>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="prog-ring">
-          <svg viewBox="0 0 110 110">
-            <circle cx="55" cy="55" r="47" stroke="rgba(86,194,113,0.12)" stroke-width="8" fill="none"/>
-            <circle cx="55" cy="55" r="47" stroke="#56c271" stroke-width="8" fill="none" stroke-dasharray="295" stroke-dashoffset="44" stroke-linecap="round" id="progRing"/>
-          </svg>
-          <div class="prog-inner">
-            <div class="prog-pct">85%</div>
-            <div class="prog-lbl">Complete</div>
-          </div>
-        </div>
-        <div class="hero-stats">
-          <div class="h-stat">⏱ <strong>~25 min</strong> remaining</div>
-          <div class="h-stat">⭐ Earn <strong>+100 XP</strong></div>
-          <div class="h-stat">📋 <strong>2 tasks</strong> linked</div>
+        <h1 class="lh-title">Forests: Our Lifeline</h1>
+        <p class="lh-sub">Ecosystems, food chains, biodiversity and the water cycle</p>
+        <div class="lh-meta">
+          <div class="lh-meta-item"><svg viewBox="0 0 16 16" fill="none" width="14"><circle cx="8" cy="8" r="6" stroke="#56c271" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="#56c271" stroke-width="1.3" stroke-linecap="round"/></svg><span>~35 min</span></div>
+          <div class="lh-meta-item"><svg viewBox="0 0 16 16" fill="none" width="14"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" fill="#56c271"/></svg><span>+100 XP on completion</span></div>
+          <div class="lh-meta-item" style="color:#fbbf24;">⚡ 3 levels · 1 quiz · 2 NGO tasks</div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ LEFT / MAIN COLUMN ═══ -->
-    <div class="main-col">
+    <!-- TABS -->
+    <div class="section-tabs animate d2">
+      <button class="stab active" onclick="switchTab('learn', this)" id="tab-learn">📚 Learn</button>
+      <button class="stab" onclick="switchTab('quiz', this)" id="tab-quiz">🎯 Quiz</button>
+      <button class="stab" onclick="switchTab('credits', this)" id="tab-credits">📝 Credits</button>
+    </div>
 
-      <!-- 1. INTRODUCTION -->
-      <div class="section-card" id="sec-intro">
-        <div class="card-header">
-          <div class="card-icon" style="background:#eaf3de;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 2C10 2 4 6.5 4 12a6 6 0 0012 0C16 6.5 10 2 10 2z" fill="#56c271" opacity="0.35" stroke="#2d7a38" stroke-width="1.3"/><path d="M10 9v6" stroke="#2d7a38" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <h2>What Is a Forest?
-            <small>NCERT Class 7 Ch. 17 · SSC Maharashtra Class 7 Science</small>
-          </h2>
+    <!-- ═══ LEARN TAB ═══ -->
+    <div class="tab-panel active animate d3" id="panel-learn">
+
+      <!-- VIDEO -->
+      <div class="video-block">
+        <iframe src="https://www.youtube.com/embed/K3oUTKr25ic" title="Forests Our Lifeline NCERT Class 7 Science" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <!-- FAST FACTS -->
+      <h2 style="font-family:var(--font-d);font-size:22px;color:var(--g-text);margin-bottom:1rem;">Key Facts</h2>
+      <div class="facts-grid" style="margin-bottom:2rem;">
+        <div class="fact-card green">
+          <div class="fact-icon">🌲</div>
+          <div class="fact-stat">31%</div>
+          <div class="fact-label">of Earth's land area is covered by forests</div>
         </div>
-        <div class="prose">
-          <p>A <strong>forest</strong> is a large, densely wooded area that forms a complex, self-sustaining ecosystem. Forests are not merely collections of trees — they are intricate communities of producers, consumers, and decomposers that interact continuously with one another and with the non-living environment (soil, water, sunlight, and air).</p>
-          <p>According to your <strong>NCERT Science Class 7 textbook (Chapter 17)</strong>, a forest is described as a system where plants, animals, and micro-organisms live together, each depending on the others. This interdependence is what keeps the forest healthy and self-renewing. The same concept appears in the <strong>SSC Maharashtra Board Class 7 Science</strong> chapter on "Natural Resources and their Conservation."</p>
-          <div class="callout">
-            <strong>📖 Textbook Reference (NCERT Class 7 Science, Ch. 17):</strong> "A forest is a system in which plants, animals, and micro-organisms live together and depend on each other for their needs. It is a biotic community consisting of producers, consumers, and decomposers."
-          </div>
+        <div class="fact-card blue">
+          <div class="fact-icon">🦋</div>
+          <div class="fact-stat">80%</div>
+          <div class="fact-label">of all land species live in forests</div>
         </div>
-        <div class="fact-row">
-          <div class="fact-chip"><span class="fc-val">21%</span><span class="fc-lbl">of India's total land area is forested</span></div>
-          <div class="fact-chip"><span class="fc-val">5,000+</span><span class="fc-lbl">plant species in India's forests</span></div>
-          <div class="fact-chip"><span class="fc-val">90,000+</span><span class="fc-lbl">animal species supported</span></div>
-          <div class="fact-chip"><span class="fc-val">300M+</span><span class="fc-lbl">people depend on forests in India</span></div>
+        <div class="fact-card amber">
+          <div class="fact-icon">💧</div>
+          <div class="fact-stat">40%</div>
+          <div class="fact-label">of fresh water is sourced from forested watersheds</div>
+        </div>
+        <div class="fact-card purple">
+          <div class="fact-icon">🍂</div>
+          <div class="fact-stat">10T</div>
+          <div class="fact-label">tonnes of CO₂ absorbed by forests every year</div>
         </div>
       </div>
 
-      <!-- 2. TYPES -->
-      <div class="section-card" id="sec-types">
-        <div class="card-header">
-          <div class="card-icon" style="background:#eff6ff;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="10" cy="10" r="8" stroke="#3b82f6" stroke-width="1.3" fill="#3b82f6" opacity="0.15"/><path d="M10 6v8M7 9l3-3 3 3" stroke="#3b82f6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <!-- LEVEL PATH (Duolingo-style) -->
+      <h2 style="font-family:var(--font-d);font-size:22px;color:var(--g-text);margin-bottom:1.25rem;">Your Learning Path</h2>
+      <div class="level-path">
+
+        <!-- Level 1 — Done -->
+        <div class="level-node">
+          <div class="ln-circle done" onclick="alert('Great! You already completed Level 1 🎉 Tap the next level to continue!')">
+            🌱
+            <div class="ln-check">✓</div>
           </div>
-          <h2>Types of Forests in India
-            <small>NCERT Geography Class 9, Ch. 5 · SSC Geography Class 8–9</small>
-          </h2>
-        </div>
-        <div class="prose">
-          <p>India's forests are classified into five main types based on climate, rainfall, and altitude. This classification is covered in <strong>NCERT Geography Class 9 (Chapter 5 — Natural Vegetation and Wildlife)</strong> and <strong>SSC Maharashtra Board Geography (Classes 8–9)</strong>.</p>
-        </div>
-        <div class="forest-types">
-          <div class="ft-card">
-            <h4>🌧️ Tropical Evergreen Forests <span class="ft-badge" style="background:#eaf3de;color:#27500a;">Heavy rainfall</span></h4>
-            <p>Found in Western Ghats, northeast India (Assam, Meghalaya), and Andaman &amp; Nicobar. Receive over 200 cm of annual rainfall. Trees never shed all leaves at once.</p>
-            <div class="ft-eg">📌 Example species: Rosewood, Mahogany, Ebony</div>
-          </div>
-          <div class="ft-card">
-            <h4>🍂 Tropical Deciduous Forests <span class="ft-badge" style="background:#faeeda;color:#633806;">Most widespread</span></h4>
-            <p>Most common forest type in India — Madhya Pradesh, Odisha, Maharashtra. Trees shed leaves in dry season to conserve water. Divided into <em>Moist</em> and <em>Dry</em> deciduous.</p>
-            <div class="ft-eg">📌 Example species: Teak, Sal, Shisham</div>
-          </div>
-          <div class="ft-card">
-            <h4>🌵 Tropical Thorn Forests <span class="ft-badge" style="background:#fef2f2;color:#991b1b;">Arid regions</span></h4>
-            <p>Found in Rajasthan, Gujarat, and parts of Punjab. Very low rainfall (&lt;70 cm). Thorny shrubs and small trees adapted to conserve water.</p>
-            <div class="ft-eg">📌 Example species: Khejri (State tree of Rajasthan), Babul (Acacia)</div>
-          </div>
-          <div class="ft-card">
-            <h4>⛰️ Montane Forests <span class="ft-badge" style="background:#f5f3ff;color:#5b21b6;">Altitude-based</span></h4>
-            <p>Found along the Himalayas and Nilgiris. Vegetation changes with altitude: tropical → temperate → alpine meadows as you climb higher.</p>
-            <div class="ft-eg">📌 Example species: Oak, Deodar, Rhododendron, Silver Fir</div>
-          </div>
-          <div class="ft-card" style="grid-column: span 2;">
-            <h4>🌊 Mangrove Forests <span class="ft-badge" style="background:#eff6ff;color:#0c447c;">Coastal / Tidal</span></h4>
-            <p>Unique salt-tolerant forests found in tidal zones — the Sundarbans (West Bengal) is the world's largest mangrove forest. These forests protect coastlines from cyclones and erosion, and are nurseries for fish and crabs. Maharashtra's Konkan coast also has mangrove patches.</p>
-            <div class="ft-eg">📌 Example species: Sundari (gives Sundarbans its name), Avicennia, Rhizophora</div>
+          <div class="ln-info">
+            <div class="ln-title">Level 1 — What is a Forest?</div>
+            <div class="ln-sub">Producers, consumers, decomposers and the food chain</div>
+            <div class="ln-xp">+30 XP earned</div>
           </div>
         </div>
-        <div class="callout blue">
-          <strong>🌿 Maharashtra Connect (SSC Board):</strong> Maharashtra has tropical deciduous forests in the Sahyadri (Western Ghats) range and mangrove patches along the Konkan coast. The Sahyadri forests are home to leopards, Indian giant squirrels, and over 1,500 plant species — many found nowhere else in the world.
+        <div class="ln-connector done"></div>
+
+        <!-- Level 2 — Active -->
+        <div class="level-node">
+          <div class="ln-circle active-node" onclick="alert('▶ Playing Level 2!\n\nLesson content: The Water Cycle through Forests\n\nForests act as giant sponges — they absorb rainfall, release water slowly, and prevent floods. This is called the hydrological cycle.')">
+            🌊
+          </div>
+          <div class="ln-info">
+            <div class="ln-title">Level 2 — Water Cycle through Forests</div>
+            <div class="ln-sub">How forests regulate rainfall, rivers and groundwater</div>
+            <div class="ln-xp" style="background:#fef3c7;color:#d97706;">⭐ Active — +40 XP to earn</div>
+          </div>
         </div>
+        <div class="ln-connector"></div>
+
+        <!-- Level 3 — Locked -->
+        <div class="level-node">
+          <div class="ln-circle locked">🔒</div>
+          <div class="ln-info">
+            <div class="ln-title" style="color:var(--g-muted);">Level 3 — Deforestation & Human Impact</div>
+            <div class="ln-sub" style="color:#c0c0c0;">Complete Level 2 to unlock</div>
+            <div class="ln-xp" style="background:#f0f4f0;color:#7a9a7c;">+30 XP locked</div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- 3. LAYERS -->
-      <div class="section-card" id="sec-layers">
-        <div class="card-header">
-          <div class="card-icon" style="background:#eaf3de;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M3 5h14M3 10h14M3 15h14" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </div>
-          <h2>Layers of a Forest Ecosystem
-            <small>NCERT Science Class 7, Ch. 17 — Vertical Stratification</small>
-          </h2>
-        </div>
-        <div class="prose">
-          <p>A forest is not flat — it is organized into <strong>vertical layers or strata</strong>, each forming its own micro-habitat with distinct plants and animals. This vertical structure is a key concept in <strong>NCERT Science Class 7 (Chapter 17)</strong> and explains how one forest can support thousands of different species simultaneously.</p>
-        </div>
-        <table class="layer-table">
-          <thead>
-            <tr><th>Layer</th><th>Height</th><th>Key Features</th><th>Example Organisms</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>🌳 <strong>Emergent Layer</strong></td>
-              <td>30 – 60 m</td>
-              <td>Tallest trees rising above canopy; full sun &amp; strong winds</td>
-              <td>Teak, Deodar, Rosewood; eagles, large hornbills</td>
-            </tr>
-            <tr>
-              <td>🍃 <strong>Canopy Layer</strong></td>
-              <td>20 – 30 m</td>
-              <td>Dense, interlocking branches; traps most sunlight; highest animal diversity</td>
-              <td>Monkeys, leopards, parrots, flying squirrels</td>
-            </tr>
-            <tr>
-              <td>🌿 <strong>Understorey</strong></td>
-              <td>5 – 20 m</td>
-              <td>Shade-adapted smaller trees &amp; shrubs; diffused light</td>
-              <td>Bamboo, wild banana, tree ferns, slender loris</td>
-            </tr>
-            <tr>
-              <td>🌱 <strong>Shrub Layer</strong></td>
-              <td>1 – 5 m</td>
-              <td>Dense shrubs, saplings, young trees competing for light</td>
-              <td>Wild berry bushes, coffee plants, small reptiles</td>
-            </tr>
-            <tr>
-              <td>🍂 <strong>Forest Floor</strong></td>
-              <td>0 – 1 m</td>
-              <td>Very little light; decaying leaf litter; nutrient recycling hub</td>
-              <td>Earthworms, beetles, fungi, mushrooms, centipedes</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    </div>
 
-      <!-- 4. IMPORTANCE -->
-      <div class="section-card" id="sec-importance">
-        <div class="card-header">
-          <div class="card-icon" style="background:#fffbeb;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 2l1.5 4h4l-3 2.5 1 4L10 10l-3.5 2.5 1-4L4.5 6h4z" fill="#f59e0b" opacity="0.35" stroke="#d97706" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          </div>
-          <h2>Why Forests Are Important
-            <small>NCERT Science Class 7 Ch. 17 · EVS Classes 3–5</small>
-          </h2>
+    <!-- ═══ QUIZ TAB ═══ -->
+    <div class="tab-panel" id="panel-quiz">
+      <div class="quiz-section animate d1">
+        <div class="quiz-header">
+          <div class="quiz-title">🎯 Forests & Biodiversity Quiz</div>
+          <div class="quiz-score-badge">3 Questions · +50 XP</div>
         </div>
-        <div class="prose">
-          <p class="sub-h">Environmental Functions</p>
-          <p><strong>Oxygen production &amp; CO₂ absorption:</strong> Through photosynthesis, trees absorb carbon dioxide and release oxygen. A single mature tree absorbs about 22 kg of CO₂ per year. Forests act as <em>carbon sinks</em> — they slow climate change by storing carbon in their biomass and soil.</p>
-          <p><strong>Water cycle regulation:</strong> Forests are critical to the water cycle. Tree roots absorb rainwater, which slowly releases into groundwater and streams. Trees release water vapour through <em>transpiration</em>, which forms clouds and eventually falls as rain — forests literally make their own rain.</p>
-          <p><strong>Soil protection:</strong> Tree roots bind soil together, preventing erosion by wind and rain. In hilly areas, forests prevent dangerous landslides. When forests are cleared, the topsoil is quickly washed away, making land infertile.</p>
-          <p><strong>Biodiversity:</strong> About 80% of the world's known land biodiversity lives in forests. Every organism — from a tiny soil microbe to a Bengal tiger — plays an interconnected role in maintaining the forest's balance.</p>
-          <p class="sub-h">Importance for Humans (NCERT EVS Classes 3–5)</p>
-          <p>Forests provide <strong>timber</strong> for furniture and buildings, <strong>fuelwood</strong> for cooking, and hundreds of <strong>non-timber forest products</strong> — honey, medicinal herbs (neem, turmeric, tulsi, ashwagandha), rubber, bamboo, and lac. India's tribal communities have lived <em>with</em> and <em>protected</em> forests for thousands of years, making them our best conservationists.</p>
-          <div class="callout amber">
-            <strong>📚 NCERT EVS Class 5 (Ch. 5 — Seeds, Seeds, Seeds) Connect:</strong> This chapter shows how forest biodiversity depends on seed dispersal — seeds travel by wind, water, and animals, ensuring the forest naturally regenerates. Without diverse seed dispersal, a forest cannot sustain itself.
-          </div>
+        <div id="quizArea"></div>
+        <div class="quiz-nav">
+          <button class="q-btn secondary" id="prevBtn" onclick="moveQ(-1)" style="display:none;">← Previous</button>
+          <div class="q-progress-dots" id="qDots"></div>
+          <button class="q-btn primary" id="nextBtn" onclick="moveQ(1)">Next →</button>
         </div>
       </div>
-
-      <!-- 5. THREATS -->
-      <div class="section-card" id="sec-threats">
-        <div class="card-header">
-          <div class="card-icon" style="background:#fef2f2;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 3v7M10 14v1" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="8" stroke="#ef4444" stroke-width="1.3" opacity="0.5"/></svg>
-          </div>
-          <h2>Threats to Forests
-            <small>NCERT Science Class 8 Ch. 7 · SSC Class 8–9 Environmental Studies</small>
-          </h2>
-        </div>
-        <div class="prose">
-          <p><strong>Deforestation</strong> is the largest threat — clearing forests for agriculture, urban expansion, roads, dams, and industries. India loses thousands of hectares of dense forest every year. When forests are cut, animals lose their homes, soil erodes, groundwater depletes, and local rainfall decreases.</p>
-          <p><strong>Forest fires</strong> — both natural (lightning) and human-caused (burning for land clearing or accidental fires) — destroy vast areas. Uttarakhand, Maharashtra (Vidarbha), and Odisha face recurring forest fires every summer.</p>
-          <p><strong>Overgrazing</strong> by cattle destroys undergrowth and prevents natural forest regeneration. Young saplings are eaten before they can grow into mature trees.</p>
-          <p><strong>Poaching and illegal logging:</strong> Endangered animals like tigers, elephants, and rhinos are killed for body parts. Rare trees like sandalwood and teak are illegally felled for high market prices.</p>
-          <div class="callout">
-            <strong>📊 India Data (State of Forest Report 2021):</strong> India has approximately 7,13,789 sq km of total forest and tree cover. However, 44.6% of this is classified as "open forest" — degraded, sparse trees with less than 40% canopy density. Only 3% is classified as "very dense forest."
-          </div>
+      <div class="completion-banner" id="completionBanner">
+        <div class="cb-emoji">🏅</div>
+        <div class="cb-title">Outstanding Explorer!</div>
+        <div class="cb-sub">You scored <span id="finalScore"></span>/3 and earned <strong>+50 XP</strong>. Your streak is now 🔥 6 days!</div>
+        <div class="cb-actions">
+          <button class="cb-btn primary-cb" onclick="window.location.href='tasks.html'">Go to Tasks →</button>
+          <button class="cb-btn secondary-cb" onclick="resetQuiz()">Retry Quiz</button>
         </div>
       </div>
+    </div>
 
-      <!-- 6. CONSERVATION -->
-      <div class="section-card" id="sec-conservation">
-        <div class="card-header">
-          <div class="card-icon" style="background:#eaf3de;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 3C10 3 4 6 4 11a6 6 0 0012 0C16 6 10 3 10 3z" fill="#56c271" opacity="0.3" stroke="#2d7a38" stroke-width="1.3"/><path d="M7 11l2 2 4-4" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h2>Conservation — Protecting Forests
-            <small>NCERT Science Class 8 Ch. 7 · Forest Rights Act 2006</small>
-          </h2>
-        </div>
-        <div class="prose">
-          <p><strong>Reserved Forests, Protected Forests, and Village Forests</strong> are legal categories under the Indian Forest Act where cutting trees is restricted or prohibited. India has <strong>106 National Parks</strong> and <strong>567 Wildlife Sanctuaries</strong> specifically to protect forest ecosystems and endangered species.</p>
-          <p>The <strong>Forest Rights Act, 2006</strong> — an important law covered in SSC civics — formally recognises the rights of tribal and forest-dwelling communities who have lived in and protected India's forests for generations. These communities are now legally recognised as forest guardians.</p>
-          <p>The famous <strong>Chipko Movement (1973, Uttarakhand)</strong> is a landmark example of community conservation. Villagers — especially women — literally hugged trees to stop contractors from cutting them. The word <em>Chipko</em> means "to hug" in Hindi. This became a worldwide symbol of peaceful environmental protest.</p>
-          <p><strong>Social forestry and agroforestry</strong> programmes encourage planting trees along roadsides, farmlands, and degraded lands. Government campaigns like <em>Van Mahotsav</em> (Forest Festival) and <em>Ek Ped Maa Ke Naam</em> motivate millions of students and citizens to plant trees annually.</p>
-          <div class="callout">
-            <strong>🌱 Your Role as a Student:</strong> Plant native trees (not ornamental exotic species) in your school or home. Participate in Van Mahotsav. Refuse single-use plastic — plastic litter kills forest animals. Write letters to your local municipality if you see trees being unnecessarily cut. Every action counts!
+    <!-- ═══ CREDITS TAB ═══ -->
+    <div class="tab-panel" id="panel-credits">
+      <div class="credits-card animate d1">
+        <h2 style="font-family:var(--font-d);font-size:22px;color:var(--g-text);margin-bottom:1.5rem;">Lesson Credits & Sources</h2>
+        <div class="credit-row">
+          <div class="credit-badge" style="background:#eaf3de;">📚</div>
+          <div class="credit-info">
+            <strong>NCERT Science — Class 7, Chapter 17</strong>
+            <span>Primary textbook content · National Council of Educational Research and Training</span>
           </div>
         </div>
-      </div>
-
-      <!-- 7. QUICK NOTES -->
-      <div class="section-card" id="sec-notes">
-        <div class="card-header">
-          <div class="card-icon" style="background:#fffbeb;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><rect x="3" y="2" width="14" height="16" rx="2" stroke="#f59e0b" stroke-width="1.3" fill="#f59e0b" opacity="0.2"/><path d="M7 7h6M7 11h4" stroke="#d97706" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <h2>Quick Revision Notes
-            <small>Key points for exam preparation</small>
-          </h2>
-        </div>
-        <div class="notes-grid">
-          <div class="note-item">
-            <h4>Forest — Definition</h4>
-            <p>A biotic community of producers (plants), consumers (animals), and decomposers (fungi, bacteria) that live and interact together in a natural ecosystem.</p>
-          </div>
-          <div class="note-item amber">
-            <h4>5 Forest Types in India</h4>
-            <p>Tropical Evergreen · Tropical Deciduous · Thorn &amp; Scrub · Montane · Mangrove (Sundarbans = world's largest).</p>
-          </div>
-          <div class="note-item">
-            <h4>5 Forest Layers (Strata)</h4>
-            <p>Emergent → Canopy → Understorey → Shrub Layer → Forest Floor. Each layer is a distinct habitat.</p>
-          </div>
-          <div class="note-item blue">
-            <h4>Water Cycle Role</h4>
-            <p>Trees absorb rain → store in groundwater → release via transpiration → forms clouds → rainfall. Forests make their own rain!</p>
-          </div>
-          <div class="note-item">
-            <h4>Decomposers — Key Role</h4>
-            <p>Fungi, bacteria, and earthworms break down dead matter → release nutrients back to soil → trees absorb them → cycle continues.</p>
-          </div>
-          <div class="note-item amber">
-            <h4>Chipko Movement</h4>
-            <p>1973, Uttarakhand. Villagers hugged trees to stop cutting. "Chipko" = to hug. Symbol of grassroots conservation in India.</p>
-          </div>
-          <div class="note-item blue">
-            <h4>Forest Rights Act, 2006</h4>
-            <p>Legally recognises tribal communities as rightful inhabitants and protectors of India's forests.</p>
-          </div>
-          <div class="note-item coral">
-            <h4>India's Forest Cover (2021)</h4>
-            <p>7,13,789 sq km total. Only 3% is "very dense." 44.6% is open/degraded forest — under severe threat.</p>
+        <div class="credit-row">
+          <div class="credit-badge" style="background:#eff6ff;">🎥</div>
+          <div class="credit-info">
+            <strong>Video: Forests Our Lifeline — Class 7 NCERT</strong>
+            <span>YouTube — Educational channel for NCERT science content</span>
           </div>
         </div>
-      </div>
-
-      <!-- 8. VIDEOS -->
-      <div class="section-card" id="sec-videos">
-        <div class="card-header">
-          <div class="card-icon" style="background:#eff6ff;">
-            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#3b82f6" stroke-width="1.3" fill="#3b82f6" opacity="0.2"/><path d="M8 8l5 2.5L8 13V8z" fill="#3b82f6" stroke="#3b82f6" stroke-width="1" stroke-linejoin="round"/></svg>
-          </div>
-          <h2>Video Lessons
-            <small>Curated YouTube videos aligned with NCERT &amp; SSC syllabus</small>
-          </h2>
-        </div>
-        <div class="video-grid">
-
-          <a class="video-card" href="https://www.youtube.com/watch?v=oD6pDtMeFhI" target="_blank" rel="noopener">
-            <div class="video-thumb" style="background:linear-gradient(135deg,#0d2b10,#1a6b2a);">
-              <div class="play-icon">▶</div>
-            </div>
-            <div class="video-info">
-              <div class="vi-class">Class 7 · NCERT Ch. 17</div>
-              <div class="vi-title">Forests: Our Lifeline — Full Chapter Explanation</div>
-              <div class="vi-meta">Magnet Brains · ~15 min · Hindi + English</div>
-              <span class="vi-tag">Core Lesson</span>
-            </div>
-          </a>
-
-          <a class="video-card" href="https://www.youtube.com/watch?v=WEeqHj4mwdE" target="_blank" rel="noopener">
-            <div class="video-thumb" style="background:linear-gradient(135deg,#0d1f3a,#1a3d7a);">
-              <div class="play-icon">▶</div>
-            </div>
-            <div class="video-info">
-              <div class="vi-class">Class 9 · NCERT Geography Ch. 5</div>
-              <div class="vi-title">Types of Natural Vegetation in India — Forest Types</div>
-              <div class="vi-meta">Vedantu · ~12 min · English</div>
-              <span class="vi-tag">Forest Types</span>
-            </div>
-          </a>
-
-          <a class="video-card" href="https://www.youtube.com/watch?v=8vAJMUHjAc0" target="_blank" rel="noopener">
-            <div class="video-thumb" style="background:linear-gradient(135deg,#2b1f0d,#6b3a10);">
-              <div class="play-icon">▶</div>
-            </div>
-            <div class="video-info">
-              <div class="vi-class">Class 7 · NCERT Science</div>
-              <div class="vi-title">Food Chains &amp; Food Webs in Forest Ecosystems</div>
-              <div class="vi-meta">BYJU'S · ~10 min · English</div>
-              <span class="vi-tag">Food Chains</span>
-            </div>
-          </a>
-
-          <a class="video-card" href="https://www.youtube.com/watch?v=AN9j5Eo4t5Y" target="_blank" rel="noopener">
-            <div class="video-thumb" style="background:linear-gradient(135deg,#0a2a2a,#0d5c5c);">
-              <div class="play-icon">▶</div>
-            </div>
-            <div class="video-info">
-              <div class="vi-class">Class 8 · NCERT Ch. 7</div>
-              <div class="vi-title">Conservation of Plants &amp; Animals — Deforestation Effects</div>
-              <div class="vi-meta">Infinity Learn · ~11 min · English</div>
-              <span class="vi-tag">Conservation</span>
-            </div>
-          </a>
-
-          <a class="video-card" href="https://www.youtube.com/watch?v=5I0qoKxsmfE" target="_blank" rel="noopener">
-            <div class="video-thumb" style="background:linear-gradient(135deg,#1f0d2b,#5c2a6b);">
-              <div class="play-icon">▶</div>
-            </div>
-            <div class="video-info">
-              <div class="vi-class">EVS · Classes 3–5</div>
-              <div class="vi-title">Why Do We Need Forests? — Simple Explanation for Kids</div>
-              <div class="vi-meta">Peekaboo Kidz · ~7 min · English</div>
-              <span class="vi-tag">Junior Students</span>
-            </div>
-          </a>
-
-        </div>
-
-        <!-- QUIZ PROMPT -->
-        <div class="quiz-prompt">
-          <div>
-            <div class="qp-label">Ready to test yourself?</div>
-            <div class="qp-title">Forests &amp; Biodiversity Quiz</div>
-            <div class="qp-sub">10 questions · Based on Ch. 17 · Earn up to 50 XP · Unlocks forest task</div>
-          </div>
-          <button class="qp-btn">Take Quiz →</button>
-        </div>
-      </div>
-
-    </div><!-- /main-col -->
-
-    <!-- ═══ RIGHT SIDEBAR ═══ -->
-    <div class="side-col">
-
-      <!-- TOC -->
-      <div class="side-card">
-        <div class="side-title">On This Page</div>
-        <ul class="toc-list" id="tocList">
-          <li><a href="#sec-intro"        class="active">What Is a Forest?</a></li>
-          <li><a href="#sec-types"               >Types of Forests</a></li>
-          <li><a href="#sec-layers"              >Forest Layers</a></li>
-          <li><a href="#sec-importance"          >Why Forests Matter</a></li>
-          <li><a href="#sec-threats"             >Threats to Forests</a></li>
-          <li><a href="#sec-conservation"        >Conservation</a></li>
-          <li><a href="#sec-notes"               >📝 Quick Notes</a></li>
-          <li><a href="#sec-videos"              >🎥 Videos</a></li>
-        </ul>
-      </div>
-
-      <!-- XP card -->
-      <div class="xp-card">
-        <div class="xp-val">+100</div>
-        <div class="xp-label">XP on completing this lesson</div>
-        <button class="xp-btn" onclick="markComplete()">Mark as Complete ✓</button>
-      </div>
-
-      <!-- Linked task -->
-      <div class="task-teaser">
-        <div class="tt-label">🎯 Linked Festival Task — June</div>
-        <h4>Seed Bomb Raksha Bandhan</h4>
-        <p>Make seed bombs using native tree seeds (neem, peepal, banyan) mixed with soil and dry cow dung. Gift them instead of plastic rakhis this Raksha Bandhan — planting a tree is the best protection you can give!</p>
-        <button class="tt-btn">View Full Task →</button>
-      </div>
-
-      <!-- Key vocabulary -->
-      <div class="side-card">
-        <div class="side-title">Key Terms</div>
-        <ul class="vocab-list">
-          <li><span class="vterm">Ecosystem</span><span class="vdef">All living and non-living things in an area interacting as a system</span></li>
-          <li><span class="vterm">Decomposers</span><span class="vdef">Organisms (fungi, bacteria) that break down dead matter, recycling nutrients back to soil</span></li>
-          <li><span class="vterm">Transpiration</span><span class="vdef">Process by which plants release water vapour through leaves, contributing to the water cycle</span></li>
-          <li><span class="vterm">Deforestation</span><span class="vdef">Large-scale clearing of forests for agriculture, urban use, or industry</span></li>
-          <li><span class="vterm">Biodiversity</span><span class="vdef">The variety of all living species in a given area or on Earth</span></li>
-          <li><span class="vterm">Carbon Sink</span><span class="vdef">A natural system (like a forest) that absorbs more CO₂ than it releases, slowing climate change</span></li>
-          <li><span class="vterm">Canopy</span><span class="vdef">The dense upper layer of branches and leaves formed by tall trees in a forest</span></li>
-        </ul>
-      </div>
-
-      <!-- Syllabus reference -->
-      <div class="side-card">
-        <div class="side-title">Syllabus Coverage</div>
-        <div style="display:flex;flex-direction:column;gap:.5rem;">
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">NCERT Class 7 Science</span>
-            <span style="background:#eaf3de;color:#27500a;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Ch. 17</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">NCERT Class 8 Science</span>
-            <span style="background:#eaf3de;color:#27500a;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Ch. 7</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">NCERT Geo Class 9</span>
-            <span style="background:#eff6ff;color:#0c447c;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Ch. 5</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">NCERT EVS Classes 3–5</span>
-            <span style="background:#eaf3de;color:#27500a;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Multiple</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">SSC Maharashtra Class 7</span>
-            <span style="background:#faeeda;color:#633806;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Science</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
-            <span style="color:var(--g-sub);">SSC Maharashtra Class 8–9</span>
-            <span style="background:#faeeda;color:#633806;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Geography</span>
+        <div class="credit-row">
+          <div class="credit-badge" style="background:#f5f3ff;">📊</div>
+          <div class="credit-info">
+            <strong>Statistics & Data</strong>
+            <span>Food and Agriculture Organization (FAO) — Global Forest Resources Assessment 2020</span>
           </div>
         </div>
+        <div class="credit-row">
+          <div class="credit-badge" style="background:#faeeda;">🌍</div>
+          <div class="credit-info">
+            <strong>Maps & Geographic Data</strong>
+            <span>OpenStreetMap Contributors — open license (ODbL)</span>
+          </div>
+        </div>
+        <div class="credit-row">
+          <div class="credit-badge" style="background:#eaf3de;">✏️</div>
+          <div class="credit-info">
+            <strong>Lesson Design & Gamification</strong>
+            <span>EcoQuest Education Team — inspired by Byju's, Duolingo, and Brilliant learning frameworks</span>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--g-pale);border-radius:var(--r-md);border:1px solid var(--g-border);">
+          <div style="font-size:12px;color:var(--g-muted);line-height:1.6;">This lesson is designed for Class 6–8 students studying environmental sciences. All content is aligned with the National Curriculum Framework (NCF) and is intended for educational purposes only. If you notice any errors, please report them to your teacher.</div>
+        </div>
       </div>
+    </div>
 
-    </div><!-- /side-col -->
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
 <script>
-  // Mark complete
-  function markComplete() {
-    const btn = document.querySelector('.xp-btn');
-    const tbBtn = document.querySelector('.tb-btn.primary');
-    btn.textContent = '✅ Lesson Completed!';
-    btn.style.background = '#27500a';
-    tbBtn.textContent = '✅ Completed +100 XP';
-    document.getElementById('progRing').setAttribute('stroke-dashoffset', '0');
-    document.querySelector('.prog-pct').textContent = '100%';
+// ── TAB SWITCHING ──
+function switchTab(name, el) {
+  document.querySelectorAll('.stab').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ── LEVEL BAR ANIMATION ──
+window.addEventListener('load', () => {
+  const fill = document.getElementById('mainLevFill');
+  if (fill) setTimeout(() => fill.style.width = '64%', 300);
+});
+
+// ── QUIZ ENGINE ──
+const questions = [
+  {
+    q: "Which organisms are called the 'producers' in a forest ecosystem?",
+    opts: ["Animals", "Green plants", "Fungi", "Insects"],
+    ans: 1,
+    exp: "✅ Correct! Green plants are the producers — they make food through photosynthesis using sunlight, water and CO₂."
+  },
+  {
+    q: "What is the role of decomposers in a forest?",
+    opts: ["They eat other animals", "They produce oxygen", "They break down dead matter to release nutrients", "They control flooding"],
+    ans: 2,
+    exp: "✅ Correct! Decomposers (like fungi and bacteria) break down dead leaves and animals, returning nutrients to the soil."
+  },
+  {
+    q: "Which of the following is a direct consequence of deforestation?",
+    opts: ["More rainfall", "Increased biodiversity", "Soil erosion", "Cooler temperatures"],
+    ans: 2,
+    exp: "✅ Correct! Without tree roots to hold the soil, deforestation leads to rapid soil erosion and landslides."
   }
+];
 
-  // Active TOC on scroll
-  const sections = ['sec-intro','sec-types','sec-layers','sec-importance','sec-threats','sec-conservation','sec-notes','sec-videos'];
-  const tocLinks  = document.querySelectorAll('#tocList a');
+let current = 0, answered = [], score = 0;
 
-  window.addEventListener('scroll', () => {
-    let current = sections[0];
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top < 100) current = id;
-    });
-    tocLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-    });
-  });
+function renderQuiz() {
+  const q = questions[current];
+  const ua = answered[current];
+  const letters = ['A','B','C','D'];
+  document.getElementById('quizArea').innerHTML = `
+    <div class="question-block">
+      <div class="q-num">Question ${current + 1} of ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options-grid">
+        ${q.opts.map((o, i) => {
+          let cls = 'opt';
+          if (ua !== undefined) {
+            if (i === q.ans) cls += ' correct';
+            else if (i === ua && ua !== q.ans) cls += ' wrong';
+          } else if (ua === i) cls += ' selected';
+          return `<button class="${cls}" onclick="selectOpt(${i})" ${ua !== undefined ? 'disabled' : ''}>
+            <span class="opt-letter">${letters[i]}</span>${o}
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="q-feedback ${ua !== undefined ? (ua === q.ans ? 'correct' : 'wrong') : ''}" 
+           style="display:${ua !== undefined ? 'block' : 'none'}">
+        ${ua !== undefined ? (ua === q.ans ? q.exp : '❌ Not quite. ' + q.exp) : ''}
+      </div>
+    </div>
+  `;
+  renderDots();
+  document.getElementById('prevBtn').style.display = current > 0 ? 'inline-flex' : 'none';
+  const nb = document.getElementById('nextBtn');
+  if (current === questions.length - 1 && answered.length === questions.length) {
+    nb.textContent = 'Finish Quiz 🎉';
+    nb.onclick = finishQuiz;
+  } else {
+    nb.textContent = 'Next →';
+    nb.onclick = () => moveQ(1);
+  }
+}
+
+function renderDots() {
+  document.getElementById('qDots').innerHTML = questions.map((_, i) => 
+    `<div class="q-dot ${answered[i] !== undefined ? 'answered' : ''} ${i === current ? 'current' : ''}"></div>`
+  ).join('');
+}
+
+function selectOpt(i) {
+  if (answered[current] !== undefined) return;
+  answered[current] = i;
+  if (i === questions[current].ans) score++;
+  renderQuiz();
+}
+
+function moveQ(dir) {
+  current = Math.min(questions.length - 1, Math.max(0, current + dir));
+  renderQuiz();
+}
+
+function finishQuiz() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.querySelector('.quiz-nav').style.display = 'none';
+  document.getElementById('completionBanner').style.display = 'block';
+  document.getElementById('finalScore').textContent = score;
+}
+
+function resetQuiz() {
+  current = 0; answered = []; score = 0;
+  document.getElementById('quizArea').style.display = 'block';
+  document.querySelector('.quiz-nav').style.display = 'flex';
+  document.getElementById('completionBanner').style.display = 'none';
+  renderQuiz();
+}
+
+renderQuiz();
 </script>
-  <script src="api.js"></script>
+<script src="api.js"></script>
 </body>
 </html>
