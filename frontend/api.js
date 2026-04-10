@@ -233,4 +233,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (err) {}
     }
+
+    // ─── 5. GLOBAL BUTTON ROUTING (TINY DETAILS) ───
+    
+    // Dashboard Hero Buttons
+    document.querySelectorAll('.h-btn.solid').forEach(b => b.addEventListener('click', () => window.location.href = 'page3.html'));
+    document.querySelectorAll('.h-btn.outline').forEach(b => b.addEventListener('click', () => window.location.href = 'page4.html'));
+    
+    // Task Start & Accept Buttons -> route to Upload Proof
+    document.querySelectorAll('.ft-btn.solid, .tc-action.start, .ngo-accept-btn, .topbar-right .tb-btn.primary:not([onclick])').forEach(btn => {
+        btn.addEventListener('click', () => {
+            window.location.href = 'tasks-upload.html';
+        });
+    });
+    
+    // Future / Preview Tasks
+    document.querySelectorAll('.tc-action.view').forEach(btn => {
+        btn.addEventListener('click', () => {
+            alert('This task will fully unlock next month! Keep checking back to participate.');
+        });
+    });
+    
+    // Locked Tasks
+    document.querySelectorAll('.tc-action.locked-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            alert('🔒 This task is locked. Wait for the festival month or complete previous tasks to unlock it!');
+        });
+    });
 });
