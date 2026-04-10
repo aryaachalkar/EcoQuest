@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoQuest — Wastewater Story</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --g-dark:    #0d1f0f;
+      --g-deep:    #132b15;
+      --g-mid:     #2d7a38;
+      --g-bright:  #56c271;
+      --g-light:   #e8f5e9;
+      --g-pale:    #f4f9f4;
+      --g-border:  #c8dcc8;
+      --g-muted:   #7a9a7c;
+      --g-text:    #1a3d1c;
+      --g-sub:     #5a7a5c;
+      --blue:      #3b82f6;
+      --blue-bg:   #eff6ff;
+      --blue-bdr:  #bfdbfe;
+      --amber:     #f59e0b;
+      --amber-bg:  #fffbeb;
+      --purple:    #8b5cf6;
+      --purple-bg: #f5f3ff;
+      --font-d:    'Playfair Display', Georgia, serif;
+      --font-b:    'DM Sans', sans-serif;
+      --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
+      --ease: 0.22s ease;
+    }
+
+    html, body { height: 100%; font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; }
+
+    /* ── SIDEBAR (same as reference) ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+      background: var(--g-dark); display: flex; flex-direction: column; z-index: 100;
+    }
+    .sb-brand { display: flex; align-items: center; gap: 12px; padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(86,194,113,0.12); }
+    .sb-logo { width: 40px; height: 40px; background: linear-gradient(135deg, #56c271, #2d7a38); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-logo svg { width: 22px; height: 22px; }
+    .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
+    .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: 0.8px; text-transform: uppercase; }
+    .sb-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: 0.5rem 0.5rem 0.35rem; margin-top: 0.5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); color: #7a9a7c; font-size: 14px; font-weight: 400; cursor: pointer; transition: all var(--ease); margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .nav-item:hover { background: rgba(86,194,113,0.08); color: #c8e6c9; }
+    .nav-item.active { background: rgba(86,194,113,0.14); color: var(--g-bright); font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center; }
+    .sb-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,0.12); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #2d7a38, #56c271); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
+    .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
+    .sb-user-class { font-size: 11px; color: #5a7a5c; }
+
+    /* ── MAIN ── */
+    .main { margin-left: 240px; min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar { background: #fff; border-bottom: 1px solid var(--g-border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--g-muted); }
+    .breadcrumb a { color: var(--g-mid); font-weight: 500; text-decoration: none; cursor: pointer; }
+    .breadcrumb a:hover { color: var(--g-dark); }
+    .breadcrumb-sep { color: var(--g-border); }
+    .breadcrumb-current { color: var(--g-text); font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .tb-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 13px; font-weight: 500; cursor: pointer; transition: all var(--ease); border: 1px solid var(--g-border); background: #fff; color: var(--g-sub); }
+    .tb-btn svg { width: 14px; height: 14px; }
+    .tb-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
+    .tb-btn.primary { background: var(--g-bright); color: var(--g-dark); border-color: var(--g-bright); }
+    .tb-btn.primary:hover { background: #46b261; }
+
+    /* ── CONTENT LAYOUT ── */
+    .content { padding: 2rem; max-width: 1180px; display: grid; grid-template-columns: 1fr 260px; gap: 1.75rem; align-items: start; }
+    .col-main { display: flex; flex-direction: column; gap: 1.5rem; }
+    .col-side { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 80px; align-self: start; }
+
+    /* ── LESSON HERO ── */
+    .lesson-hero { background: var(--g-dark); border-radius: var(--r-xl); padding: 1.75rem 2rem; position: relative; overflow: hidden; }
+    .lesson-hero::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(30 40 40)'/%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(90 40 40)'/%3E%3C/svg%3E"); background-size: 80px 80px; }
+    .lh-inner { position: relative; z-index: 1; }
+    .lh-eyebrow { display: inline-flex; align-items: center; gap: 7px; background: rgba(59,130,246,0.14); border: 1px solid rgba(59,130,246,0.25); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #93c5fd; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .lh-eyebrow span { width: 5px; height: 5px; border-radius: 50%; background: #93c5fd; animation: pulse 2s infinite; }
+    .lh-title { font-family: var(--font-d); font-size: 28px; color: #e8f5e9; line-height: 1.2; margin-bottom: 0.3rem; }
+    .lh-title em { color: var(--g-bright); font-style: italic; }
+    .lh-chapter { font-size: 13px; color: var(--g-bright); font-weight: 500; margin-bottom: 0.9rem; }
+    .lh-meta { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .lh-meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #7a9a7c; }
+    .lh-meta-item svg { width: 13px; height: 13px; }
+    .lh-prog-row { display: flex; align-items: center; gap: 14px; }
+    .lh-prog-bar { flex: 1; height: 6px; background: rgba(86,194,113,0.12); border-radius: 3px; overflow: hidden; }
+    .lh-prog-fill { height: 100%; background: var(--g-bright); border-radius: 3px; width: 60%; transition: width 1s ease; }
+    .lh-prog-label { font-size: 12px; color: var(--g-bright); font-weight: 500; white-space: nowrap; }
+    .lh-concepts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
+    .concept-pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(86,194,113,0.1); border: 1px solid rgba(86,194,113,0.18); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--g-bright); }
+
+    /* ── SECTION CARDS ── */
+    .card { background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl); overflow: hidden; }
+    .card-head { display: flex; align-items: center; gap: 10px; padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--g-border); }
+    .card-head-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .card-head-icon svg { width: 16px; height: 16px; }
+    .card-head-title { font-family: var(--font-d); font-size: 16px; color: var(--g-text); }
+    .card-head-sub { font-size: 11px; color: var(--g-muted); margin-top: 1px; }
+    .card-body { padding: 1.5rem; }
+
+    /* ── LESSON DESCRIPTION ── */
+    .intro-text { font-size: 14px; color: var(--g-text); line-height: 1.75; margin-bottom: 1.25rem; }
+    .intro-text strong { color: var(--g-mid); font-weight: 500; }
+
+    /* ── KEY CONCEPTS GRID ── */
+    .concepts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .concept-box { background: var(--g-pale); border: 1px solid var(--g-border); border-radius: var(--r-lg); padding: 1rem; }
+    .concept-box.blue { background: var(--blue-bg); border-color: var(--blue-bdr); }
+    .concept-box.amber { background: var(--amber-bg); border-color: #fde68a; }
+    .concept-box.purple { background: var(--purple-bg); border-color: #ddd6fe; }
+    .cb-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+    .cb-icon svg { width: 15px; height: 15px; }
+    .cb-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .cb-desc { font-size: 12px; color: var(--g-muted); line-height: 1.55; }
+    .concept-box.blue .cb-title { color: #0c447c; }
+    .concept-box.amber .cb-title { color: #854f0b; }
+    .concept-box.purple .cb-title { color: #5b21b6; }
+    .concept-box .cb-title { color: var(--g-text); }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider { display: flex; align-items: center; gap: 10px; margin: 0.25rem 0; }
+    .sd-line { flex: 1; height: 1px; background: var(--g-border); }
+    .sd-label { font-size: 11px; color: var(--g-muted); text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
+
+    /* ── NOTES / TOPIC LIST ── */
+    .topic-accordion { display: flex; flex-direction: column; gap: 8px; }
+    .ta-item { border: 1px solid var(--g-border); border-radius: var(--r-md); overflow: hidden; }
+    .ta-head { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1.1rem; cursor: pointer; transition: background var(--ease); background: #fff; border: none; width: 100%; text-align: left; }
+    .ta-head:hover { background: var(--g-pale); }
+    .ta-head.open { background: var(--g-pale); }
+    .ta-num { width: 24px; height: 24px; border-radius: 6px; background: var(--g-mid); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 500; flex-shrink: 0; }
+    .ta-title { flex: 1; font-size: 13.5px; font-weight: 500; color: var(--g-text); }
+    .ta-arrow { width: 16px; height: 16px; color: var(--g-muted); transition: transform var(--ease); flex-shrink: 0; }
+    .ta-head.open .ta-arrow { transform: rotate(180deg); }
+    .ta-body { display: none; padding: 0 1.1rem 1rem 3.4rem; background: var(--g-pale); }
+    .ta-body.visible { display: block; }
+    .ta-body p { font-size: 13px; color: var(--g-text); line-height: 1.7; margin-bottom: 0.6rem; }
+    .ta-body p:last-child { margin-bottom: 0; }
+    .ta-body ul { padding-left: 1.1rem; }
+    .ta-body ul li { font-size: 13px; color: var(--g-text); line-height: 1.7; margin-bottom: 3px; }
+    .ta-body .note-tag { display: inline-flex; align-items: center; gap: 5px; background: rgba(86,194,113,0.1); border: 1px solid rgba(86,194,113,0.18); border-radius: 12px; padding: 2px 10px; font-size: 11px; color: var(--g-mid); margin-bottom: 8px; }
+    .ta-body .callout { background: var(--blue-bg); border: 1px solid var(--blue-bdr); border-radius: var(--r-sm); padding: 10px 14px; margin-top: 8px; font-size: 12.5px; color: #185fa5; line-height: 1.6; }
+    .ta-body .callout.amber { background: var(--amber-bg); border-color: #fde68a; color: #854f0b; }
+    .ta-body .callout.green { background: #eaf3de; border-color: #c0dd97; color: #27500a; }
+
+    /* ── YOUTUBE VIDEO CARDS ── */
+    .video-list { display: flex; flex-direction: column; gap: 10px; }
+    .video-card { display: flex; align-items: center; gap: 12px; background: var(--g-pale); border: 1px solid var(--g-border); border-radius: var(--r-md); padding: 12px 14px; cursor: pointer; transition: all var(--ease); text-decoration: none; }
+    .video-card:hover { border-color: var(--g-bright); background: #fff; transform: translateX(3px); }
+    .video-thumb { width: 80px; height: 52px; border-radius: var(--r-sm); background: var(--g-deep); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .play-btn { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: rgba(86,194,113,0.9); display: flex; align-items: center; justify-content: center; }
+    .play-btn svg { width: 10px; height: 10px; fill: #0d1f0f; margin-left: 2px; }
+    .video-info { flex: 1; min-width: 0; }
+    .video-title { font-size: 13px; font-weight: 500; color: var(--g-text); line-height: 1.35; margin-bottom: 4px; }
+    .video-meta { display: flex; align-items: center; gap: 8px; }
+    .video-source { font-size: 11px; color: var(--g-mid); font-weight: 500; }
+    .video-dur { font-size: 11px; color: var(--g-muted); }
+    .video-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+
+    /* ── SIDEBAR CARDS ── */
+    .side-card { background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-lg); overflow: hidden; }
+    .side-card-head { padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--g-border); }
+    .side-card-title { font-size: 10.5px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--g-muted); margin-bottom: 0; }
+    .side-card-body { padding: 1rem 1.1rem; }
+
+    /* ── TOC ── */
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .toc-list li a { display: block; padding: 8px 10px; border-radius: var(--r-sm); font-size: 13px; color: var(--g-sub); text-decoration: none; border-left: 3px solid transparent; transition: all var(--ease); }
+    .toc-list li a:hover  { background: var(--g-pale); border-left-color: var(--g-bright); color: var(--g-text); }
+    .toc-list li a.active { background: var(--g-light); border-left-color: var(--g-bright); color: var(--g-mid); font-weight: 500; }
+
+    /* ── XP CARD ── */
+    .xp-card { background: var(--g-dark); border-radius: var(--r-lg); padding: 1.25rem; text-align: center; border: 1px solid rgba(86,194,113,.2); }
+    .xp-val   { font-family: var(--font-d); font-size: 2rem; color: var(--g-bright); }
+    .xp-label { font-size: 11px; color: #5a7a5c; margin-top: 3px; }
+    .xp-btn   { margin-top: .9rem; width: 100%; background: var(--g-bright); color: var(--g-dark); border: none; padding: 9px; border-radius: var(--r-sm); font-weight: 500; font-size: 13px; cursor: pointer; transition: all var(--ease); }
+    .xp-btn:hover { background: #46b261; transform: scale(1.02); }
+
+    /* ── TASK TEASER (amber) ── */
+    .task-teaser { background: var(--amber-bg); border: 1px solid #fde68a; border-radius: var(--r-lg); padding: 1rem 1.1rem; }
+    .task-teaser .tt-label { font-size: 10.5px; font-weight: 500; color: var(--amber); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 5px; }
+    .task-teaser h4 { font-family: var(--font-d); font-size: 14px; color: #5a3a00; margin-bottom: 4px; }
+    .task-teaser p  { font-size: 12px; color: #7a5a10; line-height: 1.6; margin-bottom: .75rem; }
+    .task-teaser .tt-btn { width: 100%; background: var(--amber); color: #fff; border: none; padding: 8px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all var(--ease); }
+    .task-teaser .tt-btn:hover { background: #d97706; }
+
+    /* ── VOCAB LIST ── */
+    .vocab-list { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .vocab-list li { font-size: 12.5px; display: flex; flex-direction: column; gap: 1px; padding-bottom: .6rem; border-bottom: 1px solid #f0f4f0; }
+    .vocab-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .vterm { font-weight: 500; color: var(--g-mid); }
+    .vdef  { color: var(--g-muted); font-size: 12px; line-height: 1.5; }
+
+    /* ── QUIZ PROMPT (forest style, inside video card) ── */
+    .quiz-prompt { background: linear-gradient(135deg, #0d2b10, #1a3d1c); border: 1px solid rgba(86,194,113,.2); border-radius: var(--r-xl); padding: 1.5rem 1.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: .75rem; }
+    .qp-label { font-size: 10.5px; color: var(--g-bright); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+    .qp-title { font-family: var(--font-d); font-size: 17px; color: #e8f5e9; margin-bottom: 3px; }
+    .qp-sub   { font-size: 12.5px; color: #7a9a7c; }
+    .qp-btn   { padding: 11px 22px; background: var(--g-bright); color: var(--g-dark); border: none; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all var(--ease); white-space: nowrap; }
+    .qp-btn:hover { background: #46b261; }
+
+    /* ── TEXTBOOK TAG ── */
+    .textbook-badge { display: inline-flex; align-items: center; gap: 7px; background: #eaf3de; border: 1px solid #c0dd97; border-radius: var(--r-md); padding: 8px 14px; font-size: 12px; color: #27500a; font-weight: 500; }
+    .textbook-badge svg { width: 14px; height: 14px; }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .ani { animation: fadeUp 0.45s ease both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s} .d5{animation-delay:.25s}
+
+    @media (max-width: 1024px) {
+      .content { grid-template-columns: 1fr; }
+      .col-side { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main { margin-left: 0; }
+      .content { padding: 1.25rem; }
+      .col-side { grid-template-columns: 1fr; }
+      .concepts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sb-name">EcoQuest</div>
+      <div class="sb-tagline">Eco Learning</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Main</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item active">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Lessons
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
+      Quizzes
+      <span class="nav-badge">2</span>
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Tasks
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">Community</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Leaderboard
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      NGO Tasks
+      <span class="nav-badge" style="background:#f59e0b;">1</span>
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">My Account</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Upload Proof
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Profile
+    </button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar">AS</div>
+    <div>
+      <div class="sb-user-name">Aarav Sharma</div>
+      <div class="sb-user-class">Class 7 · Pune</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="breadcrumb">
+      <a>Lessons</a>
+      <span class="breadcrumb-sep">›</span>
+      <a>Class 7</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Wastewater Story</span>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn">
+        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save Notes
+      </button>
+      <button class="tb-btn primary">Mark as Complete →</button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ═══ MAIN COLUMN ═══ -->
+    <div class="col-main">
+
+      <!-- LESSON HERO -->
+      <div class="lesson-hero ani d1">
+        <div class="lh-inner">
+          <div class="lh-eyebrow"><span></span> In Progress — Ch. 18</div>
+          <h1 class="lh-title">Wastewater <em>Story</em></h1>
+          <div class="lh-chapter">NCERT Science · Class 7 · Chapter 18 · Sub-section 1</div>
+          <div class="lh-meta">
+            <div class="lh-meta-item">
+              <svg viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="#56c271" stroke-width="1.1"/><path d="M6.5 3.5v3l1.5 1.5" stroke="#56c271" stroke-width="1.1" stroke-linecap="round"/></svg>
+              <span>~30 min read</span>
+            </div>
+            <div class="lh-meta-item">
+              <svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5L8 5h3.5l-2.5 2 1 3.5L6.5 9l-3.5 1.5 1-3.5L1.5 5H5z" stroke="#56c271" stroke-width="1.1"/></svg>
+              <span>+80 XP on completion</span>
+            </div>
+            <div class="lh-meta-item">
+              <svg viewBox="0 0 13 13" fill="none"><rect x="1.5" y="1.5" width="10" height="10" rx="1.5" stroke="#56c271" stroke-width="1.1"/><path d="M4 6.5h5M4 9h3" stroke="#56c271" stroke-width="1.1" stroke-linecap="round"/></svg>
+              <span>1 task linked</span>
+            </div>
+            <div class="lh-meta-item">
+              <svg viewBox="0 0 13 13" fill="none"><path d="M1.5 11.5l2.5-2.5L7 12l2-4 2.5 3" stroke="#56c271" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>3 topics · 6 notes sections</span>
+            </div>
+          </div>
+          <div class="lh-prog-row">
+            <div class="lh-prog-bar"><div class="lh-prog-fill" id="heroFill"></div></div>
+            <div class="lh-prog-label">60% complete</div>
+          </div>
+          <div class="lh-concepts">
+            <span class="concept-pill">Sewage</span>
+            <span class="concept-pill">Wastewater treatment</span>
+            <span class="concept-pill">WWTP</span>
+            <span class="concept-pill">Waterborne diseases</span>
+            <span class="concept-pill">Sanitation</span>
+            <span class="concept-pill">Open-air defecation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXTBOOK ALIGNMENT BADGE -->
+      <div class="ani d1" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="textbook-badge">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2z" stroke="#27500a" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 2v3h3M4 7h6M4 9.5h4" stroke="#27500a" stroke-width="1.2" stroke-linecap="round"/></svg>
+          NCERT Science Class 7 · Chapter 18
+        </div>
+        <div class="textbook-badge" style="background:#eff6ff; border-color:#bfdbfe; color:#0c447c;">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2z" stroke="#0c447c" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 2v3h3M4 7h6M4 9.5h4" stroke="#0c447c" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Maharashtra SSC · Std 7 Science · Ch 18
+        </div>
+        <div class="textbook-badge" style="background:#f5f3ff; border-color:#ddd6fe; color:#5b21b6;">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M7 1.5l1.5 4h4l-3.5 2.5L10 12 7 10l-3 2 1-4L1.5 5.5h4z" stroke="#5b21b6" stroke-width="1.2"/></svg>
+          Covers Class 6–8 Environmental curriculum
+        </div>
+      </div>
+
+      <!-- DESCRIPTION CARD -->
+      <div class="card ani d2" id="sec-intro">
+        <div class="card-head">
+          <div class="card-head-icon" style="background:#eff6ff;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2C8 2 3 5.5 3 9.5a5 5 0 0010 0C13 5.5 8 2 8 2z" stroke="#185fa5" stroke-width="1.3" fill="#185fa5" opacity="0.25"/></svg>
+          </div>
+          <div>
+            <div class="card-head-title">What is this lesson about?</div>
+            <div class="card-head-sub">Chapter overview & NCERT alignment</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="intro-text">
+            Every day, water is used in our homes for bathing, cooking, washing and flushing — this water becomes <strong>sewage</strong> after use. <em>Wastewater Story</em> (NCERT Science, Class 7, Chapter 18) teaches us where this dirty water goes, how it is cleaned, and why <strong>safe disposal of wastewater</strong> is critical for health and the environment.
+          </p>
+          <p class="intro-text">
+            This sub-section introduces the concept of <strong>wastewater</strong>, its sources, what pollutants it contains, and the role of the <strong>sewage treatment plant (STP)</strong> in making dirty water safe again before releasing it into rivers or reusing it. It also stresses the link between poor sanitation and <strong>waterborne diseases</strong> like cholera, typhoid and dysentery — a real and ongoing problem in urban and rural India.
+          </p>
+          <p class="intro-text" style="margin-bottom:0;">
+            The NCERT lesson connects directly to the Sustainable Development Goal 6 — <strong>Clean Water and Sanitation</strong> — and is part of the Maharashtra SSC Standard 7 science syllabus as well.
+          </p>
+        </div>
+      </div>
+
+      <!-- KEY CONCEPTS GRID -->
+      <div class="card ani d2" id="sec-concepts">
+        <div class="card-head">
+          <div class="card-head-icon" style="background:#eaf3de;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l6 4v4l-6 4-6-4V6z" stroke="#3b6d11" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="card-head-title">Key Concepts at a Glance</div>
+            <div class="card-head-sub">Core ideas you will learn in this sub-section</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="concepts-grid">
+            <div class="concept-box blue">
+              <div class="cb-icon" style="background:#bfdbfe;">
+                <svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2C7.5 2 3 5 3 9a4.5 4.5 0 009 0C12 5 7.5 2 7.5 2z" fill="#185fa5" opacity="0.5" stroke="#185fa5" stroke-width="1.2"/></svg>
+              </div>
+              <div class="cb-title">What is Wastewater?</div>
+              <div class="cb-desc">Water that has been used in homes, factories or agriculture and is contaminated with waste, chemicals or pathogens.</div>
+            </div>
+            <div class="concept-box amber">
+              <div class="cb-icon" style="background:#fde68a;">
+                <svg viewBox="0 0 15 15" fill="none"><rect x="2" y="4" width="11" height="8" rx="1.5" fill="#854f0b" opacity="0.3" stroke="#854f0b" stroke-width="1.2"/><path d="M5 4V3a2 2 0 014 0v1" stroke="#854f0b" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="cb-title">Sewage Composition</div>
+              <div class="cb-desc">Sewage contains water, organic waste, detergents, nitrates, phosphates, pathogens (bacteria, viruses, parasites) and heavy metals.</div>
+            </div>
+            <div class="concept-box purple">
+              <div class="cb-icon" style="background:#ddd6fe;">
+                <svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="#5b21b6" stroke-width="1.2"/><path d="M7.5 4v3.5l2 2" stroke="#5b21b6" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="cb-title">Sewage Treatment Plant (STP)</div>
+              <div class="cb-desc">An STP cleans wastewater in three stages — physical (screening), biological (aeration, sedimentation) and chemical — before it can be released safely.</div>
+            </div>
+            <div class="concept-box">
+              <div class="cb-icon" style="background:#fecaca;">
+                <svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2l1.3 3.5h3.7l-3 2.2 1.1 3.5-3.1-2.3-3 2.3 1.1-3.5-3-2.2h3.7z" stroke="#dc2626" stroke-width="1.2" fill="#dc2626" opacity="0.2"/></svg>
+              </div>
+              <div class="cb-title" style="color:#991b1b;">Waterborne Diseases</div>
+              <div class="cb-desc">Cholera, typhoid, hepatitis A, dysentery and polio spread through contaminated water. Proper treatment prevents outbreaks.</div>
+            </div>
+            <div class="concept-box" style="background:#eaf3de; border-color:#c0dd97;">
+              <div class="cb-icon" style="background:#c0dd97;">
+                <svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2c0 0-4 3 0 7.5C11.5 5 7.5 2 7.5 2z" fill="#3b6d11" opacity="0.3" stroke="#3b6d11" stroke-width="1.2"/><path d="M7.5 9.5v3" stroke="#3b6d11" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="cb-title" style="color:#27500a;">Sanitation &amp; Open Defecation</div>
+              <div class="cb-desc">Open defecation contaminates groundwater and soil. Swachh Bharat Mission aims to build household toilets and eliminate open defecation in India.</div>
+            </div>
+            <div class="concept-box" style="background:#fef2f2; border-color:#fecaca;">
+              <div class="cb-icon" style="background:#fecaca;">
+                <svg viewBox="0 0 15 15" fill="none"><path d="M2 13L7.5 2l5.5 11H2z" stroke="#dc2626" stroke-width="1.2" stroke-linejoin="round" fill="#dc2626" opacity="0.15"/><path d="M7.5 6v3M7.5 11v.5" stroke="#dc2626" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="cb-title" style="color:#991b1b;">Why Untreated Sewage is Dangerous</div>
+              <div class="cb-desc">Dumping untreated sewage in rivers depletes dissolved oxygen, kills aquatic life and renders rivers unfit for drinking or irrigation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES ACCORDION -->
+      <div class="card ani d3" id="sec-notes">
+        <div class="card-head">
+          <div class="card-head-icon" style="background:#eaf3de;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l3 3v9H3z" stroke="#3b6d11" stroke-width="1.3" stroke-linejoin="round"/><path d="M11 2v3h3M5 9h6M5 11.5h4" stroke="#3b6d11" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="card-head-title">Topic-wise Notes</div>
+            <div class="card-head-sub">Click each topic to read notes — aligned to NCERT &amp; SSC syllabus</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="topic-accordion">
+
+            <!-- Topic 1 -->
+            <div class="ta-item">
+              <button class="ta-head open" onclick="toggleAccordion(this)">
+                <div class="ta-num">1</div>
+                <div class="ta-title">What is Wastewater? Sources and Types</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body visible">
+                <span class="note-tag">NCERT pg. 220–221</span>
+                <p><strong>Wastewater</strong> (also called <strong>sewage</strong>) is any water that has been used and contaminated. It is produced from multiple sources:</p>
+                <ul>
+                  <li><strong>Domestic/household</strong> — kitchen sink water, toilet flush, bathing water, washing machine water</li>
+                  <li><strong>Industrial</strong> — factories release chemicals, dyes, acids and heavy metals like mercury and lead into water</li>
+                  <li><strong>Agricultural</strong> — excess fertilisers (nitrates, phosphates) and pesticides wash off farmland into water bodies</li>
+                  <li><strong>Hospitals</strong> — medical waste and pharmaceutical chemicals</li>
+                </ul>
+                <div class="callout">
+                  <strong>NCERT Key Fact:</strong> Sewage is 99.9% water. The remaining 0.1% contains dissolved and suspended impurities — but that tiny fraction is enough to make the water extremely dangerous and unusable.
+                </div>
+                <div class="callout amber" style="margin-top:8px;">
+                  <strong>SSC Link:</strong> Maharashtra Board Standard 7 includes the concept of "safe disposal of waste" — this connects directly to managing wastewater at home and in factories.
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 2 -->
+            <div class="ta-item">
+              <button class="ta-head" onclick="toggleAccordion(this)">
+                <div class="ta-num">2</div>
+                <div class="ta-title">What Does Sewage Contain? (Composition)</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body">
+                <span class="note-tag">NCERT pg. 221–222</span>
+                <p>Sewage is a complex mixture. It contains both <strong>dissolved substances</strong> (which mix into water) and <strong>suspended substances</strong> (which float or sink).</p>
+                <ul>
+                  <li><strong>Organic matter</strong> — faeces, food waste, vegetable and fruit scraps</li>
+                  <li><strong>Inorganic salts</strong> — nitrates, phosphates from fertilisers, chlorides</li>
+                  <li><strong>Pathogens</strong> — disease-causing bacteria (E. coli, Vibrio cholerae), viruses (Hepatitis A, Poliovirus), parasites (Entamoeba)</li>
+                  <li><strong>Detergents &amp; soaps</strong> — cause foam and reduce oxygen in water bodies</li>
+                  <li><strong>Heavy metals</strong> — lead, mercury, arsenic from industries</li>
+                  <li><strong>Toxic chemicals</strong> — dyes, pesticides, pharmaceuticals</li>
+                </ul>
+                <div class="callout">
+                  Dissolved oxygen (DO) in water is essential for aquatic life. When sewage enters a river, microbes decomposing organic waste <em>consume</em> all the dissolved oxygen, suffocating fish and other organisms — this is called <strong>Biochemical Oxygen Demand (BOD)</strong>. High BOD = highly polluted water.
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 3 -->
+            <div class="ta-item">
+              <button class="ta-head" onclick="toggleAccordion(this)">
+                <div class="ta-num">3</div>
+                <div class="ta-title">Sewage Treatment Plant (STP) — Step by Step</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body">
+                <span class="note-tag">NCERT pg. 222–224</span>
+                <p>A <strong>Sewage Treatment Plant (STP)</strong> or <strong>Wastewater Treatment Plant (WWTP)</strong> is a facility that processes wastewater in stages to remove impurities before the water is returned to the environment or reused.</p>
+                <ul>
+                  <li><strong>Step 1 — Physical treatment (Screening &amp; Sedimentation):</strong> Sewage flows through bar screens to remove large objects like rags and plastic. Then it flows into a grit tank where sand and small stones settle. Finally, water enters a large settling tank where suspended solids (called <em>sludge</em>) sink to the bottom.</li>
+                  <li><strong>Step 2 — Biological treatment (Aeration):</strong> The remaining water is pumped into an aeration tank, where air is bubbled through it. This encourages aerobic bacteria to rapidly break down organic matter. Bacteria consume the organic waste and convert it into harmless substances. The mixture then flows to a secondary settling tank, where bacterial mass settles as activated sludge.</li>
+                  <li><strong>Step 3 — Chemical treatment (Chlorination):</strong> The clarified water is disinfected using chlorine or ozone to kill any remaining pathogens. The water is now safe to discharge into rivers or to reuse for irrigation.</li>
+                  <li><strong>Sludge treatment:</strong> The collected sludge is dried in sludge-drying beds or treated in a biogas digester, where anaerobic bacteria produce <em>biogas</em> (methane) — used as fuel. The dried sludge can be used as fertiliser (manure) for agriculture.</li>
+                </ul>
+                <div class="callout green">
+                  <strong>Eco-Connection:</strong> STPs turn waste into resources — biogas (fuel), treated water (irrigation), and dried sludge (compost/manure). This is a real example of circular economy in environmental science.
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 4 -->
+            <div class="ta-item">
+              <button class="ta-head" onclick="toggleAccordion(this)">
+                <div class="ta-num">4</div>
+                <div class="ta-title">Sanitation, Open Defecation &amp; the Swachh Bharat Mission</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body">
+                <span class="note-tag">NCERT pg. 224–225</span>
+                <p><strong>Sanitation</strong> refers to the safe collection and disposal of human waste. It is a basic human right and a key part of public health. In India, lack of proper sanitation has been a major challenge.</p>
+                <ul>
+                  <li><strong>Open defecation</strong> — practising in fields, open grounds, near rivers — allows faecal bacteria to enter groundwater and surface water, spreading diseases.</li>
+                  <li>India's <strong>Swachh Bharat Mission</strong> (Clean India Mission), launched in 2014, aimed to build 100 million household toilets and make India open-defecation free (ODF) by 2019.</li>
+                  <li>Many rural areas still lack proper sewage networks. Wastewater flows directly into rivers like the Ganga, Yamuna and local rivers in Maharashtra.</li>
+                  <li><strong>Sewerage system</strong> — a network of underground pipes that carries sewage from households and industries to STPs.</li>
+                </ul>
+                <div class="callout amber">
+                  <strong>Think about it:</strong> 80% of India's water pollution comes from untreated sewage directly discharged into rivers. Every household toilet connected to a sewage line and treated at an STP prevents disease and saves lives.
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 5 -->
+            <div class="ta-item">
+              <button class="ta-head" onclick="toggleAccordion(this)">
+                <div class="ta-num">5</div>
+                <div class="ta-title">Waterborne Diseases — Prevention &amp; Link to Sanitation</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body">
+                <span class="note-tag">NCERT pg. 225</span>
+                <p>Waterborne diseases spread when contaminated water is used for drinking, cooking or washing. These diseases kill millions globally each year, and disproportionately affect children under five.</p>
+                <ul>
+                  <li><strong>Cholera</strong> — caused by <em>Vibrio cholerae</em> bacteria; symptoms: severe watery diarrhoea and dehydration</li>
+                  <li><strong>Typhoid</strong> — caused by <em>Salmonella typhi</em>; symptoms: high fever, weakness, stomach pain</li>
+                  <li><strong>Hepatitis A</strong> — caused by a virus; affects the liver; spreads through contaminated water and food</li>
+                  <li><strong>Dysentery</strong> — caused by <em>Shigella</em> bacteria or <em>Entamoeba histolytica</em> (amoeba); bloody diarrhoea</li>
+                  <li><strong>Polio</strong> — caused by poliovirus; can cause permanent paralysis; nearly eradicated in India through vaccination + sanitation</li>
+                </ul>
+                <div class="callout green">
+                  <strong>Prevention:</strong> Boil drinking water, use water purifiers (RO/UV), maintain personal hygiene, wash hands with soap, ensure food is cooked properly, support proper sewage disposal systems in your community.
+                </div>
+              </div>
+            </div>
+
+            <!-- Topic 6 -->
+            <div class="ta-item">
+              <button class="ta-head" onclick="toggleAccordion(this)">
+                <div class="ta-num">6</div>
+                <div class="ta-title">What You Can Do at Home — Eco Actions</div>
+                <svg class="ta-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="ta-body">
+                <span class="note-tag">Linked to EcoQuest Task — World Water Day (March)</span>
+                <ul>
+                  <li>Never pour cooking oil or grease down the drain — it blocks pipes and pollutes water bodies.</li>
+                  <li>Use biodegradable soaps and detergents to reduce chemical load in sewage.</li>
+                  <li>Do not flush medicines, sanitary products or plastic — they end up in rivers.</li>
+                  <li>Reuse kitchen rinse water to water plants — reduce wastewater generated at home.</li>
+                  <li>Spread awareness in your community about toilets, hand-washing and open defecation.</li>
+                  <li>Collect rainwater in tanks — reduces burden on freshwater sources and sewage systems.</li>
+                </ul>
+                <div class="callout green">
+                  <strong>EcoQuest Task Alert:</strong> Your linked World Water Day task asks you to make a DIY water filter model using sand, gravel and charcoal — demonstrating the physical filtration step of a real STP. Complete it to earn +80 XP!
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO RESOURCES -->
+      <div class="card ani d4" id="sec-videos">
+        <div class="card-head">
+          <div class="card-head-icon" style="background:#fecaca;">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 3l10 5-10 5V3z" fill="#dc2626" opacity="0.4" stroke="#dc2626" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="card-head-title">Watch &amp; Learn — Video Resources</div>
+            <div class="card-head-sub">Handpicked YouTube videos aligned to NCERT Class 7 Ch. 18</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="video-list">
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=wv_3kONYBVU" target="_blank">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/wv_3kONYBVU/mqdefault.jpg" alt="Wastewater Treatment" onerror="this.style.display='none'"/>
+                <div class="play-btn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Wastewater Treatment — NCERT Class 7 Chapter 18 Explained</div>
+                <div class="video-meta">
+                  <span class="video-source">Khan Academy India</span>
+                  <span class="video-dur">8 min</span>
+                  <span class="video-tag" style="background:#fef2f2; color:#991b1b;">Hindi + English</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=BI_VnnApQCk" target="_blank">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/BI_VnnApQCk/mqdefault.jpg" alt="Sewage Treatment Plant" onerror="this.style.display='none'"/>
+                <div class="play-btn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">How Does a Sewage Treatment Plant Work? (Animated)</div>
+                <div class="video-meta">
+                  <span class="video-source">Magnet Brains</span>
+                  <span class="video-dur">11 min</span>
+                  <span class="video-tag" style="background:#eaf3de; color:#27500a;">Animation</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=FeFj8mPFhCE" target="_blank">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/FeFj8mPFhCE/mqdefault.jpg" alt="Water Pollution" onerror="this.style.display='none'"/>
+                <div class="play-btn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Water Pollution — Causes, Effects and Solutions for Class 7</div>
+                <div class="video-meta">
+                  <span class="video-source">Vedantu</span>
+                  <span class="video-dur">14 min</span>
+                  <span class="video-tag" style="background:#eff6ff; color:#0c447c;">Exam Focus</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=PTTJL7BLhN4" target="_blank">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/PTTJL7BLhN4/mqdefault.jpg" alt="Swachh Bharat" onerror="this.style.display='none'"/>
+                <div class="play-btn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Swachh Bharat Mission — Sanitation &amp; Open Defecation Free India</div>
+                <div class="video-meta">
+                  <span class="video-source">NCERT Official</span>
+                  <span class="video-dur">6 min</span>
+                  <span class="video-tag" style="background:#f5f3ff; color:#5b21b6;">Official</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="video-card" href="https://www.youtube.com/watch?v=Vqz2IYlj-Ws" target="_blank">
+              <div class="video-thumb">
+                <img src="https://img.youtube.com/vi/Vqz2IYlj-Vs/mqdefault.jpg" alt="DIY Water Filter" onerror="this.style.display='none'"/>
+                <div class="play-btn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>
+              </div>
+              <div class="video-info">
+                <div class="video-title">Make a DIY Water Filter at Home — Science Project (Sand + Charcoal)</div>
+                <div class="video-meta">
+                  <span class="video-source">Science Activity</span>
+                  <span class="video-dur">7 min</span>
+                  <span class="video-tag" style="background:#eaf3de; color:#27500a;">Linked to Task</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+
+          <!-- QUIZ PROMPT -->
+          <div class="quiz-prompt">
+            <div>
+              <div class="qp-label">Ready to test yourself?</div>
+              <div class="qp-title">Wastewater Story Quiz</div>
+              <div class="qp-sub">10 questions · Based on Ch. 18 · Earn up to 50 XP · Unlocks water filter task</div>
+            </div>
+            <button class="qp-btn">Take Quiz →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ SIDE COLUMN ═══ -->
+    <div class="col-side" id="sideCol">
+
+      <!-- TOC -->
+      <div class="side-card">
+        <div class="side-card-head">
+          <div class="side-card-title">On This Page</div>
+        </div>
+        <div class="side-card-body" style="padding:.6rem .75rem;">
+          <ul class="toc-list" id="tocList">
+            <li><a href="#sec-intro"         class="active">What is Wastewater?</a></li>
+            <li><a href="#sec-concepts"              >Key Concepts</a></li>
+            <li><a href="#sec-notes"                 >Topic-wise Notes</a></li>
+            <li><a href="#sec-videos"                >🎥 Video Lessons</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- XP CARD -->
+      <div class="xp-card">
+        <div class="xp-val">+80</div>
+        <div class="xp-label">XP on completing this lesson</div>
+        <button class="xp-btn" onclick="markComplete()">Mark as Complete ✓</button>
+      </div>
+
+      <!-- LINKED TASK (amber teaser) -->
+      <div class="task-teaser">
+        <div class="tt-label">🎯 Linked Eco Task — March</div>
+        <h4>DIY Water Filter Challenge</h4>
+        <p>Using sand, gravel and activated charcoal, build a simple water filter that demonstrates physical filtration — just like a real STP. Photograph it before and after filtering muddy water!</p>
+        <button class="tt-btn">View Full Task →</button>
+      </div>
+
+      <!-- KEY VOCABULARY -->
+      <div class="side-card">
+        <div class="side-card-head">
+          <div class="side-card-title">Key Terms</div>
+        </div>
+        <div class="side-card-body">
+          <ul class="vocab-list">
+            <li><span class="vterm">Wastewater / Sewage</span><span class="vdef">Water that has been used and contaminated by homes, factories or agriculture</span></li>
+            <li><span class="vterm">BOD</span><span class="vdef">Biochemical Oxygen Demand — a measure of how much organic pollution is in water; high BOD = heavily polluted</span></li>
+            <li><span class="vterm">STP / WWTP</span><span class="vdef">Sewage/Wastewater Treatment Plant — facility that cleans sewage in physical, biological and chemical stages</span></li>
+            <li><span class="vterm">Sludge</span><span class="vdef">Solid matter that settles during sewage treatment; can be converted to biogas or used as manure</span></li>
+            <li><span class="vterm">Aeration</span><span class="vdef">Pumping air into wastewater to help aerobic bacteria break down organic matter</span></li>
+            <li><span class="vterm">Pathogen</span><span class="vdef">Disease-causing micro-organism (bacteria, virus, parasite) found in untreated sewage</span></li>
+            <li><span class="vterm">Sanitation</span><span class="vdef">Safe collection and disposal of human waste; essential for public health</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SYLLABUS COVERAGE -->
+      <div class="side-card">
+        <div class="side-card-head">
+          <div class="side-card-title">Syllabus Coverage</div>
+        </div>
+        <div class="side-card-body">
+          <div style="display:flex;flex-direction:column;gap:.5rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
+              <span style="color:var(--g-sub);">NCERT Class 7 Science</span>
+              <span style="background:#eaf3de;color:#27500a;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Ch. 18</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
+              <span style="color:var(--g-sub);">SSC Maharashtra Std 7</span>
+              <span style="background:#faeeda;color:#633806;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Science</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
+              <span style="color:var(--g-sub);">SDG Alignment</span>
+              <span style="background:#eff6ff;color:#0c447c;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Goal 6</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
+              <span style="color:var(--g-sub);">EVS Classes 6–8</span>
+              <span style="background:#eaf3de;color:#27500a;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;">Multiple</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleAccordion(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('.ta-head').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.classList.remove('visible');
+    });
+    if (!isOpen) {
+      btn.classList.add('open');
+      body.classList.add('visible');
+    }
+  }
+
+  setTimeout(() => {
+    document.getElementById('heroFill').style.width = '60%';
+  }, 400);
+
+  // Mark complete
+  function markComplete() {
+    const xpBtn = document.querySelector('.xp-btn');
+    const tbBtn = document.querySelector('.tb-btn.primary');
+    if (xpBtn) { xpBtn.textContent = '✅ Lesson Completed!'; xpBtn.style.background = '#27500a'; }
+    if (tbBtn) { tbBtn.textContent = '✅ Completed +80 XP'; }
+  }
+
+  // Active TOC on scroll
+  const sections = ['sec-intro', 'sec-concepts', 'sec-notes', 'sec-videos'];
+  const tocLinks  = document.querySelectorAll('#tocList a');
+  window.addEventListener('scroll', () => {
+    let current = sections[0];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < 120) current = id;
+    });
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest – Upload Proof</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --g-dark:#0d1f0f;--g-deep:#132b15;--g-mid:#2d7a38;--g-bright:#56c271;
+    --g-light:#e8f5e9;--g-pale:#f4f9f4;--g-border:#c8dcc8;--g-muted:#7a9a7c;
+    --g-text:#1a3d1c;--g-sub:#5a7a5c;
+    --font-d:'Playfair Display',Georgia,serif;--font-b:'DM Sans',sans-serif;
+    --r-sm:8px;--r-md:12px;--r-lg:18px;--r-xl:24px;
+  }
+  body{font-family:var(--font-b);background:#f0f4f0;color:var(--g-text);-webkit-font-smoothing:antialiased;display:flex;min-height:100vh;}
+  a{font-family:inherit;}
+
+  .sidebar{width:240px;background:var(--g-dark);display:flex;flex-direction:column;flex-shrink:0;}
+  .sb-brand{display:flex;align-items:center;gap:12px;padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(86,194,113,.12);}
+  .sb-logo{width:40px;height:40px;background:linear-gradient(135deg,#56c271,#2d7a38);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sb-name{font-family:var(--font-d);font-size:18px;color:#e8f5e9;}
+  .sb-tagline{font-size:10px;color:#5a7a5c;letter-spacing:.8px;text-transform:uppercase;}
+  .sb-nav{flex:1;padding:1rem .75rem;overflow-y:auto;}
+  .nav-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#3d5c3f;padding:.5rem .5rem .35rem;margin-top:.5rem;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-sm);color:#7a9a7c;font-size:14px;cursor:pointer;transition:all .22s ease;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--font-b);}
+  .nav-item svg{width:16px;height:16px;flex-shrink:0;}
+  .nav-item:hover{background:rgba(86,194,113,.08);color:#c8e6c9;}
+  .nav-item.active{background:rgba(86,194,113,.14);color:var(--g-bright);font-weight:500;}
+  .nav-badge{margin-left:auto;background:var(--g-mid);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;}
+  .sb-user{padding:1rem 1.25rem;border-top:1px solid rgba(86,194,113,.12);display:flex;align-items:center;gap:10px;}
+  .sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#2d7a38,#56c271);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#fff;flex-shrink:0;}
+  .sb-user-name{font-size:13px;color:#c8e6c9;font-weight:500;}
+  .sb-user-class{font-size:11px;color:#5a7a5c;}
+
+  .main{flex:1;display:flex;flex-direction:column;}
+  .topbar{background:#fff;border-bottom:1px solid var(--g-border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .back-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--g-border);background:#fff;color:var(--g-sub);font-family:var(--font-b);font-size:13px;cursor:pointer;transition:all .22s;}
+  .back-btn:hover{border-color:var(--g-bright);color:var(--g-mid);}
+  .back-btn svg{width:14px;height:14px;}
+  .topbar-title{font-family:var(--font-d);font-size:20px;color:var(--g-text);}
+  .topbar-sub{font-size:12px;color:var(--g-muted);margin-top:1px;}
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .tb-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);font-family:var(--font-b);font-size:13px;font-weight:500;cursor:pointer;transition:all .22s;border:1px solid var(--g-border);background:#fff;color:var(--g-sub);}
+  .tb-btn svg{width:14px;height:14px;}
+  .tb-btn:hover{border-color:var(--g-bright);color:var(--g-mid);}
+  .tb-btn.primary{background:var(--g-mid);color:#fff;border-color:var(--g-mid);}
+  .tb-btn.primary:hover{background:#236030;}
+  .tb-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .content{padding:2rem;max-width:900px;width:100%;}
+
+  .progress-bar-wrap{background:#fff;border:1px solid var(--g-border);border-radius:var(--r-xl);padding:1.25rem 1.75rem;margin-bottom:2rem;display:flex;align-items:center;gap:0;}
+  .step-item{display:flex;align-items:center;gap:0;flex:1;}
+  .step-item:last-child{flex:none;}
+  .step-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;transition:all .3s;}
+  .step-circle.done{background:var(--g-bright);color:var(--g-dark);}
+  .step-circle.active{background:var(--g-mid);color:#fff;box-shadow:0 0 0 4px rgba(45,122,56,.15);}
+  .step-circle.pending{background:#f0f4f0;color:var(--g-muted);border:1.5px solid var(--g-border);}
+  .step-label{font-size:12px;color:var(--g-muted);margin-top:5px;white-space:nowrap;}
+  .step-label.active-lbl{color:var(--g-mid);font-weight:500;}
+  .step-connector{flex:1;height:2px;background:var(--g-border);margin:0 4px;margin-bottom:18px;}
+  .step-connector.done-con{background:var(--g-bright);}
+  .step-with-label{display:flex;flex-direction:column;align-items:center;}
+
+  .task-context-banner{background:var(--g-dark);border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:16px;}
+  .tcb-icon{width:44px;height:44px;border-radius:12px;background:rgba(86,194,113,.12);border:1px solid rgba(86,194,113,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .tcb-icon svg{width:22px;height:22px;color:var(--g-bright);}
+  .tcb-task-label{font-size:10px;color:#5a7a5c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;}
+  .tcb-task-name{font-family:var(--font-d);font-size:17px;color:#e8f5e9;}
+  .tcb-festival{font-size:12px;color:var(--g-bright);margin-top:3px;}
+  .tcb-pts{margin-left:auto;text-align:right;}
+  .tcb-pts-val{font-family:var(--font-d);font-size:28px;color:var(--g-bright);}
+  .tcb-pts-label{font-size:10px;color:#5a7a5c;text-transform:uppercase;letter-spacing:.8px;}
+
+  .upload-section{background:#fff;border:1px solid var(--g-border);border-radius:var(--r-xl);padding:1.75rem;margin-bottom:1.5rem;}
+  .upload-section-title{font-family:var(--font-d);font-size:18px;color:var(--g-text);margin-bottom:.35rem;}
+  .upload-section-sub{font-size:13px;color:var(--g-muted);margin-bottom:1.5rem;line-height:1.6;}
+
+  .drop-zone{border:2px dashed var(--g-border);border-radius:var(--r-lg);padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all .22s;background:var(--g-pale);position:relative;}
+  .drop-zone:hover,.drop-zone.drag-over{border-color:var(--g-bright);background:#f0fdf4;}
+  .drop-zone.has-file{border-color:var(--g-mid);border-style:solid;background:#f0fdf4;}
+  .dz-icon{width:48px;height:48px;background:#eaf3de;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+  .dz-icon svg{width:24px;height:24px;color:var(--g-mid);}
+  .dz-title{font-size:15px;font-weight:500;color:var(--g-text);margin-bottom:.4rem;}
+  .dz-sub{font-size:13px;color:var(--g-muted);margin-bottom:1rem;}
+  .dz-browse{display:inline-block;padding:8px 20px;border-radius:var(--r-sm);background:var(--g-mid);color:#fff;font-family:var(--font-b);font-size:13px;font-weight:500;cursor:pointer;border:none;}
+  .dz-formats{font-size:11px;color:#a0b8a0;margin-top:.75rem;}
+  .dz-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+
+  .file-preview{display:flex;align-items:center;gap:12px;background:#f0fdf4;border:1px solid #a8d5b0;border-radius:var(--r-md);padding:.85rem 1.1rem;margin-top:1rem;}
+  .fp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .fp-icon.img-type{background:#dbeafe;}
+  .fp-icon.vid-type{background:#fef3c7;}
+  .fp-icon.doc-type{background:#ede9fe;}
+  .fp-icon svg{width:18px;height:18px;}
+  .fp-name{font-size:13px;font-weight:500;color:var(--g-text);}
+  .fp-size{font-size:11px;color:var(--g-muted);margin-top:2px;}
+  .fp-remove{margin-left:auto;width:28px;height:28px;border-radius:50%;background:#fee2e2;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#dc2626;flex-shrink:0;}
+  .fp-remove svg{width:13px;height:13px;}
+
+  .multi-upload-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+  .caption-box{width:100%;border:1px solid var(--g-border);border-radius:var(--r-md);padding:.75rem 1rem;font-family:var(--font-b);font-size:13.5px;color:var(--g-text);background:#fafcfa;resize:vertical;min-height:90px;transition:border-color .22s;outline:none;}
+  .caption-box:focus{border-color:var(--g-bright);background:#fff;}
+  .char-count{font-size:11px;color:var(--g-muted);text-align:right;margin-top:4px;}
+
+  .checklist-group{display:flex;flex-direction:column;gap:10px;}
+  .check-item{display:flex;align-items:flex-start;gap:12px;padding:.85rem 1.1rem;border-radius:var(--r-md);border:1.5px solid var(--g-border);cursor:pointer;transition:all .22s;background:var(--g-pale);}
+  .check-item:hover{border-color:var(--g-bright);background:#f0fdf4;}
+  .check-item.checked{border-color:var(--g-mid);background:#f0fdf4;}
+  .check-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--g-border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .22s;}
+  .check-item.checked .check-box{background:var(--g-mid);border-color:var(--g-mid);}
+  .check-box svg{width:11px;height:11px;color:#fff;opacity:0;}
+  .check-item.checked .check-box svg{opacity:1;}
+  .check-label{font-size:13.5px;color:var(--g-text);}
+  .check-sub{font-size:12px;color:var(--g-muted);margin-top:2px;}
+
+  .concept-tag-group{display:flex;flex-wrap:wrap;gap:8px;}
+  .concept-tag{padding:7px 14px;border-radius:20px;border:1.5px solid var(--g-border);background:#fff;font-family:var(--font-b);font-size:13px;color:var(--g-sub);cursor:pointer;transition:all .22s;}
+  .concept-tag:hover{border-color:var(--g-bright);color:var(--g-mid);}
+  .concept-tag.selected{background:var(--g-mid);border-color:var(--g-mid);color:#fff;}
+
+  .impact-meter{margin-top:.75rem;}
+  .impact-slider{width:100%;accent-color:var(--g-mid);}
+  .impact-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--g-muted);margin-top:4px;}
+  .impact-val{display:inline-block;background:var(--g-mid);color:#fff;font-size:12px;font-weight:500;padding:3px 10px;border-radius:10px;margin-top:6px;}
+
+  .pts-preview-bar{background:#fff;border:1px solid var(--g-border);border-radius:var(--r-xl);padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+  .pts-breakdown{display:flex;gap:1.5rem;align-items:center;}
+  .pts-item{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .pts-item-val{font-family:var(--font-d);font-size:22px;color:var(--g-mid);}
+  .pts-item-lbl{font-size:10px;color:var(--g-muted);text-transform:uppercase;letter-spacing:.6px;}
+  .pts-plus{font-size:18px;color:var(--g-border);}
+  .pts-total-val{font-family:var(--font-d);font-size:32px;color:var(--g-bright);}
+  .pts-total-lbl{font-size:11px;color:var(--g-muted);text-transform:uppercase;letter-spacing:.6px;}
+
+  .submit-area{display:flex;gap:10px;justify-content:flex-end;padding-bottom:2rem;}
+  .submit-btn{padding:12px 28px;border-radius:var(--r-sm);background:var(--g-mid);color:#fff;font-family:var(--font-b);font-size:14px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .22s;}
+  .submit-btn:hover{background:#236030;}
+  .submit-btn svg{width:16px;height:16px;}
+  .save-draft{padding:12px 20px;border-radius:var(--r-sm);background:#fff;color:var(--g-sub);font-family:var(--font-b);font-size:14px;font-weight:500;border:1px solid var(--g-border);cursor:pointer;transition:all .22s;}
+  .save-draft:hover{border-color:var(--g-bright);color:var(--g-mid);}
+
+  .success-overlay{display:none;position:fixed;inset:0;background:rgba(13,31,15,.75);z-index:200;align-items:center;justify-content:center;}
+  .success-overlay.show{display:flex;}
+  .success-modal{background:#fff;border-radius:var(--r-xl);padding:2.5rem;text-align:center;max-width:400px;width:90%;}
+  .success-anim{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#56c271,#2d7a38);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;}
+  .success-anim svg{width:32px;height:32px;color:#fff;}
+  .success-title{font-family:var(--font-d);font-size:24px;color:var(--g-text);margin-bottom:.5rem;}
+  .success-sub{font-size:14px;color:var(--g-muted);line-height:1.6;margin-bottom:1.5rem;}
+  .success-pts{font-family:var(--font-d);font-size:40px;color:var(--g-bright);margin-bottom:.25rem;}
+  .success-pts-lbl{font-size:12px;color:var(--g-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5rem;}
+  .success-close{padding:10px 28px;border-radius:var(--r-sm);background:var(--g-mid);color:#fff;font-family:var(--font-b);font-size:14px;font-weight:500;border:none;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div style="display:flex;min-height:100vh;">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sb-name">EcoQuest</div>
+      <div class="sb-tagline">Eco Learning</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Main</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Lessons
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
+      Quizzes
+      <span class="nav-badge">2</span>
+    </button>
+    <button class="nav-item active">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Tasks
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">Community</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Leaderboard
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      NGO Tasks
+      <span class="nav-badge" style="background:#f59e0b;">2</span>
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">My Account</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Upload Proof
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Profile
+    </button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar">AK</div>
+    <div><div class="sb-user-name">Aarav Sharma</div><div class="sb-user-class">Grade 7 · Pune</div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn"><svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to Tasks</button>
+      <div style="width:1px;height:28px;background:var(--g-border);margin:0 4px;"></div>
+      <div><div class="topbar-title">Upload Proof</div><div class="topbar-sub">Make an Eco-Friendly Gudi · April 2026</div></div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" onclick="saveDraft()"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h8l2 2v8a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 2v4h4V2M4 10h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Save Draft</button>
+      <button class="tb-btn primary" onclick="submitProof()"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4L12 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Submit</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+  
+
+    <!-- TASK CONTEXT BANNER -->
+    <div class="task-context-banner">
+      <div class="tcb-icon">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 3C11 3 5 7.5 5 13a6 6 0 0012 0C17 7.5 11 3 11 3z" fill="#56c271" opacity=".25"/><path d="M11 3C11 3 5 7.5 5 13a6 6 0 0012 0C17 7.5 11 3 11 3z" stroke="#56c271" stroke-width="1.3"/><path d="M11 9v5M9 13c.7-1.5 2-2.5 2-2.5" stroke="#56c271" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="tcb-task-label">Active Task</div>
+        <div class="tcb-task-name">Make an Eco-Friendly Gudi</div>
+        <div class="tcb-festival">Festival: Gudi Padwa -Maharashtra New Year</div>
+      </div>
+      <div class="tcb-pts">
+        <div class="tcb-pts-val">120</div>
+        <div class="tcb-pts-label">EcoPoints</div>
+      </div>
+    </div>
+
+    <!-- UPLOAD: MAIN PHOTO -->
+    <div class="upload-section">
+      <div class="upload-section-title">Photo / Video Proof</div>
+      <div class="upload-section-sub">Upload a photo or short video showing your completed activity. Clear, well-lit images earn bonus quality points.</div>
+      <div class="drop-zone" id="mainDrop" ondragover="handleDrag(event,'mainDrop')" ondragleave="handleDragLeave(event,'mainDrop')" ondrop="handleDrop(event,'mainDrop','mainInput','mainPreview')">
+        <input type="file" class="dz-input" id="mainInput" accept="image/*,video/*" onchange="handleFile(this,'mainPreview','mainDrop')">
+        <div id="mainEmpty">
+          <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Drop your photo or video here</div>
+          <div class="dz-sub">or browse from your device</div>
+          <div class="dz-browse">Browse Files</div>
+          <div class="dz-formats">JPG, PNG, HEIC, MP4 · Max 25MB</div>
+        </div>
+      </div>
+      <div class="file-preview" id="mainPreview" style="display:none;"></div>
+    </div>
+
+    <!-- UPLOAD: SUPPORTING DOCS -->
+    <div class="upload-section">
+      <div class="upload-section-title">Supporting Documents <span style="font-size:12px;color:var(--g-muted);font-family:var(--font-b);font-weight:400;">(optional)</span></div>
+      <div class="upload-section-sub">Add a pledge letter, drawing, or written note to strengthen your submission and earn extra points.</div>
+      <div class="multi-upload-row">
+        <div>
+          <div style="font-size:12px;color:var(--g-sub);font-weight:500;margin-bottom:8px;">Document / Drawing</div>
+          <div class="drop-zone" id="docDrop" style="padding:1.5rem 1rem;" ondragover="handleDrag(event,'docDrop')" ondragleave="handleDragLeave(event,'docDrop')" ondrop="handleDrop(event,'docDrop','docInput','docPreview')">
+            <input type="file" class="dz-input" id="docInput" accept=".pdf,.doc,.docx,image/*" onchange="handleFile(this,'docPreview','docDrop')">
+            <div class="dz-icon" style="margin-bottom:.5rem;"><svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div style="font-size:13px;color:var(--g-muted);">PDF, DOC, or image</div>
+          </div>
+          <div class="file-preview" id="docPreview" style="display:none;margin-top:8px;"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--g-sub);font-weight:500;margin-bottom:8px;">Group / Team Photo</div>
+          <div class="drop-zone" id="groupDrop" style="padding:1.5rem 1rem;" ondragover="handleDrag(event,'groupDrop')" ondragleave="handleDragLeave(event,'groupDrop')" ondrop="handleDrop(event,'groupDrop','groupInput','groupPreview')">
+            <input type="file" class="dz-input" id="groupInput" accept="image/*" onchange="handleFile(this,'groupPreview','groupDrop')">
+            <div class="dz-icon" style="margin-bottom:.5rem;"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.3"/><polyline points="21,15 16,10 5,21" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+            <div style="font-size:13px;color:var(--g-muted);">JPG, PNG, HEIC</div>
+          </div>
+          <div class="file-preview" id="groupPreview" style="display:none;margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAPTION -->
+    <div class="upload-section">
+      <div class="upload-section-title">Activity Caption</div>
+      <div class="upload-section-sub">Describe what you did in 2–3 sentences. This helps your teacher review your work quickly.</div>
+      <textarea class="caption-box" id="caption" placeholder="e.g. I made a poster asking my neighbours not to burst crackers during Diwali. I explained how crackers increase PM2.5 levels and cause respiratory issues..." oninput="updateCaption(this)"></textarea>
+      <div class="char-count" id="charCount">0 / 300 characters</div>
+    </div>
+<!-- CHECKLIST -->
+<div class="upload-section">
+  <div class="upload-section-title">Gudi Padwa Activity Checklist</div>
+  <div class="upload-section-sub">
+    Tick off what you actually did — earn points for eco-friendly celebration 🌿
+  </div>
+
+  <div class="checklist-group">
+
+    <div class="check-item" id="ck1" onclick="toggleCheck('ck1')">
+      <div class="check-box">
+        <svg viewBox="0 0 11 11" fill="none">
+          <path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="check-label">
+          Made a traditional Gudi using bamboo stick, kalash & neem leaves
+        </div>
+        <div class="check-sub">Earns 40 pts</div>
+      </div>
+    </div>
+
+    <div class="check-item" id="ck2" onclick="toggleCheck('ck2')">
+      <div class="check-box">
+        <svg viewBox="0 0 11 11" fill="none">
+          <path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="check-label">
+          Used old saree / cotton dupatta instead of buying synthetic cloth
+        </div>
+        <div class="check-sub">Earns 30 pts</div>
+      </div>
+    </div>
+
+    <div class="check-item" id="ck3" onclick="toggleCheck('ck3')">
+      <div class="check-box">
+        <svg viewBox="0 0 11 11" fill="none">
+          <path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="check-label">
+          Prepared natural dyes using turmeric, hibiscus, or spinach
+        </div>
+        <div class="check-sub">Earns 25 pts</div>
+      </div>
+    </div>
+
+    <div class="check-item" id="ck4" onclick="toggleCheck('ck4')">
+      <div class="check-box">
+        <svg viewBox="0 0 11 11" fill="none">
+          <path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="check-label">
+          Compared natural vs synthetic colors and noted observations (Science link)
+        </div>
+        <div class="check-sub">Earns 25 pts · Bonus</div>
+      </div>
+    </div>
+
+    <div class="check-item" id="ck5" onclick="toggleCheck('ck5')">
+      <div class="check-box">
+        <svg viewBox="0 0 11 11" fill="none">
+          <path d="M2 5.5l3 3L9 2.5" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="check-label">
+          Explained the eco-friendly idea to family or friends
+        </div>
+        <div class="check-sub">Earns 20 pts</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- CONCEPT TAG -->
+<div class="upload-section">
+  <div class="upload-section-title">
+    Which concept does this activity best connect to?
+  </div>
+  <div class="upload-section-sub">
+    Tag the environmental & science concept your Gudi Padwa activity demonstrates.
+  </div>
+
+  <div class="concept-tag-group" id="conceptTags">
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Sustainable Living
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Waste Reduction (Reuse of Clothes)
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Natural vs Synthetic Materials
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Eco-friendly Festivals
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Plant-Based Colors & Dyes
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Science – Acids, Bases & Salts
+    </div>
+
+    <div class="concept-tag" onclick="selectConcept(this)">
+      Community Awareness
+    </div>
+
+  </div>
+</div>
+    
+
+    <!-- POINTS PREVIEW -->
+    <div class="pts-preview-bar">
+      <div>
+        <div style="font-size:12px;color:var(--g-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.6px;">Points Preview</div>
+        <div style="font-size:13px;color:var(--g-sub);">Based on your checklist selections</div>
+      </div>
+      <div class="pts-breakdown">
+        <div class="pts-item"><div class="pts-item-val" id="baseVal">0</div><div class="pts-item-lbl">Base</div></div>
+        <div class="pts-plus">+</div>
+        <div class="pts-item"><div class="pts-item-val" id="bonusVal">0</div><div class="pts-item-lbl">Bonus</div></div>
+        <div class="pts-plus">=</div>
+        <div style="text-align:center;">
+          <div class="pts-total-val" id="totalVal">0</div>
+          <div class="pts-total-lbl">EcoPoints</div>
+        </div>
+      </div>
+    </div>
+
+    
+
+  </div>
+</div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-anim">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M6 16l7 7L26 9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="success-title">Submission Complete!</div>
+    <div class="success-sub">Your proof has been submitted for teacher review. You'll be notified once it's approved.</div>
+    <div class="success-pts" id="modalPts">0</div>
+    <div class="success-pts-lbl">EcoPoints Pending</div>
+    <button class="success-close" onclick="closeSuccess()">Back to Tasks</button>
+  </div>
+</div>
+
+<script>
+const checkPts={ck1:40,ck2:30,ck3:25,ck4:25};
+const impactLabels=['Just myself','2–5 people reached','6–20 people reached','21–50 people reached','50+ people reached'];
+
+function toggleCheck(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('checked');
+  updatePoints();
+}
+
+function updatePoints(){
+  let base=0,bonus=0;
+  ['ck1','ck2','ck3'].forEach(id=>{if(document.getElementById(id).classList.contains('checked'))base+=checkPts[id];});
+  if(document.getElementById('ck4').classList.contains('checked'))bonus+=checkPts['ck4'];
+  document.getElementById('baseVal').textContent=base;
+  document.getElementById('bonusVal').textContent=bonus;
+  document.getElementById('totalVal').textContent=base+bonus;
+}
+
+function updateImpact(el){
+  const labels=impactLabels;
+  document.getElementById('impactVal').textContent=labels[parseInt(el.value)-1];
+}
+
+function updateCaption(el){
+  const len=Math.min(el.value.length,300);
+  el.value=el.value.slice(0,300);
+  document.getElementById('charCount').textContent=len+' / 300 characters';
+}
+
+function selectConcept(el){
+  document.querySelectorAll('.concept-tag').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function handleFile(input,previewId,dropId){
+  const file=input.files[0];if(!file)return;
+  const drop=document.getElementById(dropId);
+  drop.classList.add('has-file');
+  const icon=file.type.startsWith('video')?'vid-type':file.type.includes('pdf')||file.name.endsWith('.doc')||file.name.endsWith('.docx')?'doc-type':'img-type';
+  const iconSvg=icon==='vid-type'?'<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="13" height="10" rx="1.5" stroke="#b45309" stroke-width="1.3"/><path d="M15 8l4-2v6l-4-2z" stroke="#b45309" stroke-width="1.3" stroke-linejoin="round"/></svg>':icon==='doc-type'?'<svg viewBox="0 0 20 20" fill="none"><path d="M4 3h8l4 4v10H4z" stroke="#7c3aed" stroke-width="1.3" stroke-linejoin="round"/><path d="M12 3v4h4M7 11h6M7 14h4" stroke="#7c3aed" stroke-width="1.3" stroke-linecap="round"/></svg>':'<svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="1.5" stroke="#1d4ed8" stroke-width="1.3"/><circle cx="7" cy="9" r="1.5" stroke="#1d4ed8" stroke-width="1.2"/><path d="M2 14l5-4 4 3 2-2 5 3" stroke="#1d4ed8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const sz=(file.size/1024)<1024?(file.size/1024).toFixed(0)+' KB':((file.size/1024)/1024).toFixed(1)+' MB';
+  const prev=document.getElementById(previewId);
+  prev.innerHTML=`<div class="fp-icon ${icon}">${iconSvg}</div><div><div class="fp-name">${file.name.length>28?file.name.slice(0,26)+'…':file.name}</div><div class="fp-size">${sz}</div></div><button class="fp-remove" onclick="removeFile('${previewId}','${dropId}','${input.id}')"><svg viewBox="0 0 13 13" fill="none"><path d="M2 2l9 9M11 2L2 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
+  prev.style.display='flex';
+}
+
+function removeFile(previewId,dropId,inputId){
+  document.getElementById(previewId).style.display='none';
+  document.getElementById(dropId).classList.remove('has-file');
+  document.getElementById(inputId).value='';
+}
+
+function handleDrag(e,id){e.preventDefault();document.getElementById(id).classList.add('drag-over');}
+function handleDragLeave(e,id){document.getElementById(id).classList.remove('drag-over');}
+function handleDrop(e,dropId,inputId,previewId){
+  e.preventDefault();
+  document.getElementById(dropId).classList.remove('drag-over');
+  const dt=e.dataTransfer;
+  if(dt.files.length){
+    const inp=document.getElementById(inputId);
+    const fake=new DataTransfer();fake.items.add(dt.files[0]);
+    inp.files=fake.files;
+    handleFile(inp,previewId,dropId);
+  }
+}
+
+function saveDraft(){
+  const btn=event.target.closest('button');
+  const orig=btn.textContent;
+  btn.textContent='Saved!';
+  btn.style.color='var(--g-mid)';btn.style.borderColor='var(--g-bright)';
+  setTimeout(()=>{btn.textContent=orig;btn.style.color='';btn.style.borderColor='';},1800);
+}
+
+function submitProof(){
+  const total=parseInt(document.getElementById('totalVal').textContent)||0;
+  document.getElementById('modalPts').textContent=total||'—';
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function closeSuccess(){document.getElementById('successOverlay').classList.remove('show');}
+</script>
+
+</body>
+</html>

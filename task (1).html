@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoQuest — Tasks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g-dark:   #0d1f0f;
+      --g-deep:   #132b15;
+      --g-mid:    #2d7a38;
+      --g-bright: #56c271;
+      --g-light:  #e8f5e9;
+      --g-pale:   #f4f9f4;
+      --g-border: #c8dcc8;
+      --g-muted:  #7a9a7c;
+      --g-text:   #1a3d1c;
+      --g-sub:    #5a7a5c;
+      --font-d:   'Playfair Display', Georgia, serif;
+      --font-b:   'DM Sans', sans-serif;
+      --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
+      --ease: 0.22s ease;
+    }
+    html, body { height: 100%; font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+      background: var(--g-dark); display: flex; flex-direction: column; z-index: 100;
+    }
+    .sb-brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid rgba(86,194,113,0.12);
+    }
+    .sb-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #56c271, #2d7a38);
+      border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sb-logo svg { width: 22px; height: 22px; }
+    .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
+    .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: 0.8px; text-transform: uppercase; }
+    .sb-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: 0.5rem 0.5rem 0.35rem; margin-top: 0.5rem; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--r-sm);
+      color: #7a9a7c; font-size: 14px; cursor: pointer;
+      transition: all var(--ease); margin-bottom: 2px;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .nav-item:hover { background: rgba(86,194,113,0.08); color: #c8e6c9; }
+    .nav-item.active { background: rgba(86,194,113,0.14); color: var(--g-bright); font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+    .sb-user {
+      padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,0.12);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sb-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2d7a38, #56c271);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0;
+    }
+    .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
+    .sb-user-class { font-size: 11px; color: #5a7a5c; }
+
+    /* ── MAIN ── */
+    .main { margin-left: 240px; min-height: 100vh; }
+    .topbar {
+      background: #fff; border-bottom: 1px solid var(--g-border);
+      padding: 0 2rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); }
+    .topbar-sub { font-size: 12px; color: var(--g-muted); margin-top: 1px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .tb-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: var(--r-sm);
+      font-family: var(--font-b); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all var(--ease);
+      border: 1px solid var(--g-border); background: #fff; color: var(--g-sub);
+    }
+    .tb-btn svg { width: 14px; height: 14px; }
+    .tb-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
+    .tb-btn.primary { background: var(--g-mid); color: #fff; border-color: var(--g-mid); }
+    .tb-btn.primary:hover { background: #236030; }
+
+    .content { padding: 2rem; max-width: 1200px; }
+
+    /* ── MONTH FILTER ── */
+    .month-strip {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+      margin-bottom: 2rem; scrollbar-width: none;
+    }
+    .month-strip::-webkit-scrollbar { display: none; }
+    .month-pill {
+      flex-shrink: 0; padding: 8px 18px; border-radius: 20px;
+      border: 1.5px solid var(--g-border); background: #fff;
+      font-family: var(--font-b); font-size: 13px; color: var(--g-sub);
+      cursor: pointer; transition: all var(--ease);
+      display: flex; flex-direction: column; align-items: center; gap: 1px;
+    }
+    .month-pill:hover { border-color: var(--g-bright); color: var(--g-mid); }
+    .month-pill.active { background: var(--g-mid); border-color: var(--g-mid); color: #fff; }
+    .month-pill .festival-name { font-size: 10px; opacity: 0.75; }
+
+    /* ── FEATURED TASK (HERO) ── */
+    .featured-task {
+      background: var(--g-dark); border-radius: var(--r-xl);
+      padding: 2rem 2.5rem; margin-bottom: 2rem;
+      position: relative; overflow: hidden;
+      display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start;
+    }
+    .featured-task::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(30 40 40)'/%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(90 40 40)'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+    }
+    .ft-left { position: relative; }
+    .ft-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 11px; color: #fbbf24; letter-spacing: 0.8px; text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+    .ft-eyebrow span { width: 5px; height: 5px; border-radius: 50%; background: #fbbf24; animation: pulse 2s infinite; }
+    .ft-title { font-family: var(--font-d); font-size: 32px; color: #e8f5e9; line-height: 1.15; margin-bottom: 0.4rem; }
+    .ft-festival { font-size: 13px; color: var(--g-bright); font-weight: 500; margin-bottom: 1rem; }
+    .ft-desc { font-size: 14px; color: #7a9a7c; line-height: 1.7; margin-bottom: 1.25rem; max-width: 560px; }
+    .ft-concept {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(86,194,113,0.1); border: 1px solid rgba(86,194,113,0.2);
+      border-radius: 8px; padding: 7px 14px;
+      font-size: 12.5px; color: #a8d5b0; margin-bottom: 1.25rem;
+    }
+    .ft-concept svg { width: 13px; height: 13px; color: var(--g-bright); flex-shrink: 0; }
+    .ft-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .ft-meta-item { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #5a7a5c; }
+    .ft-meta-item svg { width: 14px; height: 14px; color: var(--g-bright); }
+    .ft-actions { display: flex; gap: 10px; }
+    .ft-btn {
+      padding: 11px 22px; border-radius: var(--r-sm);
+      font-family: var(--font-b); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all var(--ease); border: none;
+    }
+    .ft-btn.solid { background: var(--g-bright); color: var(--g-dark); }
+    .ft-btn.solid:hover { background: #46b261; }
+    .ft-btn.ghost { background: transparent; border: 1px solid rgba(86,194,113,0.3); color: var(--g-bright); }
+    .ft-btn.ghost:hover { background: rgba(86,194,113,0.08); }
+
+    .ft-right { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .pts-bubble {
+      background: rgba(86,194,113,0.12); border: 1px solid rgba(86,194,113,0.25);
+      border-radius: var(--r-xl); padding: 1.25rem 1.5rem; text-align: center; min-width: 140px;
+    }
+    .pts-val { font-family: var(--font-d); font-size: 40px; color: var(--g-bright); line-height: 1; }
+    .pts-label { font-size: 11px; color: #5a7a5c; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+    .pts-type { font-size: 10px; color: #3d5c3f; margin-top: 2px; }
+    .ngo-bonus-pill {
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 12px; padding: 8px 14px; text-align: center; min-width: 140px;
+    }
+    .ngo-bonus-val { font-size: 18px; font-weight: 500; color: #fbbf24; }
+    .ngo-bonus-label { font-size: 10px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* ── SECTION HEADING ── */
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.25rem; }
+    .section-title { font-family: var(--font-d); font-size: 22px; color: var(--g-text); }
+    .section-sub { font-size: 12.5px; color: var(--g-muted); margin-top: 2px; }
+    .see-all { font-size: 13px; color: var(--g-mid); font-weight: 500; cursor: pointer; border: none; background: none; }
+
+    /* ── TASKS GRID ── */
+    .tasks-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+
+    .task-card {
+      background: #fff; border: 1.5px solid var(--g-border);
+      border-radius: var(--r-lg); overflow: hidden;
+      display: flex; flex-direction: column;
+      cursor: pointer; transition: all var(--ease);
+    }
+    .task-card:hover { border-color: var(--g-bright); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(45,122,56,0.1); }
+    .task-card.completed { border-color: #c0dd97; }
+    .task-card.locked { opacity: 0.6; cursor: not-allowed; }
+    .task-card.locked:hover { transform: none; box-shadow: none; border-color: var(--g-border); }
+    .task-card.active-now { border-color: var(--g-mid); border-width: 2px; }
+
+    .tc-header {
+      padding: 1.1rem 1.25rem 0.9rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    }
+    .tc-month-badge {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+      font-weight: 500; padding: 3px 10px; border-radius: 12px;
+    }
+    .tc-status-badge {
+      font-size: 10px; padding: 3px 9px; border-radius: 12px; font-weight: 500; white-space: nowrap;
+    }
+
+    .tc-body { padding: 0 1.25rem 1.1rem; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .tc-festival { font-size: 11px; color: var(--g-mid); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tc-title { font-family: var(--font-d); font-size: 16px; color: var(--g-text); line-height: 1.3; }
+    .tc-desc { font-size: 12.5px; color: var(--g-muted); line-height: 1.6; flex: 1; }
+    .tc-concept-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #eaf3de; border-radius: 8px; padding: 4px 10px;
+      font-size: 11px; color: #27500a; align-self: flex-start;
+    }
+    .tc-concept-chip svg { width: 11px; height: 11px; }
+
+    .tc-footer {
+      padding: 0.85rem 1.25rem;
+      border-top: 1px solid #f0f4f0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tc-pts { font-size: 13px; color: var(--g-mid); font-weight: 500; display: flex; align-items: center; gap: 4px; }
+    .tc-pts svg { width: 13px; height: 13px; }
+    .tc-action {
+      padding: 6px 14px; border-radius: var(--r-sm);
+      font-family: var(--font-b); font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all var(--ease); border: none;
+    }
+    .tc-action.start { background: var(--g-mid); color: #fff; }
+    .tc-action.start:hover { background: #236030; }
+    .tc-action.done { background: #eaf3de; color: #27500a; cursor: default; }
+    .tc-action.view { background: #f0f4f0; color: var(--g-sub); }
+    .tc-action.view:hover { background: #e8f5e9; color: var(--g-mid); }
+    .tc-action.locked-btn { background: #f0f0f0; color: #aaa; cursor: not-allowed; }
+
+    /* ── NGO TASKS SECTION ── */
+    .ngo-section {
+      background: #fff; border: 1px solid var(--g-border);
+      border-radius: var(--r-xl); padding: 1.75rem; margin-bottom: 2rem;
+    }
+    .ngo-header { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; }
+    .ngo-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, #eaf3de, #c0dd97);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ngo-icon svg { width: 26px; height: 26px; }
+    .ngo-hd-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); }
+    .ngo-hd-sub { font-size: 12.5px; color: var(--g-muted); margin-top: 2px; }
+    .ngo-bonus-banner {
+      background: #faeeda; border: 1px solid #fde68a;
+      border-radius: var(--r-md); padding: 10px 16px;
+      font-size: 13px; color: #92400e;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;
+    }
+    .ngo-bonus-banner svg { width: 16px; height: 16px; color: #b45309; flex-shrink: 0; }
+    .ngo-tasks-list { display: flex; flex-direction: column; gap: 1rem; }
+    .ngo-task-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 1rem 1.25rem; border-radius: var(--r-md);
+      border: 1.5px solid var(--g-border); background: var(--g-pale);
+      transition: all var(--ease);
+    }
+    .ngo-task-row:hover { border-color: var(--g-bright); background: #f0fdf4; }
+    .ngo-task-row.featured-ngo { border-color: var(--g-mid); background: #f0fdf4; }
+    .ngo-org-logo {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500; color: #fff; flex-shrink: 0;
+    }
+    .ngo-task-body { flex: 1; }
+    .ngo-task-org { font-size: 11px; color: var(--g-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .ngo-task-name { font-family: var(--font-d); font-size: 15px; color: var(--g-text); margin-bottom: 4px; }
+    .ngo-task-desc { font-size: 12.5px; color: var(--g-sub); line-height: 1.55; margin-bottom: 8px; }
+    .ngo-task-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ngo-tag { font-size: 11px; padding: 2px 9px; border-radius: 10px; }
+    .ngo-task-pts {
+      text-align: right; flex-shrink: 0; display: flex; flex-direction: column;
+      align-items: flex-end; gap: 6px;
+    }
+    .ngo-pts-val { font-family: var(--font-d); font-size: 22px; color: #b45309; }
+    .ngo-pts-sub { font-size: 10px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; }
+    .ngo-accept-btn {
+      padding: 7px 16px; border-radius: var(--r-sm);
+      background: var(--g-text); color: #fff;
+      font-family: var(--font-b); font-size: 12px; font-weight: 500;
+      border: none; cursor: pointer; transition: all var(--ease); white-space: nowrap;
+    }
+    .ngo-accept-btn:hover { background: var(--g-mid); }
+
+    /* ── RULES BOX ── */
+    .rules-box {
+      background: #fff; border: 1px solid var(--g-border);
+      border-radius: var(--r-xl); padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .rules-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1rem; margin-top: 1.25rem; }
+    .rule-item { display: flex; flex-direction: column; gap: 8px; }
+    .rule-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rule-icon svg { width: 20px; height: 20px; }
+    .rule-title { font-size: 13.5px; font-weight: 500; color: var(--g-text); }
+    .rule-desc { font-size: 12px; color: var(--g-muted); line-height: 1.55; }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .animate { animation: fadeUp 0.45s ease both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s}
+
+    @media (max-width: 1100px) { .tasks-grid { grid-template-columns: repeat(2,1fr); } .rules-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main { margin-left: 0; }
+      .content { padding: 1.25rem; }
+      .tasks-grid { grid-template-columns: 1fr; }
+      .featured-task { grid-template-columns: 1fr; }
+      .ft-right { flex-direction: row; justify-content: flex-start; }
+      .rules-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sb-name">EcoQuest</div>
+      <div class="sb-tagline">Eco Learning</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Main</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Lessons
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
+      Quizzes
+      <span class="nav-badge">2</span>
+    </button>
+    <button class="nav-item active">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Tasks
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">Community</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Leaderboard
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      NGO Tasks
+      <span class="nav-badge" style="background:#f59e0b;">2</span>
+    </button>
+    <div class="nav-label" style="margin-top:1rem;">My Account</div>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+      Upload Proof
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Profile
+    </button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar">AS</div>
+    <div>
+      <div class="sb-user-name">Aarav Sharma</div>
+      <div class="sb-user-class">Class 7 · Pune · 1240 pts</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <header class="topbar">
+    <div>
+      <div class="topbar-title">Festival Eco-Tasks</div>
+      <div class="topbar-sub">Unique tasks linked to Indian festivals — every month</div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn">
+        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Filter: Class 7
+      </button>
+      <button class="tb-btn primary">
+        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
+        Upload Proof
+      </button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- MONTH FILTER STRIP -->
+    <div class="month-strip animate d1">
+      <div class="month-pill active" onclick="filterMonth('all', this)">
+        <span>All Months</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('jan', this)">
+        <span>January</span><span class="festival-name">Sankranti</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('feb', this)">
+        <span>February</span><span class="festival-name">Vasant Panchami</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('mar', this)">
+        <span>March</span><span class="festival-name">Holi</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('apr', this)">
+        <span>April ★</span><span class="festival-name">Gudi Padwa</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('may', this)">
+        <span>May</span><span class="festival-name">Buddha Purnima</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('jun', this)">
+        <span>June</span><span class="festival-name">Eid + Monsoon</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('jul', this)">
+        <span>July</span><span class="festival-name">Guru Purnima</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('aug', this)">
+        <span>August</span><span class="festival-name">Ganesh Chaturthi</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('sep', this)">
+        <span>September</span><span class="festival-name">Onam</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('oct', this)">
+        <span>October</span><span class="festival-name">Navratri</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('nov', this)">
+        <span>November</span><span class="festival-name">Diwali</span>
+      </div>
+      <div class="month-pill" onclick="filterMonth('dec', this)">
+        <span>December</span><span class="festival-name">Christmas</span>
+      </div>
+    </div>
+
+    <!-- FEATURED / ACTIVE TASK -->
+    <div class="featured-task animate d2">
+      <div class="ft-left">
+        <div class="ft-eyebrow"><span></span> Active This Month — April 2025</div>
+        <div class="ft-title">Make an Eco-Friendly Gudi</div>
+        <div class="ft-festival">Festival: Gudi Padwa — Maharashtra New Year</div>
+        <div class="ft-desc">
+          Traditionally, a Gudi (a decorated bamboo stick with silk cloth) is hoisted on Gudi Padwa. This year, instead of buying new synthetic cloth, use an old saree or cotton dupatta from home. Make natural dyes from turmeric (yellow), hibiscus flowers (pink/red), and spinach (green). Document how natural pigments differ from synthetic ones — this connects directly to your <strong style="color:#a8d5b0;">Science Ch. 4 (Acids, Bases & Salts)</strong> and <strong style="color:#a8d5b0;">Art & Craft</strong> crossover!
+        </div>
+        <div class="ft-concept">
+          <svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5C6.5 1.5 2 4.5 2 8a4.5 4.5 0 009 0C11 4.5 6.5 1.5 6.5 1.5z" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 5v4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+          Concepts Linked: Acids & Bases, Natural Pigments, Decomposition, Upcycling
+        </div>
+        <div class="ft-meta">
+          <div class="ft-meta-item">
+            <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Due: 30 April 2025
+          </div>
+          <div class="ft-meta-item">
+            <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="12" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M7 1L1 6h12L7 1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Classes 6, 7 & 8
+          </div>
+          <div class="ft-meta-item">
+            <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+            Photo + Short Video Required
+          </div>
+          <div class="ft-meta-item">
+            <svg viewBox="0 0 14 14" fill="none"><path d="M7 2l1.5 4h4l-3.5 2.5 1.5 4L7 10l-3.5 2.5 1.5-4L1.5 6H5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            150 Eco Points
+          </div>
+        </div>
+        <div class="ft-actions">
+          <button class="ft-btn solid">Start Task & Upload Proof →</button>
+          <button class="ft-btn ghost">View Lesson: Ch. 4</button>
+        </div>
+      </div>
+      <div class="ft-right">
+        <div class="pts-bubble">
+          <div class="pts-val">+150</div>
+          <div class="pts-label">Eco Points</div>
+          <div class="pts-type">on completion</div>
+        </div>
+        <div class="ngo-bonus-pill">
+          <div class="ngo-bonus-val">+350</div>
+          <div class="ngo-bonus-label">NGO Bonus Pts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL TASKS GRID -->
+    <div class="section-head animate d3">
+      <div>
+        <div class="section-title">All Festival Tasks — 2025</div>
+        <div class="section-sub">12 unique eco-challenges across the year</div>
+      </div>
+    </div>
+
+    <div class="tasks-grid animate d3" id="tasks-grid">
+
+      <!-- JAN -->
+      <div class="task-card completed" data-month="jan">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#eaf3de;color:#27500a;">January</span>
+          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Makar Sankranti</div>
+          <div class="tc-title">Newspaper Kite — No Plastic!</div>
+          <div class="tc-desc">Build a kite from recycled newspaper pages, old cloth strips, and bamboo sticks instead of plastic. Test aerodynamics — apply Science Ch. 13 (Motion & Time) concepts to measure how high your kite flies.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Air Resistance, Aerodynamics</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+120 pts earned</div>
+          <button class="tc-action done">Done ✓</button>
+        </div>
+      </div>
+
+      <!-- FEB -->
+      <div class="task-card completed" data-month="feb">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#eff6ff;color:#0c447c;">February</span>
+          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Vasant Panchami</div>
+          <div class="tc-title">Plant a Native Flowering Shrub</div>
+          <div class="tc-desc">On the festival of spring, plant a native shrub like Hibiscus or Jasmine (not an exotic species). Track its growth weekly in a journal. Learn pollination and ecosystems — Science Ch. 12 (Reproduction in Plants).</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Pollination, Ecosystems</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+130 pts earned</div>
+          <button class="tc-action done">Done ✓</button>
+        </div>
+      </div>
+
+      <!-- MAR -->
+      <div class="task-card completed" data-month="mar">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#faeeda;color:#633806;">March</span>
+          <span class="tc-status-badge" style="background:#eaf3de;color:#27500a;">Completed ✓</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Holi</div>
+          <div class="tc-title">Natural Colour Lab at Home</div>
+          <div class="tc-desc">Skip chemical colours this Holi. Extract pigments from beet (red), turmeric (yellow), spinach (green), and marigold (orange). Compare pH using lemon juice — linking to Ch. 5 (Acids, Bases & Salts). Document each colour's source.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Acids & Bases, Pigments</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+140 pts earned</div>
+          <button class="tc-action done">Done ✓</button>
+        </div>
+      </div>
+
+      <!-- APR — ACTIVE -->
+      <div class="task-card active-now" data-month="apr">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#dcfce7;color:#15803d;">April</span>
+          <span class="tc-status-badge" style="background:#fef3c7;color:#b45309;">Active Now ★</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Gudi Padwa</div>
+          <div class="tc-title">Eco-Friendly Gudi with Natural Dyes</div>
+          <div class="tc-desc">Use old saree / dupatta as the Gudi cloth. Make natural dyes from turmeric, hibiscus, and spinach. Understand natural vs synthetic pigments (Ch. 4). Document your process in a short 2-minute video.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Natural Pigments, Upcycling</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+150 pts</div>
+          <button class="tc-action start">Start Task →</button>
+        </div>
+      </div>
+
+      <!-- MAY -->
+      <div class="task-card" data-month="may">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#f5f3ff;color:#5b21b6;">May</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Buddha Purnima</div>
+          <div class="tc-title">Create a Silence & Mindfulness Garden</div>
+          <div class="tc-desc">Set up a small corner at home or school with 3 native plants, pebbles, and a water bowl for birds. Link to the concept of interdependence in ecosystems (Ch. 17 — Forests). Document the birds or insects that visit.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Ecosystems, Biodiversity</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+120 pts</div>
+          <button class="tc-action view">Preview</button>
+        </div>
+      </div>
+
+      <!-- JUN -->
+      <div class="task-card" data-month="jun">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#eff6ff;color:#185fa5;">June</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Eid ul-Adha + Monsoon Begins</div>
+          <div class="tc-title">DIY Rainwater Harvesting Jar</div>
+          <div class="tc-desc">Build a working rainwater harvester from a large plastic bottle, gravel, sand, and charcoal (natural filter layers). Collect and measure rainfall for 2 weeks. Connects to Ch. 18 (Wastewater Story) and the Water Cycle concept.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Water Cycle, Filtration</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+160 pts</div>
+          <button class="tc-action view">Preview</button>
+        </div>
+      </div>
+
+      <!-- JUL -->
+      <div class="task-card" data-month="jul">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#eaf3de;color:#3b6d11;">July</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Guru Purnima</div>
+          <div class="tc-title">Teach a Neighbour to Compost</div>
+          <div class="tc-desc">In the spirit of Guru Purnima (passing on knowledge), teach one neighbour or family member how to compost kitchen waste. Set up a small compost bin together from a plastic container. Link to decomposers — Ch. 17.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Decomposers, Nutrient Cycle</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+140 pts</div>
+          <button class="tc-action view">Preview</button>
+        </div>
+      </div>
+
+      <!-- AUG -->
+      <div class="task-card" data-month="aug">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#faeeda;color:#854f0b;">August</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Ganesh Chaturthi</div>
+          <div class="tc-title">Seed-Paper Ganesh Idol That Grows!</div>
+          <div class="tc-desc">Make a small Ganesh idol from seed-embedded handmade paper (newspaper pulp + tomato/marigold seeds). After visarjan in a pot of soil, it dissolves and grows into plants — zero water pollution! Links to soil and decomposition.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Decomposition, Soil, Germination</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#56c271"/></svg>+200 pts</div>
+          <button class="tc-action locked-btn">🔒 Locked</button>
+        </div>
+      </div>
+
+      <!-- SEP -->
+      <div class="task-card locked" data-month="sep">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#fbeaf0;color:#72243e;">September</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Onam</div>
+          <div class="tc-title">Pookalam with Wild & Native Flowers Only</div>
+          <div class="tc-desc">Create a traditional Onam flower carpet (Pookalam) using only wild, native flowers found near your home — no bought or exotic flowers. Document the species, their local names, and what insects they attract.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Native Biodiversity, Pollinators</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+130 pts</div>
+          <button class="tc-action locked-btn">🔒 Locked</button>
+        </div>
+      </div>
+
+      <!-- OCT -->
+      <div class="task-card locked" data-month="oct">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#f5f3ff;color:#5b21b6;">October</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Navratri / Dussehra</div>
+          <div class="tc-title">Upcycle Old Cloth into Dandiya Sticks</div>
+          <div class="tc-desc">Wrap old cloth strips in bright colours around wooden sticks to make Dandiya sticks — zero plastic, zero new material. Learn about fibre types, natural vs synthetic (Ch. 3 — Fibre to Fabric). Also document how much waste you saved.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Natural Fibres, Upcycling</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+130 pts</div>
+          <button class="tc-action locked-btn">🔒 Locked</button>
+        </div>
+      </div>
+
+      <!-- NOV -->
+      <div class="task-card locked" data-month="nov">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#faeeda;color:#854f0b;">November</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Diwali</div>
+          <div class="tc-title">Hand-Made Clay Diyas with Mustard Oil</div>
+          <div class="tc-desc">Make clay diyas at home from local clay (or mud + straw). Use mustard or groundnut oil as fuel — both biodegradable, no chemical smoke. Compare pollution levels (CO2, particulate matter) from Chinese lights vs clay diyas. Science: Ch. 18.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Air Pollution, Combustion</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+180 pts</div>
+          <button class="tc-action locked-btn">🔒 Locked</button>
+        </div>
+      </div>
+
+      <!-- DEC -->
+      <div class="task-card locked" data-month="dec">
+        <div class="tc-header">
+          <span class="tc-month-badge" style="background:#eff6ff;color:#185fa5;">December</span>
+          <span class="tc-status-badge" style="background:#f0f4f0;color:#7a9a7c;">Upcoming</span>
+        </div>
+        <div class="tc-body">
+          <div class="tc-festival">Christmas / Winter Solstice</div>
+          <div class="tc-title">Orange Peel & Cinnamon Room Freshener</div>
+          <div class="tc-desc">After eating oranges, collect the peels. Dry them, add cloves and cinnamon sticks, and make a natural aromatic sachet or simmer pot. This uses microorganism science (decomposition if peels are left vs. when dried) — Ch. 2 Microorganisms.</div>
+          <div class="tc-concept-chip"><svg viewBox="0 0 11 11" fill="none"><path d="M5.5 1C5.5 1 2 3.5 2 6.5a3.5 3.5 0 007 0C9 3.5 5.5 1 5.5 1z" stroke="#3b6d11" stroke-width="1"/></svg>Concept: Microorganisms, Decomposition</div>
+        </div>
+        <div class="tc-footer">
+          <div class="tc-pts"><svg viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5l1.2 3.5h3.5l-2.8 2 1.2 3.5L6.5 9l-2.8 1.5 1.2-3.5-2.8-2h3.5z" fill="#aaa"/></svg>+120 pts</div>
+          <button class="tc-action locked-btn">🔒 Locked</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NGO TASKS SECTION -->
+    <div class="ngo-section animate d4">
+      <div class="ngo-header">
+        <div class="ngo-icon">
+          <svg viewBox="0 0 26 26" fill="none" width="26" height="26"><path d="M13 3C13 3 5 8 5 15a8 8 0 0016 0C21 8 13 3 13 3z" fill="#639922" opacity="0.5" stroke="#3b6d11" stroke-width="1.5"/><path d="M13 9v10M10 15c1.5-2.5 3-3.5 3-3.5" stroke="#3b6d11" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="ngo-hd-title">NGO Challenge Tasks</div>
+          <div class="ngo-hd-sub">Partner with real NGOs — earn 2× bonus points for community action</div>
+        </div>
+      </div>
+      <div class="ngo-bonus-banner">
+        <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" fill="#b45309"/></svg>
+        NGO tasks earn <strong>2× to 3× more points</strong> than regular tasks — plus a special NGO Contributor badge on your profile!
+      </div>
+      <div class="ngo-tasks-list">
+
+        <div class="ngo-task-row featured-ngo">
+          <div class="ngo-org-logo" style="background:linear-gradient(135deg,#2d7a38,#56c271);">PR</div>
+          <div class="ngo-task-body">
+            <div class="ngo-task-org">Pune Rivers Trust</div>
+            <div class="ngo-task-name">Mula-Mutha River Bank Clean-Up Drive</div>
+            <div class="ngo-task-desc">Visit your nearest river bank, collect plastic waste, weigh it, and categorise by type (PET bottles, wrappers, bags). Photograph before & after. Connect this to wastewater pollution from Ch. 18.</div>
+            <div class="ngo-task-tags">
+              <span class="ngo-tag" style="background:#eaf3de;color:#27500a;">Community</span>
+              <span class="ngo-tag" style="background:#eff6ff;color:#0c447c;">Water</span>
+              <span class="ngo-tag" style="background:#faeeda;color:#854f0b;">April</span>
+            </div>
+          </div>
+          <div class="ngo-task-pts">
+            <div class="ngo-pts-val">+350</div>
+            <div class="ngo-pts-sub">Bonus pts</div>
+            <button class="ngo-accept-btn">Accept →</button>
+          </div>
+        </div>
+
+        <div class="ngo-task-row">
+          <div class="ngo-org-logo" style="background:linear-gradient(135deg,#185fa5,#378add);">GI</div>
+          <div class="ngo-task-body">
+            <div class="ngo-task-org">Green India Foundation</div>
+            <div class="ngo-task-name">Plastic-Free School Campaign</div>
+            <div class="ngo-task-desc">Design and put up 3 hand-made posters in your school about saying no to single-use plastic. Survey 10 classmates on their plastic usage and present findings to your class teacher.</div>
+            <div class="ngo-task-tags">
+              <span class="ngo-tag" style="background:#f5f3ff;color:#5b21b6;">Campaigning</span>
+              <span class="ngo-tag" style="background:#fbeaf0;color:#72243e;">School</span>
+            </div>
+          </div>
+          <div class="ngo-task-pts">
+            <div class="ngo-pts-val">+280</div>
+            <div class="ngo-pts-sub">Bonus pts</div>
+            <button class="ngo-accept-btn">Accept →</button>
+          </div>
+        </div>
+
+        <div class="ngo-task-row">
+          <div class="ngo-org-logo" style="background:linear-gradient(135deg,#854f0b,#ef9f27);">TF</div>
+          <div class="ngo-task-body">
+            <div class="ngo-task-org">Tree Friends Maharashtra</div>
+            <div class="ngo-task-name">Adopt-a-Tree: Map & Tag Native Trees Near You</div>
+            <div class="ngo-task-desc">Identify 5 native trees within 500m of your home. Tag each with a hand-written name plate (local + scientific name). Photograph and submit to the NGO's tree registry. Links to Ch. 17 — Forests Our Lifeline.</div>
+            <div class="ngo-task-tags">
+              <span class="ngo-tag" style="background:#eaf3de;color:#27500a;">Trees</span>
+              <span class="ngo-tag" style="background:#faeeda;color:#854f0b;">Outdoor</span>
+              <span class="ngo-tag" style="background:#eff6ff;color:#0c447c;">Mapping</span>
+            </div>
+          </div>
+          <div class="ngo-task-pts">
+            <div class="ngo-pts-val">+300</div>
+            <div class="ngo-pts-sub">Bonus pts</div>
+            <button class="ngo-accept-btn">Accept →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- HOW TASKS WORK -->
+    <div class="rules-box animate d4">
+      <div class="section-head" style="margin-bottom:0;">
+        <div>
+          <div class="section-title">How Tasks Work</div>
+          <div class="section-sub">4 simple steps from task to points</div>
+        </div>
+      </div>
+      <div class="rules-grid">
+        <div class="rule-item">
+          <div class="rule-icon" style="background:#eaf3de;">
+            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 3C10 3 4 7 4 12a6 6 0 0012 0C16 7 10 3 10 3z" stroke="#3b6d11" stroke-width="1.4" fill="#c0dd97" opacity="0.4"/></svg>
+          </div>
+          <div class="rule-title">1. Pick Your Task</div>
+          <div class="rule-desc">Choose the current month's festival task or an NGO challenge. Read the full description and linked lesson chapter.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon" style="background:#eff6ff;">
+            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M4 4h12v12H4z" stroke="#185fa5" stroke-width="1.4" rx="2"/><path d="M7 10l2 2 4-4" stroke="#185fa5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="rule-title">2. Do the Task</div>
+          <div class="rule-desc">Complete the hands-on eco-activity at home or in your community. Apply the textbook science concept in real life.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon" style="background:#faeeda;">
+            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><rect x="2" y="4" width="16" height="12" rx="2" stroke="#854f0b" stroke-width="1.4"/><circle cx="10" cy="10" r="3" stroke="#854f0b" stroke-width="1.4"/></svg>
+          </div>
+          <div class="rule-title">3. Upload Proof</div>
+          <div class="rule-desc">Take a photo and a short 1–2 min video of your completed task. Upload it to the proof page for review.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon" style="background:#f5f3ff;">
+            <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 2l2 6h6l-5 3.5 2 6L10 14l-5 3.5 2-6L2 8h6z" stroke="#7c3aed" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="rule-title">4. Earn Points</div>
+          <div class="rule-desc">Once verified, points are added to your account and your rank on the leaderboard updates automatically.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function filterMonth(month, el) {
+    document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    const cards = document.querySelectorAll('.task-card');
+    cards.forEach(card => {
+      if (month === 'all') {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = card.dataset.month === month ? 'flex' : 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>

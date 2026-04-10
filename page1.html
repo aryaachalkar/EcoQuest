@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoQuest — Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-dark:   #0d1f0f;
+      --green-deep:   #132b15;
+      --green-mid:    #2d7a38;
+      --green-bright: #56c271;
+      --green-light:  #e8f5e9;
+      --green-pale:   #f4f9f4;
+      --green-muted:  #8aa88b;
+      --green-border: #c8dcc8;
+      --green-text:   #1a3d1c;
+      --green-sub:    #5a7a5c;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+      --radius-sm:    8px;
+      --radius-md:    12px;
+      --radius-lg:    18px;
+      --transition:   0.22s ease;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-body);
+      background: var(--green-dark);
+      color: var(--green-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Animated leaf particles ── */
+    .particle-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .page {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══════════════════════════════════
+       LEFT PANEL
+    ═══════════════════════════════════ */
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative ring */
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(86, 194, 113, 0.12);
+    }
+    .ring-1 { width: 500px; height: 500px; bottom: -140px; left: -140px; }
+    .ring-2 { width: 340px; height: 340px; bottom: -60px;  left: -60px;  border-color: rgba(86,194,113,0.08); }
+    .ring-3 { width: 120px; height: 120px; top: 12%;  right: 8%;  border-color: rgba(86,194,113,0.14); }
+
+    /* Leaf pattern overlay */
+    .leaf-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cellipse cx='50' cy='50' rx='14' ry='32' fill='%2356c271' transform='rotate(30 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='14' ry='32' fill='%2356c271' transform='rotate(90 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='14' ry='32' fill='%2356c271' transform='rotate(150 50 50)'/%3E%3C/svg%3E");
+      background-size: 100px 100px;
+    }
+
+    /* Brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .logo-box {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, #56c271, #2d7a38);
+      border-radius: 15px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(45,122,56,0.45);
+    }
+
+    .logo-box svg { width: 28px; height: 28px; }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: #e8f5e9;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      color: var(--green-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    /* Hero content */
+    .hero {
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(86,194,113,0.1);
+      border: 1px solid rgba(86,194,113,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: var(--green-bright);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green-bright);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 52px;
+      line-height: 1.1;
+      color: #e8f5e9;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--green-bright);
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--green-muted);
+      max-width: 380px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(86,194,113,0.15);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      max-width: 400px;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 1.1rem 1.25rem;
+      border-right: 1px solid rgba(86,194,113,0.15);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--green-bright);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #6a886b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Testimonial strip */
+    .testimonial {
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .testi-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(86,194,113,0.12);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      max-width: 400px;
+    }
+
+    .testi-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d7a38, #56c271);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .testi-text {
+      font-size: 13px;
+      color: #9ab89c;
+      line-height: 1.6;
+    }
+
+    .testi-name {
+      font-size: 12px;
+      color: var(--green-bright);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════
+       RIGHT PANEL
+    ═══════════════════════════════════ */
+    .right-panel {
+      width: 500px;
+      background: var(--green-pale);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 3.5rem;
+      position: relative;
+      box-shadow: -20px 0 60px rgba(0,0,0,0.3);
+    }
+
+    .eco-badge {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      display: flex; align-items: center; gap: 6px;
+      background: #e8f5e9;
+      border: 1px solid var(--green-border);
+      border-radius: 20px;
+      padding: 5px 12px 5px 8px;
+      font-size: 11.5px;
+      color: var(--green-mid);
+      font-weight: 500;
+    }
+
+    .eco-badge svg { width: 14px; height: 14px; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: #deeede;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: transparent;
+      color: var(--green-sub);
+    }
+
+    .tab.active {
+      background: #fff;
+      color: var(--green-text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Form heading */
+    .form-heading { margin-bottom: 1.75rem; }
+
+    .form-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--green-text);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .form-sub {
+      font-size: 13.5px;
+      color: var(--green-sub);
+    }
+
+    /* Fields */
+    .field { margin-bottom: 1rem; }
+
+    .field-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #3a5c3c;
+      margin-bottom: 6px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .input-wrap { position: relative; }
+
+    .field-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7aaa7c;
+      display: flex;
+      pointer-events: none;
+    }
+
+    .field-icon svg { width: 16px; height: 16px; }
+
+    .field-input, .field-select {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      border: 1.5px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--green-text);
+      background: #fff;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .field-input:focus, .field-select:focus {
+      border-color: var(--green-bright);
+      box-shadow: 0 0 0 3px rgba(86,194,113,0.15);
+    }
+
+    .field-input::placeholder { color: #b8d0ba; }
+    .field-select { appearance: none; cursor: pointer; }
+
+    .row { display: flex; gap: 12px; }
+    .row .field { flex: 1; }
+
+    /* Grade pills */
+    .grade-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 5px;
+    }
+
+    .grade-pill {
+      padding: 7px 15px;
+      border: 1.5px solid var(--green-border);
+      border-radius: 20px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      color: var(--green-sub);
+      cursor: pointer;
+      background: #fff;
+      transition: all var(--transition);
+    }
+
+    .grade-pill:hover {
+      border-color: var(--green-bright);
+      color: var(--green-mid);
+    }
+
+    .grade-pill.selected {
+      background: var(--green-mid);
+      border-color: var(--green-mid);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Primary button */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2d7a38, #1e5e28);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 1.25rem;
+      transition: all var(--transition);
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background var(--transition);
+    }
+
+    .btn-primary:hover::after { background: rgba(255,255,255,0.07); }
+    .btn-primary:active { transform: scale(0.99); }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 1.25rem 0;
+      font-size: 12px;
+      color: #9ab89c;
+    }
+
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: #d4e8d4;
+    }
+
+    /* Google button */
+    .btn-google {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: #3a5c3c;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all var(--transition);
+    }
+
+    .btn-google:hover {
+      border-color: var(--green-bright);
+      box-shadow: 0 2px 12px rgba(86,194,113,0.12);
+    }
+
+    /* Footer link */
+    .form-footer {
+      text-align: center;
+      font-size: 13px;
+      color: #7a9a7c;
+      margin-top: 1.25rem;
+    }
+
+    .form-footer a {
+      color: var(--green-mid);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* Panels */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    /* Forgot link */
+    .forgot {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--green-mid);
+      text-decoration: none;
+      margin-top: 4px;
+    }
+
+    .forgot:hover { text-decoration: underline; }
+
+    /* Password strength */
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-seg {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: #d4e8d4;
+      transition: background var(--transition);
+    }
+
+    .strength-label {
+      font-size: 11px;
+      color: #9ab89c;
+      margin-top: 3px;
+    }
+
+    /* Success toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1e5e28;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50%       { transform: translateY(-12px) rotate(5deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .left-panel { display: none; }
+      .right-panel { width: 100%; padding: 2.5rem 1.75rem; }
+      .right-panel .eco-badge { display: none; }
+    }
+
+    @media (max-width: 500px) {
+      .right-panel { padding: 2rem 1.25rem; }
+      .row { flex-direction: column; gap: 0; }
+      .hero-title { font-size: 38px; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--green-dark); }
+    ::-webkit-scrollbar-thumb { background: #2d7a38; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- Particle canvas for animated leaves -->
+  <canvas class="particle-canvas" id="leafCanvas"></canvas>
+
+  <div class="page">
+
+    <!-- ═══ LEFT PANEL ═══ -->
+    <div class="left-panel">
+      <div class="leaf-pattern"></div>
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
+
+      <!-- Brand -->
+      <div class="brand">
+        <div class="logo-box">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3C14 3 5 9 5 17a9 9 0 0018 0C23 9 14 3 14 3z" fill="white" opacity="0.92"/>
+            <path d="M14 11v10M11 18c1.5-2.5 3-4 3-4" stroke="#2d7a38" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">EcoQuest</div>
+          <div class="brand-tag">India's Eco Learning Platform</div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span></span> Live Now — April 2026
+        </div>
+        <h1 class="hero-title">
+          Learn.<br>Act.<br><em>Save the Earth.</em>
+        </h1>
+        <p class="hero-desc">
+          An interactive environmental platform built for Indian students — connecting NCERT textbook lessons with real-world conservation tasks, quizzes, and NGO challenges.
+        </p>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-val">1–10</div>
+            <div class="stat-label">All Classes</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">12+</div>
+            <div class="stat-label">Monthly Tasks</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">NGO</div>
+            <div class="stat-label">Connected</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">Free</div>
+            <div class="stat-label">Always</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial -->
+      <div class="testimonial">
+        <div class="testi-inner">
+          <div class="testi-avatar">AS</div>
+          <div>
+            <div class="testi-text">"I made a room freshener from orange peels and learned about decomposers — all in one task!"</div>
+            <div class="testi-name">Aarav S., Class 7, Pune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RIGHT PANEL ═══ -->
+    <div class="right-panel">
+
+      <div class="eco-badge">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M7 1.5C7 1.5 3 4 3 8a4 4 0 008 0C11 4 7 1.5 7 1.5z" fill="#2d7a38"/><path d="M7 5.5v5" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>
+        Eco Verified
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- ── LOGIN PANEL ── -->
+      <div id="login-panel" class="form-panel active">
+        <div class="form-heading">
+          <div class="form-title">Welcome back 🌿</div>
+          <div class="form-sub">Continue your environmental journey</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Roll Number / Email</label>
+          <div class="input-wrap">
+            <span class="field-icon">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </span>
+            <input class="field-input" type="text" placeholder="e.g. ROLL2025001 or you@school.edu" id="login-user"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Password</label>
+          <div class="input-wrap">
+            <span class="field-icon">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </span>
+            <input class="field-input" type="password" placeholder="Enter your password" id="login-pass"/>
+          </div>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+
+        <div class="field">
+          <label class="field-label">I am a</label>
+          <div class="input-wrap">
+            <span class="field-icon">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M2 13c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/></svg>
+            </span>
+            <select class="field-select" id="login-role">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="ngo">NGO Partner</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="handleLogin()">
+          Sign In to EcoQuest→
+        </button>
+
+        <div class="divider">or continue with</div>
+
+        <button class="btn-google">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+
+        <p class="form-footer">
+          Don't have an account? <a href="#" onclick="switchTab('signup')">Sign up free</a>
+        </p>
+      </div>
+
+      <!-- ── SIGNUP PANEL ── -->
+      <div id="signup-panel" class="form-panel">
+        <div class="form-heading">
+          <div class="form-title">Join EarthWise 🌱</div>
+          <div class="form-sub">Start your green journey today — it's free!</div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field-label">First Name</label>
+            <div class="input-wrap">
+              <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <input class="field-input" type="text" placeholder="Aarav" id="su-fname"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Last Name</label>
+            <div class="input-wrap">
+              <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <input class="field-input" type="text" placeholder="Sharma" id="su-lname"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">School Name</label>
+          <div class="input-wrap">
+            <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="8" width="14" height="7" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M8 1L1 7h14L8 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+            <input class="field-input" type="text" placeholder="e.g. Pune Municipal High School" id="su-school"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Your Class / Standard</label>
+          <div class="grade-grid" id="grade-pills">
+            <button class="grade-pill" onclick="selectGrade(this, 1)">Class 1</button>
+            <button class="grade-pill" onclick="selectGrade(this, 2)">Class 2</button>
+            <button class="grade-pill" onclick="selectGrade(this, 3)">Class 3</button>
+            <button class="grade-pill" onclick="selectGrade(this, 4)">Class 4</button>
+            <button class="grade-pill" onclick="selectGrade(this, 5)">Class 5</button>
+            <button class="grade-pill" onclick="selectGrade(this, 6)">Class 6</button>
+            <button class="grade-pill" onclick="selectGrade(this, 7)">Class 7</button>
+            <button class="grade-pill" onclick="selectGrade(this, 8)">Class 8</button>
+            <button class="grade-pill" onclick="selectGrade(this, 9)">Class 9</button>
+            <button class="grade-pill" onclick="selectGrade(this, 10)">Class 10</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field-label">Email</label>
+            <div class="input-wrap">
+              <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <input class="field-input" type="email" placeholder="you@school.edu" id="su-email"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Roll Number</label>
+            <div class="input-wrap">
+              <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <input class="field-input" type="text" placeholder="ROLL2025001" id="su-roll"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Create Password</label>
+          <div class="input-wrap">
+            <span class="field-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+            <input class="field-input" type="password" placeholder="Min. 8 characters" id="su-pass" oninput="checkStrength(this.value)"/>
+          </div>
+          <div class="strength-bar">
+            <div class="strength-seg" id="s1"></div>
+            <div class="strength-seg" id="s2"></div>
+            <div class="strength-seg" id="s3"></div>
+            <div class="strength-seg" id="s4"></div>
+          </div>
+          <div class="strength-label" id="strength-label">Enter a password</div>
+        </div>
+
+        <button class="btn-primary" onclick="handleSignup()">
+          Create My EarthWise Account →
+        </button>
+
+        <p class="form-footer">
+          Already have an account? <a href="#" onclick="switchTab('login')">Sign in here</a>
+        </p>
+      </div>
+
+    </div><!-- /right-panel -->
+  </div><!-- /page -->
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#56c271"/><path d="M5 8l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="toast-msg">Signed in successfully!</span>
+  </div>
+
+  <script>
+    /* ─── Tab switch ─── */
+    function switchTab(tab) {
+      ['login','signup'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+        document.getElementById(t + '-panel').classList.toggle('active', t === tab);
+      });
+    }
+
+    /* ─── Grade selection ─── */
+    let selectedGrade = null;
+    function selectGrade(el, grade) {
+      document.querySelectorAll('.grade-pill').forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedGrade = grade;
+    }
+
+    /* ─── Password strength ─── */
+    function checkStrength(val) {
+      const colors = ['#e24b4a','#ef9f27','#56c271','#2d7a38'];
+      const labels = ['Weak','Fair','Good','Strong'];
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      for (let i = 1; i <= 4; i++) {
+        const seg = document.getElementById('s' + i);
+        seg.style.background = i <= score ? colors[score - 1] : '#d4e8d4';
+      }
+      document.getElementById('strength-label').textContent = val.length === 0 ? 'Enter a password' : labels[score - 1] || 'Too short';
+      document.getElementById('strength-label').style.color = val.length === 0 ? '#9ab89c' : colors[score - 1] || '#e24b4a';
+    }
+
+    /* ─── Toast ─── */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    /* ─── Handlers ─── */
+    function handleLogin() {
+      const user = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
+      if (!user || !pass) { showToast('Please fill in all fields'); return; }
+      showToast('Welcome back! Loading your dashboard…');
+    }
+
+    function handleSignup() {
+      const fname = document.getElementById('su-fname').value.trim();
+      const school = document.getElementById('su-school').value.trim();
+      if (!fname || !school || !selectedGrade) {
+        showToast('Please fill in all fields and select your class');
+        return;
+      }
+      showToast('Account created! Welcome to EarthWise, ' + fname + '!');
+    }
+
+    /* ─── Leaf particle canvas ─── */
+    const canvas = document.getElementById('leafCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function createParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: -20,
+        size: Math.random() * 7 + 4,
+        speedY: Math.random() * 0.8 + 0.3,
+        speedX: (Math.random() - 0.5) * 0.5,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.02,
+        opacity: Math.random() * 0.25 + 0.05,
+        color: Math.random() > 0.5 ? '#56c271' : '#2d7a38'
+      };
+    }
+
+    function drawLeaf(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.size * 0.4, p.size, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.04) particles.push(createParticle());
+      particles = particles.filter(p => p.y < canvas.height + 30);
+      particles.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotSpeed;
+        drawLeaf(p);
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
