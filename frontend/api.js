@@ -240,10 +240,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.h-btn.solid').forEach(b => b.addEventListener('click', () => window.location.href = 'page3.html'));
     document.querySelectorAll('.h-btn.outline').forEach(b => b.addEventListener('click', () => window.location.href = 'page4.html'));
     
-    // Task Start & Accept Buttons -> route to Upload Proof
-    document.querySelectorAll('.ft-btn.solid, .tc-action.start, .ngo-accept-btn, .topbar-right .tb-btn.primary:not([onclick])').forEach(btn => {
+    // Task Start Buttons -> route to Upload Proof
+    document.querySelectorAll('.ft-btn.solid, .tc-action.start, .topbar-right .tb-btn.primary:not([onclick])').forEach(btn => {
         btn.addEventListener('click', () => {
             window.location.href = 'tasks-upload.html';
+        });
+    });
+
+    // NGO Accept Buttons -> route to NGO Portal
+    document.querySelectorAll('.ngo-accept-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            window.location.href = 'ngo-detail.html';
         });
     });
     
