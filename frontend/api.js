@@ -183,6 +183,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const profRole = document.getElementById('profRole');
         const profAvatar = document.getElementById('profAvatar');
         const logoutBtn = document.getElementById('logoutBtn');
+        const profQuizzes = document.getElementById('profQuizzes');
+        const profTasks = document.getElementById('profTasks');
 
         if (profName) profName.textContent = `${user.firstName} ${user.lastName}`;
         if (profSchool) profSchool.textContent = `Class ${user.classStandard} · ${user.schoolName}`;
@@ -196,8 +198,38 @@ document.addEventListener('DOMContentLoaded', async () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            if (data.success && profPts) {
-                profPts.textContent = `${data.user.totalPoints}`;
+            if (data.success) {
+                if (profPts) profPts.textContent = `${data.user.totalPoints}`;
+                if (profQuizzes) profQuizzes.textContent = `${data.stats.quizzesCompleted}`;
+                if (profTasks) profTasks.textContent = `${data.stats.tasksCompleted}`;
+                
+                // Dynamic level calculation
+                const levelBars = document.querySelector('.level-bar-fill');
+                const levelHeader = document.querySelector('.level-header span:nth-child(2)');
+                if (levelBars && levelHeader) {
+                    let lvl = 1, currentXP = data.user.totalPoints;
+                    if (currentXP > 1000) lvl = 5;
+                    else if (currentXP > 600) lvl = 4;
+                    else if (currentXP > 300) lvl = 3;
+                    else if (currentXP > 100) lvl = 2;
+                    
+                    let nextP = 100;
+                    if (lvl === 2) nextP = 300;
+                    if (lvl === 3) nextP = 600;
+                    if (lvl === 4) nextP = 1000;
+                    
+                    if (lvl === 5) {
+                        levelBars.style.width = '100%';
+                        levelHeader.textContent = `${currentXP} / MAX XP`;
+                    } else {
+                        let percent = Math.min(100, Math.floor((currentXP / nextP) * 100));
+                        levelBars.style.width = `${percent}%`;
+                        levelHeader.textContent = `${currentXP} / ${nextP} XP`;
+                    }
+                    
+                    const passLevelBadge = document.querySelector('.pass-badge');
+                    if (passLevelBadge) passLevelBadge.textContent = `Lvl ${lvl}`;
+                }
             }
         } catch (err) {}
     }

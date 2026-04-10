@@ -3,513 +3,195 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EcoQuest — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>EcoQuest — Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --g-dark:    #0d1f0f;
-      --g-deep:    #132b15;
-      --g-mid:     #2d7a38;
-      --g-bright:  #56c271;
-      --g-light:   #e8f5e9;
-      --g-pale:    #f4f9f4;
-      --g-border:  #c8dcc8;
-      --g-muted:   #7a9a7c;
-      --g-text:    #1a3d1c;
-      --g-sub:     #5a7a5c;
-      --amber:     #f59e0b;
-      --amber-bg:  #fffbeb;
-      --amber-bdr: #fde68a;
-      --blue:      #3b82f6;
-      --blue-bg:   #eff6ff;
-      --blue-bdr:  #bfdbfe;
-      --coral:     #ef4444;
-      --coral-bg:  #fef2f2;
-      --coral-bdr: #fecaca;
-      --purple:    #8b5cf6;
-      --purple-bg: #f5f3ff;
-      --purple-bdr:#ddd6fe;
-      --font-d:    'Playfair Display', Georgia, serif;
-      --font-b:    'DM Sans', sans-serif;
+      --g-dark:   #0d1f0f;
+      --g-deep:   #132b15;
+      --g-mid:    #2d7a38;
+      --g-bright: #56c271;
+      --g-light:  #e8f5e9;
+      --g-pale:   #f4f9f4;
+      --g-border: #c8dcc8;
+      --g-muted:  #7a9a7c;
+      --g-text:   #1a3d1c;
+      --g-sub:    #5a7a5c;
+      --font-d:   'Playfair Display', Georgia, serif;
+      --font-b:   'DM Sans', sans-serif;
       --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
       --ease: 0.22s ease;
     }
-
     html, body { height: 100%; font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; }
 
     /* ── SIDEBAR ── */
     .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0;
-      width: 240px;
-      background: var(--g-dark);
-      display: flex; flex-direction: column;
-      z-index: 100;
-      transition: transform var(--ease);
+      position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+      background: var(--g-dark); display: flex; flex-direction: column; z-index: 100;
     }
-
     .sb-brand {
       display: flex; align-items: center; gap: 12px;
       padding: 1.5rem 1.25rem 1rem;
       border-bottom: 1px solid rgba(86,194,113,0.12);
     }
-
     .sb-logo {
       width: 40px; height: 40px;
       background: linear-gradient(135deg, #56c271, #2d7a38);
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-
     .sb-logo svg { width: 22px; height: 22px; }
-
     .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
     .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: 0.8px; text-transform: uppercase; }
-
     .sb-nav { flex: 1; padding: 1rem 0.75rem; overflow-y: auto; }
-
-    .nav-label {
-      font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
-      color: #3d5c3f; padding: 0.5rem 0.5rem 0.35rem; margin-top: 0.5rem;
-    }
-
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: 0.5rem 0.5rem 0.35rem; margin-top: 0.5rem; }
     .nav-item {
       display: flex; align-items: center; gap: 10px;
       padding: 10px 12px; border-radius: var(--r-sm);
-      color: #7a9a7c; font-size: 14px; font-weight: 400;
-      cursor: pointer; transition: all var(--ease);
-      margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left;
+      color: #7a9a7c; font-size: 14px; cursor: pointer;
+      transition: all var(--ease); margin-bottom: 2px;
+      border: none; background: none; width: 100%; text-align: left;
     }
-
     .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-
     .nav-item:hover { background: rgba(86,194,113,0.08); color: #c8e6c9; }
-
-    .nav-item.active {
-      background: rgba(86,194,113,0.14);
-      color: var(--g-bright);
-      font-weight: 500;
-    }
-
-    .nav-badge {
-      margin-left: auto; background: var(--g-mid);
-      color: #fff; font-size: 10px; font-weight: 500;
-      padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center;
-    }
-
+    .nav-item.active { background: rgba(86,194,113,0.14); color: var(--g-bright); font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
     .sb-user {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid rgba(86,194,113,0.12);
+      padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,0.12);
       display: flex; align-items: center; gap: 10px;
     }
-
     .sb-avatar {
       width: 36px; height: 36px; border-radius: 50%;
       background: linear-gradient(135deg, #2d7a38, #56c271);
       display: flex; align-items: center; justify-content: center;
       font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0;
     }
-
     .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
     .sb-user-class { font-size: 11px; color: #5a7a5c; }
 
     /* ── MAIN ── */
     .main { margin-left: 240px; min-height: 100vh; }
-
-    /* ── TOPBAR ── */
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid var(--g-border);
-      padding: 0 2rem;
-      height: 64px;
+      background: #fff; border-bottom: 1px solid var(--g-border);
+      padding: 0 2rem; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 50;
     }
+    .topbar-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); }
+    .topbar-sub { font-size: 12px; color: var(--g-muted); margin-top: 1px; }
 
-    .topbar-left { display: flex; flex-direction: column; }
-    .topbar-greeting { font-size: 13px; color: var(--g-muted); }
-    .topbar-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); line-height: 1.2; }
+    .content { padding: 2rem; max-width: 1000px; margin: 0 auto; }
 
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-
-    .tb-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease); border: 1px solid var(--g-border);
-      background: #fff; color: var(--g-sub);
-    }
-
-    .tb-btn svg { width: 14px; height: 14px; }
-    .tb-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
-
-    .tb-btn.primary { background: var(--g-mid); color: #fff; border-color: var(--g-mid); }
-    .tb-btn.primary:hover { background: #236030; }
-
-    .notif-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #ef4444; border: 2px solid #fff;
-      position: absolute; top: 6px; right: 6px;
-    }
-
-    .tb-notif { position: relative; }
-
-    /* ── CONTENT ── */
-    .content { padding: 2rem; max-width: 1200px; }
-
-    /* ── HERO BANNER ── */
-    .hero-banner {
+    /* ── HERO METRIC PASSPORT ── */
+    .passport-card {
       background: var(--g-dark);
       border-radius: var(--r-xl);
-      padding: 2rem 2.5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 1.75rem;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .hero-banner::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.05' transform='rotate(30 40 40)'/%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.05' transform='rotate(90 40 40)'/%3E%3C/svg%3E");
-      background-size: 80px 80px;
-    }
-
-    .hero-left { position: relative; }
-
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(86,194,113,0.12); border: 1px solid rgba(86,194,113,0.2);
-      border-radius: 20px; padding: 4px 12px;
-      font-size: 11px; color: var(--g-bright); letter-spacing: 0.8px;
-      text-transform: uppercase; margin-bottom: 0.75rem;
-    }
-
-    .hero-eyebrow span { width: 5px; height: 5px; border-radius: 50%; background: var(--g-bright); animation: pulse 2s infinite; }
-
-    .hero-title { font-family: var(--font-d); font-size: 30px; color: #e8f5e9; line-height: 1.15; margin-bottom: 0.5rem; }
-    .hero-title em { color: var(--g-bright); font-style: italic; }
-
-    .hero-sub { font-size: 13.5px; color: #7a9a7c; max-width: 380px; line-height: 1.6; margin-bottom: 1.25rem; }
-
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-    .h-btn {
-      padding: 10px 20px; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease); border: none;
-    }
-
-    .h-btn.solid { background: var(--g-bright); color: var(--g-dark); }
-    .h-btn.solid:hover { background: #46b261; }
-    .h-btn.outline { background: transparent; border: 1px solid rgba(86,194,113,0.3); color: var(--g-bright); }
-    .h-btn.outline:hover { background: rgba(86,194,113,0.08); }
-
-    .hero-right { position: relative; flex-shrink: 0; }
-
-    .xp-ring {
-      width: 130px; height: 130px;
-      position: relative; display: flex; align-items: center; justify-content: center;
-    }
-
-    .xp-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-
-    .xp-inner { text-align: center; position: relative; z-index: 1; }
-    .xp-val { font-family: var(--font-d); font-size: 28px; color: var(--g-bright); line-height: 1; }
-    .xp-label { font-size: 10px; color: #5a7a5c; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
-
-    /* ── STAT CARDS ── */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 1rem; margin-bottom: 1.75rem;
-    }
-
-    .stat-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-lg); padding: 1.1rem 1.25rem;
-      display: flex; flex-direction: column; gap: 6px;
-      transition: border-color var(--ease), transform var(--ease);
-      cursor: default;
-    }
-
-    .stat-card:hover { border-color: var(--g-bright); transform: translateY(-2px); }
-
-    .stat-icon {
-      width: 36px; height: 36px; border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 4px;
-    }
-
-    .stat-icon svg { width: 18px; height: 18px; }
-
-    .stat-val { font-family: var(--font-d); font-size: 28px; color: var(--g-text); line-height: 1; }
-    .stat-label { font-size: 12px; color: var(--g-muted); }
-    .stat-change { font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 3px; }
-    .stat-change.up { color: #16a34a; }
-    .stat-change svg { width: 11px; height: 11px; }
-
-    /* ── SECTION HEADING ── */
-    .section-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .section-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); }
-    .section-sub { font-size: 12.5px; color: var(--g-muted); margin-top: 1px; }
-
-    .see-all {
-      font-size: 13px; color: var(--g-mid); font-weight: 500;
-      cursor: pointer; border: none; background: none; display: flex; align-items: center; gap: 4px;
-      transition: color var(--ease);
-    }
-
-    .see-all:hover { color: var(--g-dark); }
-
-    /* ── MAIN GRID ── */
-    .grid-two { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; margin-bottom: 1.75rem; }
-
-    /* ── FESTIVAL TASK CARD (HIGHLIGHT) ── */
-    .festival-card {
-      background: linear-gradient(135deg, #0d2b10, #1a4a1c);
-      border: 1px solid rgba(86,194,113,0.25);
-      border-radius: var(--r-xl); padding: 1.75rem;
+      padding: 2.5rem; margin-bottom: 2rem;
       position: relative; overflow: hidden;
+      display: flex; align-items: center; gap: 2rem;
+      box-shadow: 0 10px 30px rgba(13, 31, 15, 0.15);
+    }
+    .passport-card::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0Z' fill='%2356c271' fill-opacity='0.03'/%3E%3C/svg%3E");
     }
 
-    .festival-card::after {
-      content: '';
-      position: absolute; right: -30px; top: -30px;
-      width: 160px; height: 160px; border-radius: 50%;
-      border: 1px solid rgba(86,194,113,0.1);
+    .pass-avatar-wrap {
+      position: relative; z-index: 1; flex-shrink: 0;
     }
-
-    .fc-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.25);
-      border-radius: 20px; padding: 4px 12px;
-      font-size: 11px; color: #fbbf24; letter-spacing: 0.5px;
-      margin-bottom: 0.85rem;
-    }
-
-    .fc-title { font-family: var(--font-d); font-size: 22px; color: #e8f5e9; margin-bottom: 0.4rem; }
-    .fc-festival { font-size: 13px; color: var(--g-bright); font-weight: 500; margin-bottom: 0.75rem; }
-
-    .fc-desc { font-size: 13.5px; color: #7a9a7c; line-height: 1.65; margin-bottom: 1.25rem; }
-
-    .fc-meta { display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-
-    .fc-meta-item {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px; color: #5a7a5c;
-    }
-
-    .fc-meta-item svg { width: 13px; height: 13px; color: var(--g-bright); }
-
-    .fc-points {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(86,194,113,0.12); border: 1px solid rgba(86,194,113,0.2);
-      border-radius: 20px; padding: 5px 14px;
-      font-size: 13px; color: var(--g-bright); font-weight: 500; margin-bottom: 1.25rem;
-    }
-
-    .fc-btn {
-      width: 100%; padding: 11px;
-      background: var(--g-bright); color: var(--g-dark);
-      border: none; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease);
-    }
-
-    .fc-btn:hover { background: #46b261; }
-
-    /* ── LEADERBOARD PREVIEW ── */
-    .lb-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-xl); padding: 1.5rem; display: flex; flex-direction: column; gap: 0;
-    }
-
-    .lb-top3 { display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin: 1rem 0 1.25rem; }
-
-    .lb-podium {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-    }
-
-    .lb-avatar {
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-weight: 500; color: #fff; font-size: 13px; position: relative;
-    }
-
-    .lb-crown {
-      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-      font-size: 16px;
-    }
-
-    .lb-podium-name { font-size: 11px; color: var(--g-sub); font-weight: 500; text-align: center; max-width: 60px; line-height: 1.2; }
-    .lb-podium-pts { font-size: 12px; color: var(--g-mid); font-weight: 500; }
-    .lb-block { border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #fff; }
-
-    .lb-list { display: flex; flex-direction: column; gap: 0; }
-
-    .lb-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 0; border-bottom: 1px solid #f0f4f0;
-    }
-
-    .lb-row:last-child { border-bottom: none; }
-
-    .lb-rank { font-size: 12px; color: var(--g-muted); width: 20px; text-align: center; }
-    .lb-mini-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: #fff; flex-shrink: 0; }
-    .lb-info { flex: 1; }
-    .lb-info-name { font-size: 13px; color: var(--g-text); font-weight: 500; }
-    .lb-info-school { font-size: 11px; color: var(--g-muted); }
-    .lb-pts-badge { font-size: 11px; font-weight: 500; color: var(--g-mid); background: #eaf3de; padding: 3px 9px; border-radius: 12px; }
-
-    .lb-you { background: #f0fdf4; border-radius: var(--r-sm); }
-
-    /* ── LESSONS GRID ── */
-    .lessons-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; margin-bottom: 1.75rem; }
-
-    .lesson-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-lg); padding: 1.25rem;
-      display: flex; flex-direction: column; gap: 10px;
-      cursor: pointer; transition: all var(--ease);
-    }
-
-    .lesson-card:hover { border-color: var(--g-bright); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,122,56,0.08); }
-
-    .lesson-icon {
-      width: 44px; height: 44px; border-radius: 12px;
+    .pass-avatar {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: linear-gradient(135deg, #2d7a38, #56c271);
       display: flex; align-items: center; justify-content: center;
+      font-size: 40px; font-weight: 500; color: #fff;
+      font-family: var(--font-d);
+      border: 4px solid var(--g-dark); outline: 2px solid rgba(86,194,113,0.3);
+      box-shadow: 0 0 30px rgba(86,194,113,0.3);
+    }
+    .pass-badge {
+      position: absolute; bottom: 0; right: 0;
+      background: #f59e0b; color: #92400e; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 12px; border: 2px solid var(--g-dark);
+      letter-spacing: 0.5px; text-transform: uppercase;
     }
 
-    .lesson-icon svg { width: 22px; height: 22px; }
-
-    .lesson-class { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; }
-    .lesson-title { font-family: var(--font-d); font-size: 16px; color: var(--g-text); line-height: 1.3; }
-    .lesson-desc { font-size: 12.5px; color: var(--g-muted); line-height: 1.55; }
-
-    .lesson-progress { display: flex; flex-direction: column; gap: 4px; }
-    .progress-bar { height: 4px; background: #e8f5e9; border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--g-bright); border-radius: 2px; transition: width 0.6s ease; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--g-muted); }
-
-    .lesson-footer { display: flex; align-items: center; justify-content: space-between; }
-    .lesson-tag { font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 500; }
-
-    /* ── QUIZ + NGO ROW ── */
-    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-
-    .quiz-card, .ngo-card {
-      background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-xl); padding: 1.5rem;
+    .pass-info { flex: 1; z-index: 1; }
+    .pass-role { 
+      display: inline-block; font-size: 11px; color: var(--g-bright); 
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+      background: rgba(86,194,113,0.1); padding: 4px 10px; border-radius: 10px; border: 1px solid rgba(86,194,113,0.2);
     }
+    .pass-name { font-family: var(--font-d); font-size: 36px; color: #fff; margin-bottom: 4px; line-height: 1.1; }
+    .pass-school { font-size: 14px; color: #a8d5b0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 6px; }
 
-    .quiz-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid #f0f4f0;
+    /* Progress Bar */
+    .level-container { margin-top: 1rem; }
+    .level-header { display: flex; justify-content: space-between; font-size: 12px; color: #c8e6c9; margin-bottom: 6px; font-weight: 500;}
+    .level-bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+    .level-bar-fill { height: 100%; background: linear-gradient(90deg, #56c271, #f59e0b); width: 65%; border-radius: 4px; }
+    .level-sub { font-size: 11px; color: #7a9a7c; margin-top: 6px; }
+
+    /* ── STATS GRID ── */
+    .p-stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;
     }
-
-    .quiz-item:last-child { border-bottom: none; }
-
-    .quiz-num {
-      width: 32px; height: 32px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 500; flex-shrink: 0;
+    .p-stat-card {
+      background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl);
+      padding: 1.5rem; display: flex; align-items: center; gap: 1rem;
+      transition: transform var(--ease), box-shadow var(--ease); cursor: default;
     }
-
-    .quiz-info { flex: 1; }
-    .quiz-name { font-size: 13.5px; color: var(--g-text); font-weight: 500; }
-    .quiz-meta { font-size: 11px; color: var(--g-muted); margin-top: 2px; }
-    .quiz-score { font-size: 13px; font-weight: 500; color: var(--g-mid); }
-
-    .ngo-logo {
+    .p-stat-card:hover { border-color: var(--g-bright); transform: translateY(-4px); box-shadow: 0 10px 25px rgba(45,122,56,0.06); }
+    .p-icon-box {
       width: 48px; height: 48px; border-radius: 12px;
-      background: linear-gradient(135deg, #eaf3de, #c0dd97);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 0.75rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
+    .p-stat-val { font-family: var(--font-d); font-size: 28px; color: var(--g-text); line-height: 1.1; margin-bottom: 2px;}
+    .p-stat-label { font-size: 12px; color: var(--g-muted); font-weight: 500;}
 
-    .ngo-logo svg { width: 24px; height: 24px; color: #3b6d11; }
-
-    .ngo-name { font-family: var(--font-d); font-size: 18px; color: var(--g-text); margin-bottom: 3px; }
-    .ngo-org { font-size: 12px; color: var(--g-muted); margin-bottom: 0.75rem; }
-    .ngo-task { font-size: 13.5px; color: var(--g-sub); line-height: 1.6; margin-bottom: 1rem; }
-
-    .ngo-pts {
-      display: flex; align-items: center; gap: 8px;
-      background: #faeeda; border: 1px solid #fde68a;
-      border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem;
+    /* ── ACHIEVEMENTS ── */
+    .ach-section {
+      background: #fff; border: 1px solid var(--g-border); border-radius: var(--r-xl);
+      padding: 2rem; margin-bottom: 2rem;
     }
-
-    .ngo-pts svg { width: 16px; height: 16px; color: #b45309; flex-shrink: 0; }
-    .ngo-pts-text { font-size: 13px; color: #92400e; }
-    .ngo-pts-val { font-size: 16px; font-weight: 500; color: #b45309; margin-left: auto; }
-
-    .ngo-btn {
-      width: 100%; padding: 10px;
-      background: var(--g-text); color: #fff;
-      border: none; border-radius: var(--r-sm);
-      font-family: var(--font-b); font-size: 13.5px; font-weight: 500;
-      cursor: pointer; transition: all var(--ease);
+    .section-title { font-family: var(--font-d); font-size: 20px; color: var(--g-text); margin-bottom: 1.5rem;}
+    
+    .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1.5rem; }
+    
+    .badge-card {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform var(--ease); position: relative;
     }
-
-    .ngo-btn:hover { background: var(--g-mid); }
-
-    /* ── MONTH TASKS STRIP ── */
-    .tasks-strip { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 2rem; }
-    .tasks-strip::-webkit-scrollbar { height: 4px; }
-    .tasks-strip::-webkit-scrollbar-track { background: transparent; }
-    .tasks-strip::-webkit-scrollbar-thumb { background: var(--g-border); border-radius: 2px; }
-
-    .task-chip {
-      flex-shrink: 0; background: #fff; border: 1px solid var(--g-border);
-      border-radius: var(--r-lg); padding: 1rem 1.25rem;
-      width: 200px; cursor: pointer; transition: all var(--ease);
+    .badge-card:hover { transform: scale(1.05); }
+    .badge-medal {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: #f0fdf4; border: 2px solid #bbf7d0;
+      display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 10px;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.04);
     }
+    .badge-medal.locked { background: #f3f4f6; border-color: #e5e7eb; color: #9ca3af; filter: grayscale(1); }
+    
+    .badge-title { font-size: 12.5px; font-weight: 700; color: var(--g-text); margin-bottom: 2px;}
+    .badge-sub { font-size: 10.5px; color: var(--g-muted); line-height: 1.4;}
 
-    .task-chip:hover { border-color: var(--g-bright); transform: translateY(-2px); }
-    .task-chip.active-task { border-color: var(--g-mid); background: #f0fdf4; }
-
-    .tc-month { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-muted); margin-bottom: 4px; }
-    .tc-festival { font-size: 12px; font-weight: 500; color: var(--g-mid); margin-bottom: 4px; }
-    .tc-task { font-size: 12.5px; color: var(--g-sub); line-height: 1.5; }
-    .tc-pts { font-size: 11px; color: var(--g-bright); font-weight: 500; margin-top: 6px; }
-
-    /* ── ANIMATIONS ── */
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-    .animate { animation: fadeUp 0.5s ease both; }
-    .d1 { animation-delay: 0.05s; }
-    .d2 { animation-delay: 0.10s; }
-    .d3 { animation-delay: 0.15s; }
-    .d4 { animation-delay: 0.20s; }
-    .d5 { animation-delay: 0.25s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1024px) {
-      .lessons-grid { grid-template-columns: repeat(2, 1fr); }
-      .grid-two { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: repeat(2,1fr); }
+    /* ── ACCOUNT SETTINGS ── */
+    .settings-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 14px; border-radius: var(--r-md); font-family: var(--font-b); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all var(--ease); border: 1px solid;
+      margin-bottom: 10px;
     }
+    .btn-outline { background: transparent; border-color: var(--g-border); color: var(--g-sub); }
+    .btn-outline:hover { background: #f9fbf9; border-color: var(--g-mid); color: var(--g-mid); }
+    .btn-danger { background: #fff5f5; border-color: #fecaca; color: #dc2626; }
+    .btn-danger:hover { background: #fee2e2; border-color: #fca5a5; }
 
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .main { margin-left: 0; }
-      .content { padding: 1.25rem; }
-      .lessons-grid { grid-template-columns: 1fr; }
-      .bottom-grid { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: repeat(2,1fr); }
-      .hero-right { display: none; }
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .animate { animation: fadeUp 0.45s ease both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.15s} .d3{animation-delay:.25s}
   </style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
   <div class="sb-brand">
     <div class="sb-logo">
@@ -523,40 +205,40 @@
 
   <nav class="sb-nav">
     <div class="nav-label">Main</div>
-    <button class="nav-item ${activeFilename === 'page2.html' ? 'active' : ''}" onclick="window.location.href='page2.html'">
+    <button class="nav-item" onclick="window.location.href='page2.html'">
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Dashboard
     </button>
-    <button class="nav-item ${(activeFilename === 'page3.html' || activeFilename === 'lesson-forests-detail.html') ? 'active' : ''}" onclick="window.location.href='page3.html'">
+    <button class="nav-item" onclick="window.location.href='page3.html'">
       <svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Lessons
     </button>
-    <button class="nav-item ${activeFilename === 'page4.html' ? 'active' : ''}" onclick="window.location.href='page4.html'">
+    <button class="nav-item" onclick="window.location.href='page4.html'">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>
       Quizzes
     </button>
-    <button class="nav-item ${activeFilename === 'tasks.html' ? 'active' : ''}" onclick="window.location.href='tasks.html'">
+    <button class="nav-item" onclick="window.location.href='tasks.html'">
       <svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Tasks
     </button>
 
     <div class="nav-label" style="margin-top:1rem;">Community</div>
-    <button class="nav-item ${activeFilename === 'ecoquest-leaderboard.html' ? 'active' : ''}" onclick="window.location.href='ecoquest-leaderboard.html'">
+    <button class="nav-item" onclick="window.location.href='ecoquest-leaderboard.html'">
       <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
       Leaderboard
     </button>
-    <button class="nav-item ${activeFilename === 'ngo-tasks.html' ? 'active' : ''}" onclick="window.location.href='ngo-tasks.html'">
+    <button class="nav-item" onclick="window.location.href='ngo-tasks.html'">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       NGO Tasks
       <span class="nav-badge" style="background:#f59e0b;">2</span>
     </button>
 
     <div class="nav-label" style="margin-top:1rem;">My Account</div>
-    <button class="nav-item ${activeFilename === 'tasks-upload.html' ? 'active' : ''}" onclick="window.location.href='tasks-upload.html'">
+    <button class="nav-item" onclick="window.location.href='tasks-upload.html'">
       <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
       Upload Proof
     </button>
-    <button class="nav-item ${activeFilename === 'profile.html' ? 'active' : ''}" onclick="window.location.href='profile.html'">
+    <button class="nav-item active" onclick="window.location.href='profile.html'">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Profile
     </button>
@@ -571,54 +253,135 @@
   </div>
 </aside>
 
-<!-- ═══ MAIN ═══ -->
 <div class="main">
-
-  <!-- TOPBAR -->
-  
   <header class="topbar">
     <div>
-      <div class="topbar-title">My Profile</div>
-      <div class="topbar-sub">Manage your account and view your progress</div>
-    </div>
-    <div class="topbar-right">
-      <button class="tb-btn primary" onclick="window.location.href='tasks-upload.html'">
-        Upload Proof
-      </button>
+      <div class="topbar-title">My Eco Passport</div>
+      <div class="topbar-sub">View your progress, statistics, and badges</div>
     </div>
   </header>
+
   <div class="content">
-    <div class="rules-box animate d1" style="max-width: 600px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 3rem 2rem;">
-      <div id="profAvatar" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #2d7a38, #56c271); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 500; color: #fff; margin-bottom: 1rem; font-family: var(--font-d);">??</div>
-      <h2 id="profName" style="font-family: var(--font-d); font-size: 26px; color: var(--g-text); margin-bottom: 4px;">Loading...</h2>
-      <p id="profSchool" style="font-size: 14px; color: var(--g-muted); margin-bottom: 1.5rem;">Loading...</p>
-      
-      <div style="background: #f0fdf4; border: 1px solid #c8dcc8; border-radius: var(--r-md); padding: 1.25rem; width: 100%; margin-bottom: 2rem; display: flex; justify-content: space-around;">
-        <div>
-          <div style="font-size: 11px; color: var(--g-sub); text-transform: uppercase; letter-spacing: 0.5px;">Eco Points</div>
-          <div id="profPts" style="font-family: var(--font-d); font-size: 24px; color: var(--g-mid);">--</div>
+    
+    <!-- PASSPORT HERO -->
+    <div class="passport-card animate d1">
+      <div class="pass-avatar-wrap">
+        <div class="pass-avatar" id="profAvatar">??</div>
+        <div class="pass-badge">Lvl 3</div>
+      </div>
+      <div class="pass-info">
+        <div class="pass-role" id="profRole">student</div>
+        <div class="pass-name" id="profName">Loading...</div>
+        <div class="pass-school">
+          <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 1L1 5l7 4 7-4-7-4zM1 9l7 4 7-4M3 6v6l5 3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          <span id="profSchool">Loading...</span>
         </div>
-        <div style="width: 1px; background: #c8dcc8;"></div>
+        
+        <div class="level-container">
+          <div class="level-header">
+            <span>Level 3 (Eco Learner)</span>
+            <span>450 / 600 XP</span>
+          </div>
+          <div class="level-bar-bg">
+            <div class="level-bar-fill" style="width: 75%"></div>
+          </div>
+          <div class="level-sub">Complete 1 more task to reach Level 4 (Green Warrior)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="p-stats-grid animate d2">
+      <div class="p-stat-card">
+        <div class="p-icon-box" style="background: #eaf3de; color: #2d7a38;">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
         <div>
-          <div style="font-size: 11px; color: var(--g-sub); text-transform: uppercase; letter-spacing: 0.5px;">Role</div>
-          <div id="profRole" style="font-family: var(--font-d); font-size: 24px; color: var(--g-mid); text-transform: capitalize;">--</div>
+          <div class="p-stat-val" id="profPts">--</div>
+          <div class="p-stat-label">Total Eco Points</div>
+        </div>
+      </div>
+      
+      <div class="p-stat-card">
+        <div class="p-icon-box" style="background: #eff6ff; color: #1d4ed8;">
+           <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M9 12l2 2 4-4M19 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="p-stat-val"><span id="profQuizzes">--</span>/9</div>
+          <div class="p-stat-label">Quizzes Passed</div>
         </div>
       </div>
 
-      <button id="logoutBtn" style="padding: 12px 24px; border-radius: var(--r-sm); background: #ef4444; color: #fff; font-family: var(--font-b); font-size: 14px; font-weight: 500; border: none; cursor: pointer; transition: all var(--ease); width: 100%;">
-        Log Out
+      <div class="p-stat-card">
+        <div class="p-icon-box" style="background: #fef3c7; color: #b45309;">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1v12zM4 22v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="p-stat-val" id="profTasks">--</div>
+          <div class="p-stat-label">Tasks Finished</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="ach-section animate d3">
+      <div class="section-title">Badges & Achievements</div>
+      <div class="ach-grid">
+        
+        <div class="badge-card">
+          <div class="badge-medal">🌱</div>
+          <div class="badge-title">Seed Planter</div>
+          <div class="badge-sub">Joined EcoQuest</div>
+        </div>
+        
+        <div class="badge-card">
+          <div class="badge-medal" style="background: #fefce8; border-color: #fef08a;">💡</div>
+          <div class="badge-title">Bright Spark</div>
+          <div class="badge-sub">Passed 1st Quiz</div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-medal" style="background: #f0f9ff; border-color: #bae6fd;">💧</div>
+          <div class="badge-title">Water Saver</div>
+          <div class="badge-sub">Water Task Done</div>
+        </div>
+        
+        <div class="badge-card">
+          <div class="badge-medal locked">🏅</div>
+          <div class="badge-title">Top 10</div>
+          <div class="badge-sub">Reach Top 10 Rank</div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-medal locked">🌍</div>
+          <div class="badge-title">Eco Master</div>
+          <div class="badge-sub">1000+ Points</div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-medal locked">🤝</div>
+          <div class="badge-title">NGO Friend</div>
+          <div class="badge-sub">Complete an NGO Task</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACCOUNT ACTIONS -->
+    <div class="animate d3" style="max-width: 400px; margin: 0 auto; text-align: center;">
+      <button class="settings-btn btn-outline">
+         <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 12a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.3"/><path d="M14 8h1M1 8H2M8 1v1M8 14v1M12.95 12.95l-.71-.71M3.76 3.76l-.71-.71M12.95 3.05l-.71.71M3.76 12.24l-.71.71" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+         Account Settings
+      </button>
+      <button class="settings-btn btn-danger" id="logoutBtn">
+        <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign Out Securely
       </button>
     </div>
-  </div>
 
+  </div>
 </div>
-<script>
-  document.querySelectorAll('.progress-fill').forEach(el => {
-    const w = el.style.width;
-    el.style.width = '0%';
-    setTimeout(() => { el.style.width = w; }, 400);
-  });
-</script>
-  <script src="api.js"></script>
+
+<script src="api.js"></script>
 </body>
 </html>
