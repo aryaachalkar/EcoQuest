@@ -328,6 +328,7 @@
 </div>
 
 
+
 <script>
 // Retrieve progress from localStorage
 const prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}')['water'] || [];
@@ -385,6 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Important: Re-assign onclick to actually let the user play!
     unlNode.onclick = () => window.location.href = 'lesson-play.html?lesson=water&node=' + highestUnlocked;
+  } else if (highestUnlocked === 9 && justCompleted && parseInt(justCompleted) === 8) {
+    // The user literally just finished the final node! Trigger massive chapter celebration!
+    sessionStorage.removeItem('justCompleted_water');
+    setTimeout(showChapterCelebration, 500);
   }
 
   // Update Progress Bar
@@ -423,12 +428,62 @@ function createMapConfetti(target) {
     setTimeout(() => conf.remove(), 1500);
   }
 }
+
+function showChapterCelebration() {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.inset = '0';
+  overlay.style.backgroundColor = 'rgba(13, 31, 15, 0.9)';
+  overlay.style.zIndex = '100000';
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 0.5s ease-in';
+  
+  overlay.innerHTML = `
+    <div style="font-size: 150px; filter: drop-shadow(0 0 40px #f59e0b); animation: masterBounce 2s infinite;">🏆</div>
+    <h1 style="color: #56c271; font-family: var(--font-d); font-size: 54px; margin-top: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); text-align:center;">CHAPTER MASTERED!</h1>
+    <p style="color: #e8f5e9; font-size: 20px; margin: 15px 0 40px 0; max-width: 600px; text-align: center; line-height: 1.5;">You successfully mapped the entire path and proved your ecological mastery.</p>
+    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 10px 30px; border-radius: 30px; font-weight: bold; color: #fff; font-size: 24px; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);">+500 Bonus XP</div>
+    <button onclick="this.parentElement.style.opacity='0'; setTimeout(()=>this.parentElement.remove(), 500);" style="margin-top: 40px; background: #56c271; color: #fff; font-weight: bold; padding: 18px 50px; font-size: 20px; border-radius: 12px; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 0 #2d7a38;">Claim Reward</button>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Fade in
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
+  });
+
+  // Continuous Confetti bursts
+  let bursts = 0;
+  const burstInterval = setInterval(() => {
+    const dummyTarget = document.createElement('div');
+    dummyTarget.style.position = 'fixed';
+    dummyTarget.style.left = Math.random() * 80 + 10 + 'vw';
+    dummyTarget.style.top = Math.random() * 50 + 20 + 'vh';
+    dummyTarget.style.width = '1px';
+    dummyTarget.style.height = '1px';
+    document.body.appendChild(dummyTarget);
+    createMapConfetti(dummyTarget);
+    dummyTarget.remove();
+    
+    bursts++;
+    if (bursts > 8) clearInterval(burstInterval); // stop after 4 seconds
+  }, 400);
+}
 </script>
 <style>
   @keyframes unlockBounce {
     0% { transform: scale(1); box-shadow: 0 0 0 rgba(86,194,113,0); }
     50% { transform: scale(1.3); box-shadow: 0 0 40px rgba(86,194,113,0.8); background-color: #dcfce7; }
     100% { transform: scale(1); box-shadow: 0 0 20px rgba(86,194,113,0.4); }
+  }
+  @keyframes masterBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.1); }
   }
   .unlock-bounce {
     animation: unlockBounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
