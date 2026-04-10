@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard — EcoQuest</title>
+  <meta name="description"
+    content="EcoQuest Leaderboard — See top eco-champions in your school and city ranked by Eco Points earned through lessons, quizzes and festival tasks." />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --g-dark: #0d1f0f;
+      --g-deep: #132b15;
+      --g-mid: #2d7a38;
+      --g-bright: #56c271;
+      --g-light: #e8f5e9;
+      --g-pale: #f4f9f4;
+      --g-border: #c8dcc8;
+      --g-muted: #7a9a7c;
+      --g-text: #1a3d1c;
+      --g-sub: #5a7a5c;
+      --amber: #f59e0b;
+      --amber-bg: #fffbeb;
+      --blue: #3b82f6;
+      --blue-bg: #eff6ff;
+      --coral: #ef4444;
+      --coral-bg: #fef2f2;
+      --purple: #8b5cf6;
+      --purple-bg: #f5f3ff;
+      --font-d: 'Playfair Display', Georgia, serif;
+      --font-b: 'DM Sans', sans-serif;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 18px;
+      --r-xl: 24px;
+      --ease: 0.22s ease;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: var(--font-b);
+      background: #f0f4f0;
+      color: var(--g-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 240px;
+      background: var(--g-dark);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sb-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid rgba(86, 194, 113, 0.12);
+    }
+
+    .sb-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #56c271, #2d7a38);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sb-logo svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .sb-name {
+      font-family: var(--font-d);
+      font-size: 18px;
+      color: #e8f5e9;
+    }
+
+    .sb-tagline {
+      font-size: 10px;
+      color: #5a7a5c;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 1rem 0.75rem;
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #3d5c3f;
+      padding: 0.5rem 0.5rem 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      color: #7a9a7c;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all var(--ease);
+      margin-bottom: 2px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover {
+      background: rgba(86, 194, 113, 0.08);
+      color: #c8e6c9;
+    }
+
+    .nav-item.active {
+      background: rgba(86, 194, 113, 0.14);
+      color: var(--g-bright);
+      font-weight: 500;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--g-mid);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .sb-user {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid rgba(86, 194, 113, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sb-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d7a38, #56c271);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .sb-user-name {
+      font-size: 13px;
+      color: #c8e6c9;
+      font-weight: 500;
+    }
+
+    .sb-user-class {
+      font-size: 11px;
+      color: #5a7a5c;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: 240px;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--g-border);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar-greeting {
+      font-size: 13px;
+      color: var(--g-muted);
+    }
+
+    .topbar-title {
+      font-family: var(--font-d);
+      font-size: 20px;
+      color: var(--g-text);
+      line-height: 1.2;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tb-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--r-sm);
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--ease);
+      border: 1px solid var(--g-border);
+      background: #fff;
+      color: var(--g-sub);
+    }
+
+    .tb-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .tb-btn:hover {
+      border-color: var(--g-bright);
+      color: var(--g-mid);
+    }
+
+    .tb-btn.primary {
+      background: var(--g-mid);
+      color: #fff;
+      border-color: var(--g-mid);
+    }
+
+    .tb-btn.primary:hover {
+      background: #236030;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 2rem;
+      max-width: 1200px;
+    }
+
+    /* ── HERO BANNER ── */
+    .lb-hero {
+      background: var(--g-dark);
+      border-radius: var(--r-xl);
+      padding: 2rem 2.5rem;
+      margin-bottom: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .lb-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(30 40 40)'/%3E%3Cellipse cx='40' cy='40' rx='10' ry='22' fill='%2356c271' opacity='0.04' transform='rotate(90 40 40)'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+    }
+
+    .lb-hero-left {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lb-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(86, 194, 113, 0.12);
+      border: 1px solid rgba(86, 194, 113, 0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--g-bright);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .lb-hero-eyebrow span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--g-bright);
+      animation: pulse 2s infinite;
+    }
+
+    .lb-hero-title {
+      font-family: var(--font-d);
+      font-size: 30px;
+      color: #e8f5e9;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .lb-hero-title em {
+      color: var(--g-bright);
+      font-style: italic;
+    }
+
+    .lb-hero-sub {
+      font-size: 13.5px;
+      color: #7a9a7c;
+      max-width: 400px;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .lb-hero-stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .lb-hero-stat {
+      text-align: center;
+    }
+
+    .lb-hero-stat-val {
+      font-family: var(--font-d);
+      font-size: 22px;
+      color: var(--g-bright);
+    }
+
+    .lb-hero-stat-label {
+      font-size: 11px;
+      color: #5a7a5c;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .lb-hero-right {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    .my-rank-card {
+      background: rgba(86, 194, 113, 0.08);
+      border: 1px solid rgba(86, 194, 113, 0.2);
+      border-radius: var(--r-xl);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      min-width: 180px;
+    }
+
+    .mr-label {
+      font-size: 11px;
+      color: var(--g-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .mr-rank {
+      font-family: var(--font-d);
+      font-size: 52px;
+      color: var(--g-bright);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .mr-name {
+      font-size: 13px;
+      color: #c8e6c9;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .mr-pts {
+      font-size: 12px;
+      color: #5a7a5c;
+    }
+
+    .mr-change {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(86, 194, 113, 0.14);
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: var(--g-bright);
+      font-weight: 500;
+    }
+
+    /* ── FILTERS ── */
+    .filters-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--ease);
+      border: 1px solid var(--g-border);
+      background: #fff;
+      color: var(--g-sub);
+    }
+
+    .filter-tab:hover {
+      border-color: var(--g-bright);
+      color: var(--g-mid);
+    }
+
+    .filter-tab.active {
+      background: var(--g-mid);
+      color: #fff;
+      border-color: var(--g-mid);
+    }
+
+    .filter-sep {
+      flex: 1;
+    }
+
+    .filter-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      border: 1px solid var(--g-border);
+      border-radius: var(--r-sm);
+      padding: 8px 14px;
+      transition: border-color var(--ease);
+    }
+
+    .filter-search:focus-within {
+      border-color: var(--g-bright);
+    }
+
+    .filter-search svg {
+      width: 14px;
+      height: 14px;
+      color: var(--g-muted);
+      flex-shrink: 0;
+    }
+
+    .filter-search input {
+      border: none;
+      outline: none;
+      font-family: var(--font-b);
+      font-size: 13px;
+      color: var(--g-text);
+      background: transparent;
+      width: 160px;
+    }
+
+    .filter-search input::placeholder {
+      color: var(--g-muted);
+    }
+
+    /* ── PODIUM ── */
+    .podium-section {
+      background: #fff;
+      border: 1px solid var(--g-border);
+      border-radius: var(--r-xl);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .podium-title {
+      font-family: var(--font-d);
+      font-size: 18px;
+      color: var(--g-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .podium-sub {
+      font-size: 12.5px;
+      color: var(--g-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    .podium-stage {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .podium-person {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pa-avatar {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #fff;
+      position: relative;
+      border: 3px solid transparent;
+    }
+
+    .pa-avatar.rank1 {
+      width: 80px;
+      height: 80px;
+      font-size: 20px;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+    }
+
+    .pa-avatar.rank2 {
+      width: 64px;
+      height: 64px;
+      font-size: 16px;
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.15);
+    }
+
+    .pa-avatar.rank3 {
+      width: 56px;
+      height: 56px;
+      font-size: 14px;
+      border-color: #b45309;
+      box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.12);
+    }
+
+    .pa-crown {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+    }
+
+    .pa-medal {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      border: 2px solid #fff;
+    }
+
+    .pa-medal.gold {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    .pa-medal.silver {
+      background: #94a3b8;
+      color: #fff;
+    }
+
+    .pa-medal.bronze {
+      background: #b45309;
+      color: #fff;
+    }
+
+    .pa-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--g-text);
+      text-align: center;
+    }
+
+    .pa-school {
+      font-size: 11px;
+      color: var(--g-muted);
+      text-align: center;
+      max-width: 90px;
+    }
+
+    .pa-pts {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--g-mid);
+    }
+
+    .podium-block {
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-d);
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .podium-block.b1 {
+      width: 100px;
+      height: 90px;
+      background: linear-gradient(180deg, #e8c84a, #b8941a);
+    }
+
+    .podium-block.b2 {
+      width: 90px;
+      height: 66px;
+      background: linear-gradient(180deg, #b0bec5, #78909c);
+    }
+
+    .podium-block.b3 {
+      width: 80px;
+      height: 48px;
+      background: linear-gradient(180deg, #c8955a, #8d6033);
+    }
+
+    /* ── BREAKDOWN CHIPS ── */
+    .breakdown-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .breakdown-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--g-pale);
+      border: 1px solid var(--g-border);
+      border-radius: var(--r-lg);
+      padding: 10px 16px;
+    }
+
+    .bc-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .bc-label {
+      font-size: 12px;
+      color: var(--g-sub);
+    }
+
+    .bc-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--g-text);
+    }
+
+    /* ── FULL RANKINGS TABLE ── */
+    .rankings-card {
+      background: #fff;
+      border: 1px solid var(--g-border);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+    }
+
+    .rankings-head {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--g-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .rankings-title {
+      font-family: var(--font-d);
+      font-size: 18px;
+      color: var(--g-text);
+    }
+
+    .rankings-sub {
+      font-size: 12px;
+      color: var(--g-muted);
+      margin-top: 1px;
+    }
+
+    .col-heads {
+      display: grid;
+      grid-template-columns: 56px 1fr 100px 90px 90px 90px;
+      padding: 8px 1.5rem;
+      background: var(--g-pale);
+      border-bottom: 1px solid var(--g-border);
+    }
+
+    .col-head {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--g-muted);
+    }
+
+    .col-head.right {
+      text-align: right;
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 56px 1fr 100px 90px 90px 90px;
+      padding: 12px 1.5rem;
+      border-bottom: 1px solid #f0f4f0;
+      align-items: center;
+      transition: background var(--ease);
+    }
+
+    .rank-row:last-child {
+      border-bottom: none;
+    }
+
+    .rank-row:hover {
+      background: var(--g-pale);
+    }
+
+    .rank-row.you {
+      background: #f0fdf4;
+    }
+
+    .rank-row.you:hover {
+      background: #e8faf0;
+    }
+
+    .rank-row.top3 {
+      background: #fffef5;
+    }
+
+    .rr-rank {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rr-rank.gold {
+      color: #b8941a;
+    }
+
+    .rr-rank.silver {
+      color: #78909c;
+    }
+
+    .rr-rank.bronze {
+      color: #8d6033;
+    }
+
+    .rank-medal {
+      font-size: 14px;
+    }
+
+    .rr-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rr-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .rr-info-name {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--g-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rr-info-school {
+      font-size: 11px;
+      color: var(--g-muted);
+    }
+
+    .you-badge {
+      font-size: 10px;
+      background: #eaf3de;
+      color: #27500a;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    .rr-pts {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--g-mid);
+      text-align: right;
+    }
+
+    .rr-lessons {
+      font-size: 12.5px;
+      color: var(--g-muted);
+      text-align: right;
+    }
+
+    .rr-tasks {
+      font-size: 12.5px;
+      color: var(--g-muted);
+      text-align: right;
+    }
+
+    .rr-change {
+      text-align: right;
+    }
+
+    .change-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .change-badge.up {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .change-badge.down {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .change-badge.same {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    /* ── NGO BONUS SECTION ── */
+    .ngo-section {
+      margin-bottom: 1.75rem;
+    }
+
+    .ngo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .ngo-bonus-card {
+      background: #fff;
+      border: 1px solid var(--g-border);
+      border-radius: var(--r-xl);
+      padding: 1.25rem;
+    }
+
+    .nbc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: #b45309;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .nbc-title {
+      font-family: var(--font-d);
+      font-size: 15px;
+      color: var(--g-text);
+      margin-bottom: 4px;
+    }
+
+    .nbc-org {
+      font-size: 11.5px;
+      color: var(--g-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .nbc-bonus {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--amber-bg);
+      border: 1px solid #fde68a;
+      border-radius: var(--r-sm);
+      padding: 8px 12px;
+      margin-bottom: 0.75rem;
+    }
+
+    .nbc-bonus-label {
+      font-size: 12px;
+      color: #854f0b;
+    }
+
+    .nbc-bonus-val {
+      font-size: 14px;
+      font-weight: 600;
+      color: #b45309;
+    }
+
+    .nbc-participants {
+      font-size: 11.5px;
+      color: var(--g-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nbc-participants svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── YOUR BREAKDOWN ── */
+    .breakdown-card {
+      background: linear-gradient(135deg, #0d2b10, #1a4a1c);
+      border: 1px solid rgba(86, 194, 113, 0.2);
+      border-radius: var(--r-xl);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .bd-title {
+      font-family: var(--font-d);
+      font-size: 18px;
+      color: #e8f5e9;
+      margin-bottom: 4px;
+    }
+
+    .bd-sub {
+      font-size: 12.5px;
+      color: #5a7a5c;
+      margin-bottom: 1.25rem;
+    }
+
+    .bd-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bd-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bd-bar-label {
+      font-size: 12px;
+      color: #7a9a7c;
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    .bd-bar-track {
+      flex: 1;
+      height: 7px;
+      background: rgba(86, 194, 113, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bd-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+
+    .bd-bar-val {
+      font-size: 12px;
+      color: var(--g-bright);
+      font-weight: 500;
+      white-space: nowrap;
+      min-width: 50px;
+      text-align: right;
+    }
+
+    .bd-total {
+      text-align: right;
+    }
+
+    .bd-total-num {
+      font-family: var(--font-d);
+      font-size: 48px;
+      color: var(--g-bright);
+      line-height: 1;
+    }
+
+    .bd-total-label {
+      font-size: 11px;
+      color: #5a7a5c;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 3px;
+    }
+
+    .bd-rank-hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #7a9a7c;
+    }
+
+    .bd-rank-hint strong {
+      color: var(--g-bright);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .5;
+        transform: scale(.8)
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .ani {
+      animation: fadeUp 0.45s ease both;
+    }
+
+    .d1 {
+      animation-delay: .05s
+    }
+
+    .d2 {
+      animation-delay: .10s
+    }
+
+    .d3 {
+      animation-delay: .15s
+    }
+
+    .d4 {
+      animation-delay: .20s
+    }
+
+    .d5 {
+      animation-delay: .25s
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .ngo-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .col-heads,
+      .rank-row {
+        grid-template-columns: 48px 1fr 90px 80px 80px;
+      }
+
+      .col-heads>.col-head:last-child,
+      .rank-row>.rr-change {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .content {
+        padding: 1.25rem;
+      }
+
+      .lb-hero {
+        flex-direction: column;
+      }
+
+      .breakdown-card {
+        grid-template-columns: 1fr;
+      }
+
+      .bd-total {
+        text-align: left;
+      }
+
+      .ngo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .col-heads,
+      .rank-row {
+        grid-template-columns: 40px 1fr 80px;
+      }
+
+      .col-heads>*:nth-child(n+4),
+      .rank-row>*:nth-child(n+4) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">
+        <svg viewBox="0 0 22 22" fill="none">
+          <path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92" />
+          <path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div>
+        <div class="sb-name">EcoQuest</div>
+        <div class="sb-tagline">Eco Learning</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="nav-label">Main</div>
+      <button class="nav-item" onclick="window.location.href='page2.html'">
+      <svg viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+        </svg>
+      Dashboard
+      </button>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+          <path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        Lessons
+        <span class="nav-badge">3</span>
+      </button>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3" />
+          <path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor"
+            stroke-width="1.3" stroke-linecap="round" />
+          <circle cx="8" cy="11.5" r=".6" fill="currentColor" />
+        </svg>
+        Quizzes
+        <span class="nav-badge">2</span>
+      </button>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor"
+            stroke-width="1.3" />
+          <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        Tasks
+      </button>
+
+      <div class="nav-label" style="margin-top:1rem;">Community</div>
+      <button class="nav-item active">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2 6h4z" stroke="currentColor" stroke-width="1.3"
+            stroke-linejoin="round" />
+        </svg>
+        Leaderboard
+      </button>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.3" />
+          <circle cx="11" cy="5" r="3" stroke="currentColor" stroke-width="1.3" />
+          <path d="M1 14c0-2.2 1.8-4 4-4M10 14c0-2.2 1.8-4 4-4M7 11c1 0 2-.5 2-.5" stroke="currentColor"
+            stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        NGO Tasks
+        <span class="nav-badge" style="background:#f59e0b;">1</span>
+      </button>
+
+      <div class="nav-label" style="margin-top:1rem;">My Account</div>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3" />
+        </svg>
+        Upload Proof
+      </button>
+      <button class="nav-item">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="6" r="3.5" stroke="currentColor" stroke-width="1.3" />
+          <path d="M2 14c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.3"
+            stroke-linecap="round" />
+        </svg>
+        Profile
+      </button>
+    </nav>
+
+    <div class="sb-user">
+      <div class="sb-avatar">AS</div>
+      <div>
+        <div class="sb-user-name">Aarav Sharma</div>
+        <div class="sb-user-class">Class 7 · Pune</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-greeting">April 2025 — Month of Gudi Padwa</div>
+        <div class="topbar-title">Eco Champions Leaderboard</div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-btn">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M14 10v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2M8 2v8M5 5l3-3 3 3" stroke="currentColor" stroke-width="1.3"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Export
+        </button>
+        <button class="tb-btn primary">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Complete a Task →
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- HERO BANNER -->
+      <div class="lb-hero ani d1">
+        <div class="lb-hero-left">
+          <div class="lb-hero-eyebrow"><span></span> Live Rankings — April 2025</div>
+          <h1 class="lb-hero-title">Rise to the top,<br><em>Eco Champion!</em></h1>
+          <p class="lb-hero-sub">Every lesson you complete, quiz you ace, and festival task you finish earns you Eco
+            Points. NGO tasks earn bonus points and unlock special badges.</p>
+          <div class="lb-hero-stats">
+            <div class="lb-hero-stat">
+              <div class="lb-hero-stat-val">127</div>
+              <div class="lb-hero-stat-label">Students</div>
+            </div>
+            <div class="lb-hero-stat">
+              <div class="lb-hero-stat-val">14</div>
+              <div class="lb-hero-stat-label">Schools</div>
+            </div>
+            <div class="lb-hero-stat">
+              <div class="lb-hero-stat-val">3</div>
+              <div class="lb-hero-stat-label">NGO Tasks Active</div>
+            </div>
+          </div>
+        </div>
+        <div class="lb-hero-right">
+          <div class="my-rank-card">
+            <div class="mr-label">Your Rank</div>
+            <div class="mr-rank">#4</div>
+            <div class="mr-name">Aarav Sharma</div>
+            <div class="mr-pts">1,240 Eco Points</div>
+            <div class="mr-change">
+              <svg viewBox="0 0 10 10" fill="none" width="10" height="10">
+                <path d="M5 2v6M2 4l3-2 3 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+              </svg>
+              Up 2 spots this week
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YOUR POINTS BREAKDOWN -->
+      <div class="breakdown-card ani d2">
+        <div>
+          <div class="bd-title">Your Points Breakdown</div>
+          <div class="bd-sub">How your 1,240 Eco Points were earned</div>
+          <div class="bd-bars">
+            <div class="bd-bar-row">
+              <div class="bd-bar-label">Lessons Completed</div>
+              <div class="bd-bar-track">
+                <div class="bd-bar-fill" style="width:0%;background:#56c271;" data-w="75%"></div>
+              </div>
+              <div class="bd-bar-val">480 pts</div>
+            </div>
+            <div class="bd-bar-row">
+              <div class="bd-bar-label">Quiz Scores</div>
+              <div class="bd-bar-track">
+                <div class="bd-bar-fill" style="width:0%;background:#3b82f6;" data-w="45%"></div>
+              </div>
+              <div class="bd-bar-val">290 pts</div>
+            </div>
+            <div class="bd-bar-row">
+              <div class="bd-bar-label">Festival Tasks</div>
+              <div class="bd-bar-track">
+                <div class="bd-bar-fill" style="width:0%;background:#f59e0b;" data-w="55%"></div>
+              </div>
+              <div class="bd-bar-val">350 pts</div>
+            </div>
+            <div class="bd-bar-row">
+              <div class="bd-bar-label">NGO Bonus</div>
+              <div class="bd-bar-track">
+                <div class="bd-bar-fill" style="width:0%;background:#8b5cf6;" data-w="19%"></div>
+              </div>
+              <div class="bd-bar-val">120 pts</div>
+            </div>
+          </div>
+          <div class="bd-rank-hint" style="margin-top:1rem;">You need <strong>140 more points</strong> to reach #3 —
+            complete the Gudi Padwa task to get there!</div>
+        </div>
+        <div class="bd-total">
+          <div class="bd-total-num" id="totalPts">1,240</div>
+          <div class="bd-total-label">Total Eco Points</div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters-row ani d2">
+        <button class="filter-tab active" onclick="switchFilter(this,'school')">My School</button>
+        <button class="filter-tab" onclick="switchFilter(this,'city')">Pune City</button>
+        <button class="filter-tab" onclick="switchFilter(this,'class')">Class 7</button>
+        <button class="filter-tab" onclick="switchFilter(this,'month')">This Month</button>
+        <button class="filter-tab" onclick="switchFilter(this,'alltime')">All Time</button>
+        <div class="filter-sep"></div>
+        <div class="filter-search">
+          <svg viewBox="0 0 16 16" fill="none">
+            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3" />
+            <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search students…" oninput="filterRows(this.value)" />
+        </div>
+      </div>
+
+      <!-- TOP 3 PODIUM -->
+      <div class="podium-section ani d3">
+        <div class="podium-title">🏆 Top 3 Eco Champions</div>
+        <div class="podium-sub">April 2025 · Pune Municipal Schools</div>
+
+        <div class="podium-stage">
+
+          <!-- Rank 2 -->
+          <div class="podium-person">
+            <div class="pa-avatar rank2" style="background:#378add;">PS
+              <div class="pa-medal silver">2</div>
+            </div>
+            <div class="pa-name">Priya S.</div>
+            <div class="pa-school">Deccan English School</div>
+            <div class="pa-pts">980 pts</div>
+            <div class="podium-block b2">#2</div>
+          </div>
+
+          <!-- Rank 1 -->
+          <div class="podium-person">
+            <div class="pa-avatar rank1" style="background:#2d7a38;">RK
+              <div class="pa-crown">👑</div>
+              <div class="pa-medal gold">1</div>
+            </div>
+            <div class="pa-name">Rohan K.</div>
+            <div class="pa-school">Pune Municipal School No. 4</div>
+            <div class="pa-pts">1,380 pts</div>
+            <div class="podium-block b1">#1</div>
+          </div>
+
+          <!-- Rank 3 -->
+          <div class="podium-person">
+            <div class="pa-avatar rank3" style="background:#d85a30;">AM
+              <div class="pa-medal bronze">3</div>
+            </div>
+            <div class="pa-name">Ananya M.</div>
+            <div class="pa-school">Bishops School Kalyani</div>
+            <div class="pa-pts">910 pts</div>
+            <div class="podium-block b3">#3</div>
+          </div>
+
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-chip">
+            <div class="bc-dot" style="background:#56c271;"></div>
+            <span class="bc-label">Avg lesson pts:</span>
+            <span class="bc-val">560</span>
+          </div>
+          <div class="breakdown-chip">
+            <div class="bc-dot" style="background:#f59e0b;"></div>
+            <span class="bc-label">Avg task pts:</span>
+            <span class="bc-val">480</span>
+          </div>
+          <div class="breakdown-chip">
+            <div class="bc-dot" style="background:#8b5cf6;"></div>
+            <span class="bc-label">NGO bonus pts:</span>
+            <span class="bc-val">340</span>
+          </div>
+          <div class="breakdown-chip">
+            <div class="bc-dot" style="background:#3b82f6;"></div>
+            <span class="bc-label">Quiz pts:</span>
+            <span class="bc-val">220</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL RANKINGS TABLE -->
+      <div class="rankings-card ani d4">
+        <div class="rankings-head">
+          <div>
+            <div class="rankings-title">Full Rankings</div>
+            <div class="rankings-sub">Showing all 127 students · Sorted by total Eco Points</div>
+          </div>
+          <div style="font-size:12px;color:var(--g-muted);">Updated live · April 10, 2025</div>
+        </div>
+
+        <div class="col-heads">
+          <div class="col-head">Rank</div>
+          <div class="col-head">Student</div>
+          <div class="col-head right">Total XP</div>
+          <div class="col-head right">Lessons</div>
+          <div class="col-head right">Tasks</div>
+          <div class="col-head right">Change</div>
+        </div>
+
+        <div id="rankingsBody">
+
+          <div class="rank-row top3" data-name="rohan k">
+            <div class="rr-rank gold"><span class="rank-medal">🥇</span></div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#2d7a38;">RK</div>
+              <div>
+                <div class="rr-info-name">Rohan K.</div>
+                <div class="rr-info-school">Class 7 · Pune Municipal #4</div>
+              </div>
+            </div>
+            <div class="rr-pts">1,380</div>
+            <div class="rr-lessons">7/9</div>
+            <div class="rr-tasks">6</div>
+            <div class="rr-change"><span class="change-badge up">↑ 1</span></div>
+          </div>
+
+          <div class="rank-row top3" data-name="priya s">
+            <div class="rr-rank silver"><span class="rank-medal">🥈</span></div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#378add;">PS</div>
+              <div>
+                <div class="rr-info-name">Priya S.</div>
+                <div class="rr-info-school">Class 7 · Deccan English</div>
+              </div>
+            </div>
+            <div class="rr-pts">980</div>
+            <div class="rr-lessons">6/9</div>
+            <div class="rr-tasks">4</div>
+            <div class="rr-change"><span class="change-badge same">— 0</span></div>
+          </div>
+
+          <div class="rank-row top3" data-name="ananya m">
+            <div class="rr-rank bronze"><span class="rank-medal">🥉</span></div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#d85a30;">AM</div>
+              <div>
+                <div class="rr-info-name">Ananya M.</div>
+                <div class="rr-info-school">Class 8 · Bishops School</div>
+              </div>
+            </div>
+            <div class="rr-pts">910</div>
+            <div class="rr-lessons">5/9</div>
+            <div class="rr-tasks">5</div>
+            <div class="rr-change"><span class="change-badge up">↑ 2</span></div>
+          </div>
+
+          <div class="rank-row you" data-name="aarav s">
+            <div class="rr-rank" style="color:var(--g-mid);font-weight:700;">4</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:linear-gradient(135deg,#2d7a38,#56c271);">AS</div>
+              <div>
+                <div class="rr-info-name">Aarav S. <span class="you-badge">You</span></div>
+                <div class="rr-info-school">Class 7 · Pune Municipal</div>
+              </div>
+            </div>
+            <div class="rr-pts" style="color:var(--g-bright);font-size:14px;">1,240</div>
+            <div class="rr-lessons">6/9</div>
+            <div class="rr-tasks">5</div>
+            <div class="rr-change"><span class="change-badge up">↑ 2</span></div>
+          </div>
+
+          <div class="rank-row" data-name="vidya n">
+            <div class="rr-rank">5</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#8b5cf6;">VN</div>
+              <div>
+                <div class="rr-info-name">Vidya N.</div>
+                <div class="rr-info-school">Class 7 · Deccan English</div>
+              </div>
+            </div>
+            <div class="rr-pts">1,100</div>
+            <div class="rr-lessons">6/9</div>
+            <div class="rr-tasks">4</div>
+            <div class="rr-change"><span class="change-badge down">↓ 1</span></div>
+          </div>
+
+          <div class="rank-row" data-name="sneha k">
+            <div class="rr-rank">6</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#ef4444;">SK</div>
+              <div>
+                <div class="rr-info-name">Sneha K.</div>
+                <div class="rr-info-school">Class 8 · Bishops School</div>
+              </div>
+            </div>
+            <div class="rr-pts">980</div>
+            <div class="rr-lessons">5/9</div>
+            <div class="rr-tasks">4</div>
+            <div class="rr-change"><span class="change-badge same">— 0</span></div>
+          </div>
+
+          <div class="rank-row" data-name="arjun p">
+            <div class="rr-rank">7</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#0891b2;">AP</div>
+              <div>
+                <div class="rr-info-name">Arjun P.</div>
+                <div class="rr-info-school">Class 7 · St. Xavier's</div>
+              </div>
+            </div>
+            <div class="rr-pts">870</div>
+            <div class="rr-lessons">5/9</div>
+            <div class="rr-tasks">3</div>
+            <div class="rr-change"><span class="change-badge up">↑ 1</span></div>
+          </div>
+
+          <div class="rank-row" data-name="meera j">
+            <div class="rr-rank">8</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#d97706;">MJ</div>
+              <div>
+                <div class="rr-info-name">Meera J.</div>
+                <div class="rr-info-school">Class 6 · Poona International</div>
+              </div>
+            </div>
+            <div class="rr-pts">820</div>
+            <div class="rr-lessons">4/9</div>
+            <div class="rr-tasks">5</div>
+            <div class="rr-change"><span class="change-badge up">↑ 3</span></div>
+          </div>
+
+          <div class="rank-row" data-name="kiran b">
+            <div class="rr-rank">9</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#059669;">KB</div>
+              <div>
+                <div class="rr-info-name">Kiran B.</div>
+                <div class="rr-info-school">Class 8 · Symbiosis School</div>
+              </div>
+            </div>
+            <div class="rr-pts">770</div>
+            <div class="rr-lessons">4/9</div>
+            <div class="rr-tasks">3</div>
+            <div class="rr-change"><span class="change-badge down">↓ 2</span></div>
+          </div>
+
+          <div class="rank-row" data-name="riya m">
+            <div class="rr-rank">10</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#db2777;">RM</div>
+              <div>
+                <div class="rr-info-name">Riya M.</div>
+                <div class="rr-info-school">Class 7 · NMC School</div>
+              </div>
+            </div>
+            <div class="rr-pts">740</div>
+            <div class="rr-lessons">4/9</div>
+            <div class="rr-tasks">3</div>
+            <div class="rr-change"><span class="change-badge same">— 0</span></div>
+          </div>
+
+          <div class="rank-row" data-name="nikhil d">
+            <div class="rr-rank">11</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#7c3aed;">ND</div>
+              <div>
+                <div class="rr-info-name">Nikhil D.</div>
+                <div class="rr-info-school">Class 6 · Modern High School</div>
+              </div>
+            </div>
+            <div class="rr-pts">690</div>
+            <div class="rr-lessons">3/9</div>
+            <div class="rr-tasks">4</div>
+            <div class="rr-change"><span class="change-badge up">↑ 1</span></div>
+          </div>
+
+          <div class="rank-row" data-name="sana q">
+            <div class="rr-rank">12</div>
+            <div class="rr-user">
+              <div class="rr-avatar" style="background:#be185d;">SQ</div>
+              <div>
+                <div class="rr-info-name">Sana Q.</div>
+                <div class="rr-info-school">Class 8 · Abhinava Vidyalaya</div>
+              </div>
+            </div>
+            <div class="rr-pts">650</div>
+            <div class="rr-lessons">3/9</div>
+            <div class="rr-tasks">3</div>
+            <div class="rr-change"><span class="change-badge down">↓ 1</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NGO BONUS TASKS -->
+      <div class="ngo-section ani d5">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+          <div>
+            <div style="font-family:var(--font-d);font-size:20px;color:var(--g-text);">NGO Bonus Tasks</div>
+            <div style="font-size:12.5px;color:var(--g-muted);margin-top:2px;">Complete NGO campaigns to earn extra
+              points and unlock special eco-badges</div>
+          </div>
+        </div>
+
+        <div class="ngo-grid">
+
+          <div class="ngo-bonus-card">
+            <div class="nbc-badge">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <circle cx="5.5" cy="5.5" r="4.5" stroke="#b45309" stroke-width="1.1" />
+                <path d="M5.5 3v3l1.5 1.5" stroke="#b45309" stroke-width="1.1" stroke-linecap="round" />
+              </svg>
+              Active · April 2025
+            </div>
+            <div class="nbc-title">Mula-Mutha River Clean-Up</div>
+            <div class="nbc-org">by Pune Rivers Trust · NGO Partner</div>
+            <div class="nbc-bonus">
+              <div class="nbc-bonus-label">Bonus on completion</div>
+              <div class="nbc-bonus-val">+350 pts</div>
+            </div>
+            <div class="nbc-participants">
+              <svg viewBox="0 0 12 12" fill="none">
+                <circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <circle cx="8" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <path d="M1 10c0-1.7 1.3-3 3-3M7 10c0-1.7 1.3-3 3-3" stroke="currentColor" stroke-width="1.1"
+                  stroke-linecap="round" />
+              </svg>
+              23 students participating
+            </div>
+          </div>
+
+          <div class="ngo-bonus-card">
+            <div class="nbc-badge">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <circle cx="5.5" cy="5.5" r="4.5" stroke="#b45309" stroke-width="1.1" />
+                <path d="M5.5 3v3l1.5 1.5" stroke="#b45309" stroke-width="1.1" stroke-linecap="round" />
+              </svg>
+              Active · April 2025
+            </div>
+            <div class="nbc-title">Tree Plantation Drive — Sinhagad Road</div>
+            <div class="nbc-org">by Vanashakti Maharashtra · NGO Partner</div>
+            <div class="nbc-bonus">
+              <div class="nbc-bonus-label">Bonus on completion</div>
+              <div class="nbc-bonus-val">+280 pts</div>
+            </div>
+            <div class="nbc-participants">
+              <svg viewBox="0 0 12 12" fill="none">
+                <circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <circle cx="8" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <path d="M1 10c0-1.7 1.3-3 3-3M7 10c0-1.7 1.3-3 3-3" stroke="currentColor" stroke-width="1.1"
+                  stroke-linecap="round" />
+              </svg>
+              17 students participating
+            </div>
+          </div>
+
+          <div class="ngo-bonus-card">
+            <div class="nbc-badge"
+              style="background:rgba(107,114,128,0.1);border-color:rgba(107,114,128,0.2);color:#4b5563;">
+              Upcoming · May 2025
+            </div>
+            <div class="nbc-title">Solid Waste Audit — School Campus</div>
+            <div class="nbc-org">by Swachhta Foundation · NGO Partner</div>
+            <div class="nbc-bonus" style="background:#f1f5f9;border-color:#e2e8f0;">
+              <div class="nbc-bonus-label" style="color:#475569;">Bonus on completion</div>
+              <div class="nbc-bonus-val" style="color:#64748b;">+420 pts</div>
+            </div>
+            <div class="nbc-participants" style="color:#94a3b8;">
+              <svg viewBox="0 0 12 12" fill="none">
+                <circle cx="4" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <circle cx="8" cy="4" r="2" stroke="currentColor" stroke-width="1.1" />
+                <path d="M1 10c0-1.7 1.3-3 3-3M7 10c0-1.7 1.3-3 3-3" stroke="currentColor" stroke-width="1.1"
+                  stroke-linecap="round" />
+              </svg>
+              Registrations open May 1
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Animate progress bars
+    setTimeout(() => {
+      document.querySelectorAll('.bd-bar-fill').forEach(el => {
+        el.style.width = el.dataset.w;
+      });
+    }, 400);
+
+    // Filter tabs (visual only for now)
+    function switchFilter(btn, scope) {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Live search
+    function filterRows(val) {
+      const q = val.toLowerCase().trim();
+      document.querySelectorAll('#rankingsBody .rank-row').forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        row.style.display = (!q || name.includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+
+  <script src="api.js"></script>
+</body>
+
+</html>
