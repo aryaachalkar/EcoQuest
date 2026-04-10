@@ -18,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded proof images as static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve the frontend HTML files from the parent directory
-app.use(express.static(path.join(__dirname, '..')));
+// Serve the frontend HTML files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ─── API Routes ──────────────────────────────────────────────
 app.use('/api/auth',    require('./routes/auth'));
