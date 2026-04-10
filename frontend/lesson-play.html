@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoQuest — Lesson Play</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g-dark:   #0d1f0f; --g-mid: #2d7a38; --g-bright: #56c271; --g-border: #c8dcc8;
+      --font-d: 'Playfair Display', serif; --font-b: 'DM Sans', sans-serif;
+      --r-md: 12px; --r-lg: 18px;
+    }
+    body { font-family: var(--font-b); background: #f4f9f4; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+
+    /* Top Progress Bar */
+    .play-header { background: #fff; padding: 1.5rem 2rem; border-bottom: 1px solid var(--g-border); display: flex; align-items: center; justify-content: space-between; gap: 2rem; position: relative; z-index: 10; }
+    .close-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--g-border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #5a7a5c; background: #fff; transition: all 0.2s; flex-shrink: 0; }
+    .close-btn:hover { background: #f0f4f0; color: #1a3d1c; }
+    .close-btn svg { width: 20px; height: 20px; }
+
+    .progress-container { flex: 1; max-width: 800px; display: flex; flex-direction: column; gap: 8px; }
+    .progress-bar-bg { height: 14px; background: #e8f5e9; border-radius: 7px; overflow: hidden; width: 100%; position: relative; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #56c271, #2d7a38); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 7px; }
+    .heart-box { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; color: #ef4444; flex-shrink: 0; }
+    .heart-box svg { width: 24px; height: 24px; color: #ef4444; fill: #ef4444; }
+
+    /* Main Content Area */
+    .play-main { flex: 1; position: relative; display: flex; flex-direction: column; overflow: hidden; }
+
+    .view-section { position: absolute; inset: 0; padding: 2rem; display: flex; flex-direction: column; align-items: center; background: #f4f9f4; opacity: 0; pointer-events: none; transition: all 0.4s ease; transform: translateX(50px); overflow-y: auto; }
+    .view-section.active { opacity: 1; pointer-events: auto; transform: translateX(0); z-index: 5; }
+    .view-section.completed { transform: translateX(-50px); }
+
+    /* Video View */
+    .video-wrap { width: 100%; max-width: 900px; margin: auto; background: #000; border-radius: var(--r-lg); overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .video-wrap iframe { width: 100%; height: 100%; border: none; }
+    .video-meta { text-align: center; margin-top: 2rem; }
+    .video-title { font-family: var(--font-d); font-size: 32px; color: #1a3d1c; margin-bottom: 8px; }
+
+    /* Quiz View */
+    .quiz-wrap { width: 100%; max-width: 700px; margin: auto; }
+    .q-title { font-size: 24px; font-family: var(--font-d); font-weight: 700; color: #1a3d1c; margin-bottom: 2rem; line-height: 1.4; text-align: center; }
+    
+    .opts-grid { display: flex; flex-direction: column; gap: 1rem; }
+    .opt-card { padding: 1.25rem 1.5rem; border: 2px solid var(--g-border); border-radius: var(--r-md); background: #fff; font-size: 16px; font-family: var(--font-b); color: #3a5c3c; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 16px; }
+    .opt-card:hover { border-color: var(--g-bright); background: #e8f5e9; transform: translateY(-2px); }
+    .opt-card.selected { border-color: var(--g-mid); background: #e8f5e9; box-shadow: 0 4px 15px rgba(86,194,113,0.15); }
+    
+    /* Footer Action */
+    .play-footer { padding: 1.5rem 2rem; background: #fff; border-top: 1px solid var(--g-border); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10; min-height: 100px; }
+    .play-footer.correct-state { background: #dcfce7; border-top-color: #86efac; }
+    .play-footer.wrong-state { background: #fee2e2; border-top-color: #fca5a5; }
+
+    .feedback-box { display: none; align-items: center; gap: 16px; font-weight: 700; font-size: 22px; }
+    .correct-state .feedback-box { display: flex; color: #166534; }
+    .wrong-state .feedback-box { display: flex; color: #991b1b; }
+    .feedback-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+    .correct-state .feedback-icon { background: #22c55e; }
+    .wrong-state .feedback-icon { background: #ef4444; }
+    .feedback-exp { font-size: 14px; font-weight: 500; font-family: var(--font-b); color: inherit; opacity: 0.9; margin-top: 4px; max-width: 500px; }
+
+    .action-btn { padding: 14px 40px; border-radius: var(--r-md); font-family: var(--font-b); font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 rgba(0,0,0,0.1); margin-left: auto; text-transform: uppercase; letter-spacing: 0.5px; }
+    .action-btn:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0.1); }
+    
+    .action-btn.primary { background: linear-gradient(135deg, #56c271, #2d7a38); color: #fff; }
+    .action-btn.disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+    
+    .correct-state .action-btn { background: #22c55e; color: #fff; }
+    .wrong-state .action-btn { background: #ef4444; color: #fff; }
+
+    /* Success Full View */
+    .success-view { position: fixed; inset: 0; background: linear-gradient(135deg, #e8f5e9, #c8dcc8); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .success-view.active { display: flex; animation: fadeReveal 0.5s forwards; }
+    .trophy-icon { font-size: 100px; margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); animation: floatUp 2s ease-in-out infinite alternate; }
+    .s-title { font-family: var(--font-d); font-size: 42px; color: var(--g-dark); margin-bottom: 10px; }
+    .s-sub { font-size: 18px; color: var(--g-sub); margin-bottom: 40px; font-weight: 500; }
+    .xp-card { background: #fff; padding: 20px 40px; border-radius: var(--r-lg); display: inline-flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(86,194,113,0.15); border: 2px solid var(--g-bright); margin-bottom: 40px; }
+    .xp-val { font-size: 36px; font-weight: 700; color: var(--g-mid); }
+    .xp-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--g-sub); font-weight: 700; }
+    .s-btn { background: var(--g-mid); color: #fff; padding: 18px 60px; font-size: 18px; border-radius: var(--r-md); font-weight: 700; cursor: pointer; border: none; box-shadow: 0 6px 0 #1a3d1c; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.1s; }
+    .s-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #1a3d1c; }
+
+    @keyframes fadeReveal { from{opacity:0; transform:scale(0.95)} to{opacity:1; transform:scale(1)} }
+    @keyframes floatUp { from{transform:translateY(0)} to{transform:translateY(-15px)} }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="play-header" id="playHeader">
+    <button class="close-btn" onclick="quitLesson()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="progress-container">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progFill"></div>
+      </div>
+    </div>
+    <div class="heart-box">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      <span id="heartCount">5</span>
+    </div>
+  </header>
+
+  <!-- MAIN SCROLLABLE/VIEWS -->
+  <main class="play-main" id="playMain">
+    
+    <!-- Video Wrapper injected here dynamically -->
+    <div class="view-section active" id="view-video">
+      <div class="video-meta">
+        <h1 class="video-title" id="dynTitle">Loading Lesson...</h1>
+        <p style="color:#5a7a5c; margin-bottom: 2rem;">Watch carefully! The quiz follows right after.</p>
+      </div>
+      <div class="video-wrap">
+        <iframe id="vidPlayer" src="" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- Quiz Section injected dynamically -->
+    <div class="view-section" id="view-quiz">
+      <div class="quiz-wrap" id="quizWrap">
+        <!-- JS inserts Q&A -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="play-footer" id="playFooter">
+    <div class="feedback-box">
+      <div class="feedback-icon" id="fbIcon">✓</div>
+      <div>
+        <div id="fbTitle">Excellent!</div>
+        <div class="feedback-exp" id="fbExp">Explanation goes here.</div>
+      </div>
+    </div>
+    <button class="action-btn primary" id="nextBtn" onclick="handleNext()">Continue</button>
+  </footer>
+
+  <!-- SUCCESS FULL SCREEN -->
+  <div class="success-view" id="successView">
+    <div class="trophy-icon">🏆</div>
+    <div class="s-title">Lesson Complete!</div>
+    <div class="s-sub" id="sSubText">You masterfully completed Node 2</div>
+    <div class="xp-card">
+      <div class="xp-val" id="sXp">+40</div>
+      <div class="xp-lbl">Total XP Earned</div>
+    </div>
+    <button class="s-btn" onclick="finishAndReturn()">Return to Map</button>
+  </div>
+
+
+<script>
+// Content Dictionary for multiple lessons
+const DB = {
+  forests: [
+    { type: 'video', title: "1. What is a Forest?", vid: "https://www.youtube.com/embed/if29mjcd5bc?autoplay=0" },
+    { type: 'quiz', q: "Which layer of the soil contains the most humus?", opts: ["Bedrock", "Topsoil", "Subsoil"], ans: 1, exp: "Topsoil is rich in decaying organic matter (humus) making it fertile." }
+  ],
+  water: [
+    { type: 'video', title: "1. The Wastewater Story", vid: "https://www.youtube.com/embed/bXvA4sA4iYI?autoplay=0" },
+    { type: 'quiz', q: "What is the first step in wastewater treatment?", opts: ["Aeration", "Bar Screening", "Chlorination"], ans: 1, exp: "Bar screens physically remove large objects like rags, plastics, and cans before anything else." }
+  ],
+  soil: [
+    { type: 'video', title: "2. Soil Microbes & Worms", vid: "https://www.youtube.com/embed/V8miJbbXw7U?autoplay=0" },
+    { type: 'quiz', q: "Why are earthworms famous as 'farmers' friends'?", opts: ["They eat insect pests", "They help loosen soil and add humus", "They protect crops from birds"], ans: 1, exp: "As they move, they aerate the soil and their castings provide rich nutrients." },
+    { type: 'quiz', q: "What role do bacteria and fungi play in soil?", opts: ["Decomposers", "Producers", "Consumers"], ans: 0, exp: "They decompose dead plants and animals into humus, enriching the soil." }
+  ]
+};
+
+// State
+let sequence = [];
+let currentIdx = 0;
+let selectedAns = -1;
+let answered = false;
+
+// Helpers
+const getParam = (p) => new URLSearchParams(window.location.search).get(p);
+const lessonKey = getParam('lesson') || 'forests';
+const nodeId = getParam('node') || '1';
+
+const totalSteps = DB[lessonKey] ? DB[lessonKey].length : 0;
+
+function initLesson() {
+  if (!DB[lessonKey]) { alert("Lesson not found!"); return quitLesson(); }
+  sequence = DB[lessonKey];
+  renderCurrentStep();
+}
+
+function renderCurrentStep() {
+  // Update progress
+  const pct = (currentIdx / totalSteps) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  
+  const step = sequence[currentIdx];
+  const footer = document.getElementById('playFooter');
+  const nextBtn = document.getElementById('nextBtn');
+  footer.className = 'play-footer';
+  
+  if (step.type === 'video') {
+    document.getElementById('view-video').classList.add('active');
+    document.getElementById('view-quiz').classList.remove('active');
+    document.getElementById('view-video').classList.remove('completed');
+    
+    document.getElementById('dynTitle').textContent = step.title;
+    document.getElementById('vidPlayer').src = step.vid;
+    
+    nextBtn.textContent = 'Continue to Quiz';
+    nextBtn.className = 'action-btn primary';
+  } 
+  else if (step.type === 'quiz') {
+    document.getElementById('vidPlayer').src = ""; // stop video
+    document.getElementById('view-video').classList.remove('active');
+    document.getElementById('view-video').classList.add('completed');
+    
+    const qw = document.getElementById('view-quiz');
+    qw.classList.add('active');
+    qw.classList.remove('completed');
+    
+    selectedAns = -1;
+    answered = false;
+    
+    let html = `<div class="q-title">\${step.q}</div><div class="opts-grid">`;
+    step.opts.forEach((o, i) => {
+      html += `<div class="opt-card" id="opt-\${i}" onclick="selectOpt(\${i})">\${i+1}. \${o}</div>`;
+    });
+    html += `</div>`;
+    document.getElementById('quizWrap').innerHTML = html;
+    
+    nextBtn.textContent = 'Check';
+    nextBtn.className = 'action-btn disabled';
+  }
+}
+
+function selectOpt(idx) {
+  if (answered) return;
+  selectedAns = idx;
+  document.querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('opt-'+idx).classList.add('selected');
+  
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.className = 'action-btn primary';
+}
+
+function handleNext() {
+  const step = sequence[currentIdx];
+  const footer = document.getElementById('playFooter');
+  const nextBtn = document.getElementById('nextBtn');
+  
+  if (step.type === 'video') {
+    currentIdx++;
+    renderCurrentStep();
+  } 
+  else if (step.type === 'quiz') {
+    // If pressing "Check"
+    if (!answered) {
+      if (selectedAns === -1) return;
+      answered = true;
+      
+      const isCorrect = (selectedAns === step.ans);
+      
+      const card = document.getElementById('opt-'+selectedAns);
+      card.style.borderColor = isCorrect ? '#22c55e' : '#ef4444';
+      card.style.background = isCorrect ? '#dcfce7' : '#fee2e2';
+      
+      footer.classList.add(isCorrect ? 'correct-state' : 'wrong-state');
+      document.getElementById('fbIcon').innerHTML = isCorrect ? '✓' : '×';
+      document.getElementById('fbTitle').textContent = isCorrect ? 'Excellent!' : 'Not quite.';
+      document.getElementById('fbExp').textContent = step.exp;
+      
+      nextBtn.textContent = 'Continue';
+      
+      if (!isCorrect) {
+        let h = parseInt(document.getElementById('heartCount').textContent);
+        if (h>0) document.getElementById('heartCount').textContent = h-1;
+      }
+    } 
+    // If pressing "Continue" after Checking
+    else {
+      currentIdx++;
+      if (currentIdx >= totalSteps) {
+        showSuccessView();
+      } else {
+        renderCurrentStep();
+      }
+    }
+  }
+}
+
+function showSuccessView() {
+  document.getElementById('progFill').style.width = '100%';
+  document.getElementById('playHeader').style.display = 'none';
+  document.getElementById('playMain').style.display = 'none';
+  document.getElementById('playFooter').style.display = 'none';
+  
+  setTimeout(() => {
+    document.getElementById('successView').classList.add('active');
+    document.getElementById('sSubText').textContent = \`You mastered Level \${nodeId} of \${lessonKey.toUpperCase()}!\`;
+    document.getElementById('sXp').textContent = '+' + (totalSteps * 20); // arbitrary xp formula
+    
+    // Save to localStorage
+    let prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}');
+    if(!prog[lessonKey]) prog[lessonKey] = [];
+    if(!prog[lessonKey].includes(nodeId)) prog[lessonKey].push(nodeId);
+    localStorage.setItem('ecoProgress', JSON.stringify(prog));
+    
+  }, 300);
+}
+
+function finishAndReturn() {
+  let paramUrl = \`lesson-\${lessonKey}-detail.html\`;
+  window.location.href = paramUrl;
+}
+
+function quitLesson() {
+  if(confirm("Are you sure you want to quit? Your progress in this level will be lost.")) {
+    window.location.href = \`lesson-\${lessonKey}-detail.html\`;
+  }
+}
+
+// Start
+initLesson();
+</script>
+</body>
+</html>

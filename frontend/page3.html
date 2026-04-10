@@ -657,8 +657,8 @@
             </div>
           </div>
           <div class="featured-actions">
-            <button class="f-btn solid">Continue Lesson →</button>
-            <button class="f-btn outline">View Quiz</button>
+            <button class="f-btn solid" onclick="window.location.href='lesson-forests-detail.html'">Continue Lesson →</button>
+            <button class="f-btn outline" onclick="window.location.href='page4.html'">View Quiz</button>
           </div>
         </div>
         <div class="featured-right">
@@ -692,16 +692,16 @@
       <iframe src="https://www.youtube.com/embed/K3oUTKr25ic" title="Forests Our Lifeline NCERT Class 7 Science" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
-    <!-- LEARNING JOURNEY PATH -->
+    <!-- LESSONS GRID -->
     <div class="section-head animate d3">
       <div>
-        <div class="section-title" id="grid-heading">Your learning Journey</div>
-        <div class="section-sub" id="grid-sub">Sequential path to master Environmental Science</div>
+        <div class="section-title" id="grid-heading">All Lessons</div>
+        <div class="section-sub" id="grid-sub">NCERT-aligned chapters with linked eco-tasks and quizzes</div>
       </div>
     </div>
 
-    <div class="journey-container animate d3" id="journeyContainer">
-      <!-- Path nodes will be injected by JS -->
+    <div class="lessons-grid animate d3" id="lessonsGrid">
+      <!-- Cards will be injected by JS -->
     </div>
 
     <!-- QUIZ PROMPT BANNER -->
@@ -716,7 +716,7 @@
           <div class="qp-score-val">9/10</div>
           <div class="qp-score-lbl">Last attempt</div>
         </div>
-        <button class="qp-btn">Retake Quiz →</button>
+        <button class="qp-btn" onclick="window.location.href='page4.html'">Retake Quiz →</button>
       </div>
     </div>
 
@@ -841,39 +841,44 @@ function renderPage(grade) {
   document.getElementById('grid-sub').textContent = d.gridSub;
   document.getElementById('chapter-sub').textContent = d.chapterSub;
 
-  // JOURNEY PATH RENDERING
-  const journeyContainer = document.getElementById('journeyContainer');
-  journeyContainer.innerHTML = '';
-  
-  d.cards.forEach((c, idx) => {
-    // Add connector line if not first
-    if (idx > 0) {
-      const line = document.createElement('div');
-      line.className = `path-connector ${!c.locked ? 'active' : ''}`;
-      // Basic positioning for vertical path
-      line.style.height = '40px';
-      line.style.top = `${(idx * 110) - 20}px`;
-      journeyContainer.appendChild(line);
-    }
+  // LESSONS GRID RENDERING
+  const lessonsGrid = document.getElementById('lessonsGrid');
+  if (lessonsGrid) {
+    lessonsGrid.innerHTML = '';
+    d.cards.forEach((c) => {
+      const card = document.createElement('div');
+      card.className = `lesson-card ${c.locked ? 'locked' : ''}`;
+      
+      let targetUrl = 'lesson-forests-detail.html';
+      if (c.icon === 'water') targetUrl = 'lesson-water-detail.html';
+      else if (c.icon === 'soil') targetUrl = 'lesson-soil-detail.html';
+      else if (c.icon === 'leaf') targetUrl = 'lesson-conservation-detail.html';
+      else if (c.icon === 'air') targetUrl = 'lesson-pollution-detail.html';
 
-    const node = document.createElement('div');
-    node.className = `path-node ${c.locked ? 'locked' : (idx === 0 ? 'active' : '')}`;
-    node.innerHTML = `
-      ${c.icon === 'tree' ? '🌲' : c.icon === 'water' ? '💧' : c.icon === 'soil' ? '🌱' : c.icon === 'leaf' ? '🍃' : c.icon === 'air' ? '🌬️' : '🔒'}
-      <div class="node-label">
-        <div class="ln-title">${c.title}</div>
-        <div class="node-status">${c.tag} · ${c.tasks}</div>
-      </div>
-    `;
+      if (!c.locked) {
+        card.onclick = () => {
+          window.location.href = targetUrl;
+        };
+      }
 
-    if (!c.locked) {
-      node.onclick = () => {
-        window.location.href = c.title === 'Forests: Our Lifeline' ? 'lesson-forests-detail.html' : 'page3.html';
-      };
-    }
-    
-    journeyContainer.appendChild(node);
-  });
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="lesson-icon" style="background:${c.iconBg};">
+            ${getIcon(c.icon, c.iconColor)}
+          </div>
+          <div class="lesson-tag" style="background:${c.tagBg}; color:${c.tagColor};">${c.tag}</div>
+        </div>
+        <div class="lesson-class" style="color:${c.classColor}; margin-top:8px;">${c.classLabel}</div>
+        <div class="lesson-title">${c.title}</div>
+        <div class="lesson-desc">${c.desc}</div>
+        <div class="lesson-progress" style="margin-top:auto; padding-top:10px;">
+          <div class="progress-label"><span style="font-weight:500">${c.tasks}</span><span>${c.prog}%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${c.prog}%; background:${c.progColor};"></div></div>
+        </div>
+      `;
+      lessonsGrid.appendChild(card);
+    });
+  }
 }
 
 function switchGrade(grade, el) {

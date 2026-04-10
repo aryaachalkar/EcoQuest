@@ -3,55 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoQuest — Forests: Our Lifeline Lesson Journey</title>
-  <meta name="description" content="Gamified lesson journey for Forests: Our Lifeline.">
+  <title>EcoQuest — Soil: Our Natural Resource Lesson Journey</title>
+  <meta name="description" content="Gamified lesson journey for Soil: Our Natural Resource.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --g-dark:   #0d1f0f; --g-deep: #132b15; --g-mid: #2d7a38;
-      --g-bright: #56c271; --g-light: #e8f5e9; --g-pale: #f4f9f4;
-      --g-border: #c8dcc8; --g-muted: #7a9a7c; --g-text: #1a3d1c; --g-sub: #5a7a5c;
+      --g-dark:   #2e1f13; --g-deep: #3b2818; --g-mid: #9a6324;
+      --g-bright: #d97706; --g-light: #fef3c7; --g-pale: #fffbeb;
+      --g-border: #fde68a; --g-muted: #92400e; --g-text: #451a03; --g-sub: #78350f;
       --font-d: 'Playfair Display', Georgia, serif; --font-b: 'DM Sans', sans-serif;
       --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px; --ease: 0.22s ease;
     }
-    body { font-family: var(--font-b); background: #f0f4f0; color: var(--g-text); -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh; }
+    body { font-family: var(--font-b); background: #fffcf2; color: var(--g-text); -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh; }
 
     /* SIDEBAR */
     .sidebar { width: 240px; background: var(--g-dark); display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top:0; bottom:0; left:0; z-index:100; }
-    .sb-brand { display: flex; align-items: center; gap: 12px; padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(86,194,113,.12); }
-    .sb-logo { width: 40px; height: 40px; background: linear-gradient(135deg,#56c271,#2d7a38); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-brand { display: flex; align-items: center; gap: 12px; padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid rgba(217,119,6,.12); }
+    .sb-logo { width: 40px; height: 40px; background: linear-gradient(135deg,#f59e0b,#9a6324); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .sb-logo svg { width: 22px; height: 22px; }
-    .sb-name { font-family: var(--font-d); font-size: 18px; color: #e8f5e9; }
-    .sb-tagline { font-size: 10px; color: #5a7a5c; letter-spacing: .8px; text-transform: uppercase; }
+    .sb-name { font-family: var(--font-d); font-size: 18px; color: #fffbeb; }
+    .sb-tagline { font-size: 10px; color: #d97706; letter-spacing: .8px; text-transform: uppercase; }
     .sb-nav { flex: 1; padding: 1rem .75rem; overflow-y: auto; }
-    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #3d5c3f; padding: .5rem .5rem .35rem; margin-top: .5rem; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); color: #7a9a7c; font-size: 14px; cursor: pointer; transition: all .22s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-b); }
-    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .nav-item:hover { background: rgba(86,194,113,.08); color: #c8e6c9; }
-    .nav-item.active { background: rgba(86,194,113,.14); color: var(--g-bright); font-weight: 500; }
+    .nav-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: #b45309; padding: .5rem .5rem .35rem; margin-top: .5rem; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-sm); color: #d97706; font-size: 14px; cursor: pointer; transition: all .22s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-b); }
+    .nav-item:hover { background: rgba(217,119,6,.08); color: #fde68a; }
+    .nav-item.active { background: rgba(217,119,6,.18); color: var(--g-bright); font-weight: 500; }
     .nav-badge { margin-left: auto; background: var(--g-mid); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
-    .sb-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(86,194,113,.12); display: flex; align-items: center; gap: 10px; }
-    .sb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#2d7a38,#56c271); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
-    .sb-user-name { font-size: 13px; color: #c8e6c9; font-weight: 500; }
-    .sb-user-class { font-size: 11px; color: #5a7a5c; }
+    .sb-user { padding: 1rem 1.25rem; border-top: 1px solid rgba(217,119,6,.12); display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#9a6324,#f59e0b); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
+    .sb-user-name { font-size: 13px; color: #fde68a; font-weight: 500; }
+    .sb-user-class { font-size: 11px; color: #d97706; }
 
     /* MAIN */
-    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; background: #eef5ee; /* special journey bg */ }
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; background: #faeeda; }
     .topbar { background: #fff; border-bottom: 1px solid var(--g-border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
     .back-btn { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--r-sm); border: 1px solid var(--g-border); background: #fff; color: var(--g-sub); font-family: var(--font-b); font-size: 13px; cursor: pointer; transition: all .22s; }
     .back-btn:hover { border-color: var(--g-bright); color: var(--g-mid); }
     .topbar-right { display: flex; align-items: center; gap: 10px; }
 
     /* XP & STREAK */
-    .xp-pill { display: flex; align-items: center; gap: 6px; background: #eaf3de; border: 1px solid #c0dd97; border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--g-mid); }
+    .xp-pill { display: flex; align-items: center; gap: 6px; background: #faeeda; border: 1px solid #fde68a; border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--g-mid); }
     .streak-pill { display: flex; align-items: center; gap: 5px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: #d97706; }
 
     /* LEVEL PROGRESS BAR */
     .level-track { background: #fff; border-bottom: 1px solid var(--g-border); padding: .75rem 2rem; display: flex; align-items: center; gap: 14px; }
     .lev-label { font-size: 11px; font-weight: 700; color: var(--g-mid); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .lev-bar { flex: 1; height: 10px; background: #e8f5e9; border-radius: 5px; overflow: hidden; }
-    .lev-fill { height: 100%; background: linear-gradient(90deg, #56c271, #2d7a38); border-radius: 5px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .lev-bar { flex: 1; height: 10px; background: #fffbeb; border-radius: 5px; overflow: hidden; }
+    .lev-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #9a6324); border-radius: 5px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
     .lev-pts { font-size: 12px; color: var(--g-muted); white-space: nowrap; }
 
     /* CONTENT & MAP CONTAINER */
@@ -63,11 +62,9 @@
     /* DUOLINGO STYLE MAP */
     .gamified-map-container { position: relative; width: 100%; max-width: 500px; display: flex; flex-direction: column; padding: 2rem 0 6rem; gap: 60px; }
     
-    /* Background path line */
     .map-path-line { position: absolute; top: 80px; bottom: 80px; left: 50%; width: 4px; background: var(--g-border); transform: translateX(-50%); z-index: 0; border-radius: 4px; }
 
     .map-node-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; }
-    /* Winding offsets */
     .map-node-wrapper:nth-child(odd) { align-items: flex-end; padding-right: 25%; }
     .map-node-wrapper:nth-child(even) { align-items: flex-start; padding-left: 25%; }
 
@@ -80,13 +77,12 @@
       position: relative;
     }
 
-    .map-node.done { border-color: var(--g-bright); background: #eaf3de; }
+    .map-node.done { border-color: var(--g-bright); background: #faeeda; }
     .map-node.done::after { content: "✓"; position: absolute; bottom: -4px; right: -4px; background: var(--g-bright); color: #fff; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
     
-    .map-node.active { border-color: var(--g-mid); background: var(--g-mid); box-shadow: 0 8px 24px rgba(45,122,56,0.3); animation: nodeBounce 2s infinite; }
-    .map-node.active span { filter: brightness(0) invert(1); } /* Make emoji white if possible or just use a crown */
+    .map-node.active { border-color: var(--g-mid); background: var(--g-mid); box-shadow: 0 8px 24px rgba(154,99,36,0.3); animation: nodeBounce 2s infinite; }
     
-    .map-node.locked { border-color: #d1d5db; background: #f3f4f6; cursor: not-allowed; filter: grayscale(1); }
+    .map-node.locked { border-color: #cbd5e1; background: #e2e8f0; cursor: not-allowed; filter: grayscale(1); }
 
     /* Tooltip */
     .node-tooltip { 
@@ -103,13 +99,13 @@
 
     .tooltip-title { font-family: var(--font-d); font-size: 18px; color: var(--g-text); margin-bottom: 4px; }
     .tooltip-sub { font-size: 12px; color: var(--g-muted); margin-bottom: 12px; line-height: 1.4; }
-    .tooltip-btn { width: 100%; padding: 10px; background: var(--g-bright); color: var(--g-dark); border: none; border-radius: var(--r-sm); font-family: var(--font-b); font-weight: 500; cursor: pointer; transition: background 0.2s; }
-    .tooltip-btn:hover { background: #46b261; }
-    .tooltip-btn.done-btn { background: #eaf3de; color: var(--g-mid); border: 1px solid var(--g-mid); }
+    .tooltip-btn { width: 100%; padding: 10px; background: var(--g-bright); color: #fff; border: none; border-radius: var(--r-sm); font-family: var(--font-b); font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .tooltip-btn:hover { background: #b45309; }
+    .tooltip-btn.done-btn { background: #faeeda; color: var(--g-mid); border: 1px solid var(--g-mid); }
 
     /* MODAL OVERLAY */
     .modal-overlay { 
-      position: fixed; inset: 0; background: rgba(13,31,15,0.85); backdrop-filter: blur(4px);
+      position: fixed; inset: 0; background: rgba(46,31,19,0.85); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; z-index: 1000; padding: 2rem; 
       opacity: 0; transition: opacity 0.3s ease;
     }
@@ -122,7 +118,7 @@
     }
     .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 
-    .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(0,0,0,0.1); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; color: #fff; cursor: pointer; z-index: 50; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(0,0,0,0.1); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; color: var(--g-text); cursor: pointer; z-index: 50; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
     .modal-close:hover { background: rgba(0,0,0,0.2); }
 
     /* MODAL INTERNAL VIEWS */
@@ -135,11 +131,11 @@
     .video-footer { padding: 1.5rem 2rem; background: #fff; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--g-border); }
     .vf-info h3 { font-family: var(--font-d); font-size: 20px; color: var(--g-text); margin-bottom: 4px; }
     .vf-info p { font-size: 13px; color: var(--g-muted); }
-    .continue-btn { padding: 12px 28px; background: var(--g-mid); color: #fff; border: none; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 12px rgba(45,122,56,0.3); }
-    .continue-btn:hover { background: #236030; }
+    .continue-btn { padding: 12px 28px; background: var(--g-mid); color: #fff; border: none; border-radius: var(--r-sm); font-family: var(--font-b); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 12px rgba(154,99,36,0.3); }
+    .continue-btn:hover { background: #78350f; }
 
     /* 2) QUIZ VIEW */
-    .quiz-container { flex: 1; padding: 3rem 4rem; overflow-y: auto; background: #fafdfa; }
+    .quiz-container { flex: 1; padding: 3rem 4rem; overflow-y: auto; background: #fffcf2; }
     .quiz-header { text-align: center; margin-bottom: 3rem; }
     .quiz-header h2 { font-family: var(--font-d); font-size: 28px; color: var(--g-text); }
     .quiz-header p { font-size: 14px; color: var(--g-muted); margin-top: 6px; }
@@ -149,8 +145,8 @@
     
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .opt { padding: 16px 20px; border-radius: var(--r-md); border: 2px solid var(--g-border); background: #fff; font-family: var(--font-b); font-size: 15px; color: var(--g-text); cursor: pointer; transition: all .2s; text-align: left; display: flex; align-items: center; gap: 12px; }
-    .opt:hover { border-color: var(--g-bright); background: #f0fdf4; transform: translateY(-2px); }
-    .opt.selected { border-color: var(--g-mid); background: #eaf3de; }
+    .opt:hover { border-color: var(--g-bright); background: #faeeda; transform: translateY(-2px); }
+    .opt.selected { border-color: var(--g-mid); background: #fde68a; }
     .opt.correct { border-color: #22c55e; background: #f0fdf4; color: #166534; }
     .opt.wrong { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
     .opt-letter { width: 30px; height: 30px; border-radius: 8px; background: var(--g-pale); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; transition: all 0.2s; }
@@ -168,14 +164,14 @@
     .q-dot.current { background: var(--g-mid); }
 
     /* 3) SUCCESS VIEW */
-    .success-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--g-mid), #236030); color: #fff; text-align: center; padding: 3rem; }
+    .success-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--g-bright), #9a6324); color: #fff; text-align: center; padding: 3rem; }
     .success-icon { font-size: 72px; margin-bottom: 1rem; animation: nodeBounce 2s infinite; }
     .success-container h2 { font-family: var(--font-d); font-size: 40px; margin-bottom: 1rem; }
-    .success-container p { font-size: 16px; color: #c8e6c9; margin-bottom: 2rem; max-width: 400px; line-height: 1.5; }
+    .success-container p { font-size: 16px; color: #fde68a; margin-bottom: 2rem; max-width: 400px; line-height: 1.5; }
     
     .reward-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--r-lg); padding: 1.5rem 3rem; margin-bottom: 2.5rem; display: flex; flex-direction: column; align-items: center; }
-    .reward-val { font-family: var(--font-d); font-size: 32px; color: #fde68a; margin-bottom: 4px; }
-    .reward-lbl { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.8); }
+    .reward-val { font-family: var(--font-d); font-size: 32px; color: #fff; margin-bottom: 4px; }
+    .reward-lbl { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.9); }
 
     .finish-btn { padding: 14px 36px; background: #fff; color: var(--g-mid); border: none; border-radius: var(--r-md); font-family: var(--font-b); font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
     .finish-btn:hover { transform: translateY(-2px); }
@@ -191,15 +187,15 @@
 
 <aside class="sidebar">
   <div class="sb-brand">
-    <div class="sb-logo"><svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#2d7a38" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+    <div class="sb-logo"><svg viewBox="0 0 22 22" fill="none"><path d="M11 2C11 2 4 7 4 13a7 7 0 0014 0C18 7 11 2 11 2z" fill="white" opacity="0.92"/><path d="M11 8v8M8.5 14c1-2 2.5-3 2.5-3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg></div>
     <div><div class="sb-name">EcoQuest</div><div class="sb-tagline">Eco Learning</div></div>
   </div>
   <nav class="sb-nav">
     <div class="nav-label">Main</div>
-    <button class="nav-item" onclick="window.location.href='page2.html'"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Dashboard</button>
-    <button class="nav-item active" onclick="window.location.href='page3.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M2 2h8l4 4v8H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v4h4M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Lessons</button>
-    <button class="nav-item" onclick="window.location.href='page4.html'"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6C6.5 5.17 7.17 4.5 8 4.5s1.5.67 1.5 1.5c0 1-1.5 1.5-1.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/></svg>Quizzes</button>
-    <button class="nav-item" onclick="window.location.href='tasks.html'"><svg viewBox="0 0 16 16" fill="none"><path d="M13 3H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Tasks</button>
+    <button class="nav-item" onclick="window.location.href='page2.html'">Dashboard</button>
+    <button class="nav-item active" onclick="window.location.href='page3.html'">Lessons</button>
+    <button class="nav-item" onclick="window.location.href='page4.html'">Quizzes</button>
+    <button class="nav-item" onclick="window.location.href='tasks.html'">Tasks</button>
   </nav>
   <div class="sb-user">
     <div class="sb-avatar">AS</div>
@@ -210,7 +206,6 @@
 <div class="main">
   <header class="topbar">
     <button class="back-btn" onclick="window.location.href='page3.html'">
-      <svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       All Lessons
     </button>
     <div class="topbar-right">
@@ -221,7 +216,7 @@
 
   <!-- LEVEL PROGRESS BAR -->
   <div class="level-track">
-    <div class="lev-label">Chapter 17 · Forests</div>
+    <div class="lev-label">Chapter 9 · Soil</div>
     <div class="lev-bar"><div class="lev-fill" id="mainLevFill" style="width:33%"></div></div>
     <div class="lev-pts">1 / 3 Nodes Completed</div>
   </div>
@@ -229,8 +224,8 @@
   <div class="content">
 
     <div class="map-header animate d1">
-      <h1 class="map-title">Forests: Our Lifeline</h1>
-      <p class="map-sub">Embark on a journey through the dense woods. Learn about biodiversity, ecosystems, and the water cycle.</p>
+      <h1 class="map-title">Soil: Our Natural Resource</h1>
+      <p class="map-sub">Unearth the secrets of dirt! Discover different soil types, erosion, and microscopic environments.</p>
     </div>
 
     <!-- THE WINDING MAP -->
@@ -240,10 +235,10 @@
       <!-- Node 1 (Completed) -->
       <div class="map-node-wrapper animate d2">
         <div class="map-node done" onclick="openModal(0, 'done')">
-          🌲
+          🌱
           <div class="node-tooltip">
-            <div class="tooltip-title">1. Forest Intro</div>
-            <div class="tooltip-sub">Review producers, consumers, and decomposers.</div>
+            <div class="tooltip-title">1. What is Soil?</div>
+            <div class="tooltip-sub">The layers and composition of soil.</div>
             <button class="tooltip-btn done-btn">Review Lesson</button>
           </div>
         </div>
@@ -252,10 +247,10 @@
       <!-- Node 2 (Active) -->
       <div class="map-node-wrapper animate d3">
         <div class="map-node active" id="node2" onclick="openModal(1, 'active')">
-          <span style="font-size:36px;">💧</span>
+          <span style="font-size:36px;">🐛</span>
           <div class="node-tooltip" id="tooltip2">
-            <div class="tooltip-title">2. The Water Cycle</div>
-            <div class="tooltip-sub">Learn how forests regulate rainfall and groundwater.</div>
+            <div class="tooltip-title">2. Soil Microbes</div>
+            <div class="tooltip-sub">How earthworms and microorganisms thrive.</div>
             <button class="tooltip-btn">Start Level · +40 XP</button>
           </div>
         </div>
@@ -266,7 +261,7 @@
         <div class="map-node locked" id="node3" onclick="alert('Complete previous level first!')">
           🔒
           <div class="node-tooltip" id="tooltip3">
-            <div class="tooltip-title" style="color:var(--g-muted);">3. Deforestation</div>
+            <div class="tooltip-title" style="color:var(--g-muted);">3. Soil Erosion</div>
             <div class="tooltip-sub" style="color:var(--g-muted);">Complete level 2 to unlock this lesson.</div>
           </div>
         </div>
@@ -285,12 +280,11 @@
     <!-- VIEW 1: VIDEO -->
     <div class="modal-view active" id="viewVideo">
       <div class="video-container">
-        <!-- Will be dynamically injected based on node -->
         <iframe id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="video-footer">
         <div class="vf-info">
-          <h3 id="modalVideoTitle">The Water Cycle in Forests</h3>
+          <h3 id="modalVideoTitle">Soil</h3>
           <p>Watch the video carefully before taking the quiz.</p>
         </div>
         <button class="continue-btn" onclick="goToQuiz()">Continue to Quiz →</button>
@@ -317,7 +311,7 @@
       <div class="success-container">
         <div class="success-icon">🌟</div>
         <h2>Level Completed!</h2>
-        <p>Excellent work! You've mastered the concepts of <span id="successTopic">The Water Cycle</span>.</p>
+        <p>Excellent work! You've mastered the concepts of <span id="successTopic">Soil Details</span>.</p>
         
         <div class="reward-box">
           <div class="reward-val">+40 XP</div>
@@ -335,27 +329,25 @@
 // CONTENT DATA FOR NODES
 const lessonNodes = [
   {
-    title: "Forest Intro",
-    video: "https://www.youtube.com/embed/K3oUTKr25ic?autoplay=1",
+    title: "What is Soil?",
+    video: "https://www.youtube.com/embed/if29mjcd5bc?autoplay=1",
     qs: [
-      { q: "Which organisms are called the 'producers' in a forest ecosystem?", opts: ["Animals", "Green plants", "Fungi", "Insects"], ans: 1, exp: "Green plants are producers because they make their own food through photosynthesis." },
-      { q: "What is the primary role of decomposers (like fungi) in a forest?", opts: ["Provide shade", "Eat animals", "Break down dead matter", "Create rain"], ans: 2, exp: "Decomposers break down dead leaves and animals, releasing nutrients back into the soil." }
+      { q: "Which of the following describes the topsoil layer?", opts: ["It is mostly solid rock", "It contains the most humus", "It is usually gray", "It has no roots"], ans: 1, exp: "Topsoil is rich in humus and organic matter, making it the most fertile layer." }
     ]
   },
   {
-    title: "The Water Cycle in Forests",
-    video: "https://www.youtube.com/embed/al-do-HGuIk?autoplay=1",
+    title: "Soil Microbes & Earthworms",
+    video: "https://www.youtube.com/embed/V8miJbbXw7U?autoplay=1",
     qs: [
-      { q: "How do trees contribute directly to the water cycle?", opts: ["Through transpiration", "By blocking rivers", "By freezing water", "They don't"], ans: 0, exp: "Trees release water vapor into the air through a process called transpiration." },
-      { q: "What happens to rainwater that falls in a dense forest?", opts: ["It evaporates instantly", "It causes flash floods", "It seeps into the ground to form groundwater", "It becomes toxic"], ans: 2, exp: "The forest floor acts like a sponge, allowing rainwater to seep into the soil and replenish groundwater." },
-      { q: "True or False: Forests help in regulating local climate and rainfall.", opts: ["True", "False"], ans: 0, exp: "True. Through transpiration and providing shade, forests heavily influence local microclimates and rainfall patterns." }
+      { q: "Why are earthworms called 'farmer's friends'?", opts: ["They eat pests", "They loosen the soil and add humus", "They protect crops from birds", "They produce oxygen"], ans: 1, exp: "Earthworms dig through the soil, bringing nutrients up and creating air pockets which helps roots grow." },
+      { q: "What role do bacteria play in the soil?", opts: ["Decomposition", "Creating rocks", "Absorbing sunlight", "Killing plants"], ans: 0, exp: "Bacteria and fungi compose dead organic matter into humus, which is vital for soil health." }
     ]
   },
   {
-    title: "Deforestation",
-    video: "https://www.youtube.com/embed/Ic-J6hcSKa8?autoplay=1",
+    title: "Soil Erosion",
+    video: "https://www.youtube.com/embed/im4HVXMGI68?autoplay=1",
     qs: [
-      { q: "Which of the following is a direct consequence of deforestation?", opts: ["More rainfall", "Increased biodiversity", "Soil erosion", "Cooler temperatures"], ans: 2, exp: "Without tree roots to hold the soil, deforestation leads to rapid soil erosion and landslides." }
+      { q: "What helps prevent soil erosion?", opts: ["Cutting down trees", "Overgrazing", "Planting trees", "Heavy rainfall"], ans: 2, exp: "Plant roots clutch the soil tightly, preventing it from being washed away by rain or wind." }
     ]
   }
 ];
@@ -363,20 +355,20 @@ const lessonNodes = [
 // Progress Checking from localStorage
 document.addEventListener('DOMContentLoaded', () => {
   let prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}');
-  let fProg = prog['forests'] || [];
+  let fProg = prog['soil'] || [];
   
   if (fProg.includes('2')) {
     // Mark Node 2 Done
     const node2 = document.getElementById('node2');
     node2.className = 'map-node done';
-    node2.onclick = () => window.location.href = 'lesson-play.html?lesson=forests&node=2';
-    node2.innerHTML = '<span style="font-size:36px;">💧</span><div class="node-tooltip"><div class="tooltip-title">2. The Water Cycle</div><div class="tooltip-sub">Completed!</div><button class="tooltip-btn done-btn">Review Lesson</button></div>';
+    node2.onclick = () => window.location.href = 'lesson-play.html?lesson=soil&node=2';
+    node2.innerHTML = '<span style="font-size:36px;">🐛</span><div class="node-tooltip"><div class="tooltip-title">2. Soil Microbes</div><div class="tooltip-sub">Completed!</div><button class="tooltip-btn done-btn">Review Lesson</button></div>';
     
     // Unlock Node 3
     const node3 = document.getElementById('node3');
     node3.className = 'map-node active';
-    node3.innerHTML = '🔥<div class="node-tooltip" id="tooltip3"><div class="tooltip-title">3. Deforestation</div><div class="tooltip-sub">Explore the long-term impact of losing forests.</div><button class="tooltip-btn">Start Level · +50 XP</button></div>';
-    node3.onclick = () => window.location.href = 'lesson-play.html?lesson=forests&node=3';
+    node3.innerHTML = '🪨<div class="node-tooltip" id="tooltip3"><div class="tooltip-title">3. Soil Erosion</div><div class="tooltip-sub">Discover the causes and preventions of erosion.</div><button class="tooltip-btn">Start Level · +50 XP</button></div>';
+    node3.onclick = () => window.location.href = 'lesson-play.html?lesson=soil&node=3';
 
     document.getElementById('mainLevFill').style.width = '66%';
     document.querySelector('.lev-pts').textContent = '2 / 3 Nodes Completed';
@@ -386,8 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mark Node 3 Done
     const node3 = document.getElementById('node3');
     node3.className = 'map-node done';
-    node3.onclick = () => window.location.href = 'lesson-play.html?lesson=forests&node=3';
-    node3.innerHTML = '🔥<div class="node-tooltip"><div class="tooltip-title">3. Deforestation</div><div class="tooltip-sub">Completed!</div><button class="tooltip-btn done-btn">Review Lesson</button></div>';
+    node3.onclick = () => window.location.href = 'lesson-play.html?lesson=soil&node=3';
+    node3.innerHTML = '🪨<div class="node-tooltip"><div class="tooltip-title">3. Soil Erosion</div><div class="tooltip-sub">Completed!</div><button class="tooltip-btn done-btn">Review Lesson</button></div>';
     
     document.getElementById('mainLevFill').style.width = '100%';
     document.querySelector('.lev-pts').textContent = '3 / 3 Nodes Completed - Lesson Done!';
@@ -396,9 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function openModal(nodeIndex, status) {
   if (status === 'locked') return;
-  window.location.href = 'lesson-play.html?lesson=forests&node=' + (nodeIndex + 1);
+  window.location.href = 'lesson-play.html?lesson=soil&node=' + (nodeIndex + 1);
 }
-
 </script>
 </body>
 </html>
