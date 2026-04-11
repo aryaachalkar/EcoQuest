@@ -1,6 +1,6 @@
 # 🌿 EcoQuest — India's Gamified Eco-Learning Platform
 
-> **🎥 Video Pitch:** _[Add your video pitch link here]_
+> **🎥 Video Pitch:** _[Click Here to Watch Demo Video](https://docs.google.com/videos/d/1-IZxaGxpePJSpsio2SNv_DQ8mmWdoxpfYVnujYPjJa8/edit?usp=sharing)_
 > **📊 Presentation:** _[Add your presentation/slides link here]_
 > **🌐 Live Deployment:** [eco-quest-gold.vercel.app](https://eco-quest-gold.vercel.app)
 > **📂 GitHub Repository:** [github.com/aryaachalkar/EcoQuest](https://github.com/aryaachalkar/EcoQuest)
