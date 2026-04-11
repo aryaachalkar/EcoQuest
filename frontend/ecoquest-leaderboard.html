@@ -1914,6 +1914,16 @@
   </script>
 
   <script src="api.js"></script>
+
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+<script>
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('mobileOverlay');
+  if (sb) sb.classList.toggle('open');
+  if (ov) ov.classList.toggle('open');
+}
+</script>
 </body>
 
 </html>

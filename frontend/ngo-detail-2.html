@@ -297,6 +297,30 @@
     .node-icon { font-size: 18px !important; }
   }
 
+
+  @media (max-width: 900px) {
+    .ngo-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .col-left, .col-right {
+      width: 100% !important;
+    }
+    .kb-card, .context-card, .mission-card {
+      padding: 1rem !important;
+    }
+    .ngo-hero-banner {
+      padding: 1.25rem !important;
+    }
+    .ngo-title { font-size: 24px !important; }
+    .hero-stats-row { flex-wrap: wrap !important; gap: 0.5rem !important; }
+    .hero-stat-box { flex: 1; min-width: 120px; padding: 0.75rem !important; }
+    .back-btn { font-size: 12px !important; padding: 6px 10px !important; white-space: nowrap; }
+    .topbar { padding: 0 0.75rem !important; }
+    .topbar-title { font-size: 14px !important; }
+    .topbar-sub { display: none !important; }
+    .submit-btn { width: 100% !important; }
+  }
+  
 </style>
 </head>
 <body>
@@ -502,5 +526,15 @@
 </div>
 
 <script src="api.js"></script>
+
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+<script>
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('mobileOverlay');
+  if (sb) sb.classList.toggle('open');
+  if (ov) ov.classList.toggle('open');
+}
+</script>
 </body>
 </html>
