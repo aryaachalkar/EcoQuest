@@ -725,59 +725,10 @@
         </div>
 
         <!-- Top 3 podium -->
-        <div class="lb-top3">
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:44px;height:44px;background:#378add;font-size:14px;">PS</div>
-            <div class="lb-podium-name">Priya S.</div>
-            <div class="lb-podium-pts">980 pts</div>
-            <div class="lb-block" style="width:56px;height:28px;background:#b5d4f4;color:#0c447c;">#2</div>
-          </div>
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:54px;height:54px;background:#2d7a38;font-size:16px;position:relative;">
-              <span class="lb-crown">👑</span>RK
-            </div>
-            <div class="lb-podium-name">Rohan K.</div>
-            <div class="lb-podium-pts">1380 pts</div>
-            <div class="lb-block" style="width:56px;height:38px;background:#c0dd97;color:#27500a;">#1</div>
-          </div>
-          <div class="lb-podium">
-            <div class="lb-avatar" style="width:44px;height:44px;background:#d85a30;font-size:14px;">AM</div>
-            <div class="lb-podium-name">Ananya M.</div>
-            <div class="lb-podium-pts">910 pts</div>
-            <div class="lb-block" style="width:56px;height:22px;background:#f5c4b3;color:#712b13;">#3</div>
-          </div>
-        </div>
+        <div class="lb-top3" id="lbTop3"></div>
 
         <!-- List -->
-        <div class="lb-list">
-          <div class="lb-row lb-you">
-            <div class="lb-rank" style="color:#2d7a38;font-weight:600;">4</div>
-            <div class="lb-mini-avatar" style="background:linear-gradient(135deg,#2d7a38,#56c271);">AS</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Aarav S. <span style="font-size:10px;color:#2d7a38;background:#eaf3de;padding:1px 7px;border-radius:8px;margin-left:4px;">You</span></div>
-              <div class="lb-info-school">Class 7 · Pune Municipal</div>
-            </div>
-            <div class="lb-pts-badge" id="myLbBadge">1240 pts</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">5</div>
-            <div class="lb-mini-avatar" style="background:#8b5cf6;">VN</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Vidya N.</div>
-              <div class="lb-info-school">Class 7 · Deccan English</div>
-            </div>
-            <div class="lb-pts-badge">1100 pts</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">6</div>
-            <div class="lb-mini-avatar" style="background:#ef4444;">SK</div>
-            <div class="lb-info">
-              <div class="lb-info-name">Sneha K.</div>
-              <div class="lb-info-school">Class 8 · Bishops School</div>
-            </div>
-            <div class="lb-pts-badge">980 pts</div>
-          </div>
-        </div>
+        <div class="lb-list" id="lbList"></div>
       </div>
     </div>
 
@@ -1006,9 +957,72 @@
       const headerXPUI = document.querySelectorAll('.xp-pill')[0];
       if(headerXPUI) headerXPUI.innerHTML = '<span id="headerXp">' + ecoXP + '</span> XP';
       
-      // Also update leaderboard UI for "You"
-      const myLb = document.getElementById('myLbBadge');
-      if(myLb) myLb.textContent = ecoXP + ' pts';
+      // Render Leaderboard Dynamically
+      const staticUsers = [
+        { isYou: false, initial: "RK", name: "Rohan K.", school: "Class 8 · Bishops School", pts: 2100 },
+        { isYou: false, initial: "PS", name: "Priya S.", school: "Class 7 · Symbiosis", pts: 1850 },
+        { isYou: false, initial: "AM", name: "Ananya M.", school: "Class 7 · Podar Int.", pts: 1410 },
+        { isYou: false, initial: "VN", name: "Vidya N.", school: "Class 7 · Deccan English", pts: 1100 },
+        { isYou: false, initial: "SK", name: "Sneha K.", school: "Class 8 · Bishops School", pts: 890 },
+        { isYou: false, initial: "MJ", name: "Maya J.", school: "Class 6 · Vidya Bhavan", pts: 600 }
+      ];
+      staticUsers.push({ isYou: true, initial: "AS", name: "Aarav S.", school: "Class 7 · Pune Municipal", pts: parseInt(ecoXP) });
+      staticUsers.sort((a,b) => b.pts - a.pts);
+      
+      const lbTop3 = document.getElementById('lbTop3');
+      const lbList = document.getElementById('lbList');
+      
+      if(lbTop3 && lbList) {
+         const podiumOrder = [1, 0, 2]; // For visual order: Rank 2, Rank 1, Rank 3
+         let top3HTML = '';
+         podiumOrder.forEach(idx => {
+            if(idx >= staticUsers.length) return;
+            const u = staticUsers[idx];
+            let avBg = "", pkBg = "", pkColor = "", ht = "", fh = "";
+            if(idx === 0) { avBg = "#2d7a38"; pkBg = "#c0dd97"; pkColor = "#27500a"; ht = "38px"; fh="54px"; }
+            if(idx === 1) { avBg = "#378add"; pkBg = "#b5d4f4"; pkColor = "#0c447c"; ht = "28px"; fh="44px"; }
+            if(idx === 2) { avBg = "#d85a30"; pkBg = "#f5c4b3"; pkColor = "#712b13"; ht = "22px"; fh="44px"; }
+            
+            let crown = idx === 0 ? '<span class="lb-crown">👑</span>' : '';
+            let youBadge = u.isYou ? '<div style="font-size:10px;color:#2d7a38;background:#eaf3de;padding:1px 6px;border-radius:4px;display:inline-block;margin-top:2px;">You</div>' : '';
+            
+            top3HTML += \`
+              <div class="lb-podium">
+                <div class="lb-avatar" style="width:\${fh};height:\${fh};background:\${u.isYou ? 'linear-gradient(135deg,#2d7a38,#56c271)' : avBg};font-size:\${idx===0?'16px':'14px'};position:relative;">
+                  \${crown}\${u.initial}
+                </div>
+                <div class="lb-podium-name">\${u.name} \${youBadge}</div>
+                <div class="lb-podium-pts">\${u.pts} pts</div>
+                <div class="lb-block" style="width:56px;height:\${ht};background:\${pkBg};color:\${pkColor};">#\${idx+1}</div>
+              </div>
+            \`;
+         });
+         lbTop3.innerHTML = top3HTML;
+         
+         let listHTML = '';
+         for(let i=3; i<staticUsers.length; i++) {
+            const u = staticUsers[i];
+            let youClass = u.isYou ? 'lb-you' : '';
+            let youTag = u.isYou ? '<span style="font-size:10px;color:#2d7a38;background:#eaf3de;padding:1px 7px;border-radius:8px;margin-left:4px;">You</span>' : '';
+            let rkCol = u.isYou ? 'color:#2d7a38;font-weight:600;' : '';
+            let avBg = u.isYou ? 'background:linear-gradient(135deg,#2d7a38,#56c271);' : 'background:#8b5cf6;';
+            if(i===4 && !u.isYou) avBg = 'background:#ef4444;';
+            if(i===5 && !u.isYou) avBg = 'background:#f59e0b;';
+            
+            listHTML += \`
+              <div class="lb-row \${youClass}">
+                <div class="lb-rank" style="\${rkCol}">\${i+1}</div>
+                <div class="lb-mini-avatar" style="\${avBg}">\${u.initial}</div>
+                <div class="lb-info">
+                  <div class="lb-info-name">\${u.name} \${youTag}</div>
+                  <div class="lb-info-school">\${u.school}</div>
+                </div>
+                <div class="lb-pts-badge">\${u.pts} pts</div>
+              </div>
+            \`;
+         }
+         lbList.innerHTML = listHTML;
+      }
       
       let fCount = (prog['forests'] || []).length;
       let wCount = (prog['water'] || []).length;
