@@ -1,14 +1,16 @@
 // API Utility for EcoQuest
 const API_URL = 'http://localhost:5000/api';
 
-// Check if user is logged in
+// Check if user is logged in — accepts both real token (backend) and demo user (Vercel)
 function requireAuth() {
   const token = localStorage.getItem('token');
-  if (!token) {
+  const user = localStorage.getItem('user');
+  if (!token && !user) {
     window.location.href = 'page1.html';
     return null;
   }
-  return token;
+  // Return token or a demo placeholder so callers don't break
+  return token || 'demo';
 }
 
 function handleLogout() {
@@ -27,19 +29,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         user = JSON.parse(localStorage.getItem('user'));
     } catch {
         handleLogout();
+        return;
     }
+    if (!user) return;
+
+    // Support both backend format (firstName/lastName) and demo format (name)
+    const displayFirst = user.firstName || (user.name ? user.name.split(' ')[0] : 'Eco');
+    const displayLast  = user.lastName  || (user.name ? user.name.split(' ').slice(1).join(' ') : 'Champion');
+    const displayClass = user.classStandard || user.class || '7';
+    const displaySchool = user.schoolName || user.school || 'EcoQuest School';
 
     // ─── 1. GLOBAL UI UPDATES ───
     // Update Sidebar User Profile
     document.querySelectorAll('.sb-user-name').forEach(el => {
-        el.textContent = `${user.firstName} ${user.lastName}`;
+        el.textContent = `${displayFirst} ${displayLast}`;
     });
     document.querySelectorAll('.sb-user-class').forEach(el => {
-        el.textContent = `Class ${user.classStandard} · ${user.schoolName}`;
+        el.textContent = `Class ${displayClass} · ${displaySchool}`;
     });
     // Update Sidebar Avatar
     document.querySelectorAll('.sb-avatar').forEach(el => {
-        el.textContent = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+        el.textContent = `${displayFirst.charAt(0)}${displayLast.charAt(0)}`;
     });
     
     // Add Logout Button
