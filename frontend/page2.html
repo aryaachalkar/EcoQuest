@@ -1235,11 +1235,14 @@
 (function() {
   try {
     const u = JSON.parse(localStorage.getItem('user') || '{}');
-    const firstName = u.firstName || (u.name ? u.name.split(' ')[0] : '');
+    let firstName = '';
+    if (u.firstName && u.firstName !== 'undefined') firstName = u.firstName;
+    else if (u.name && u.name !== 'undefined') firstName = u.name.split(' ')[0];
+    
     const hour = new Date().getHours();
     const g = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     const el = document.getElementById('topbar-greeting');
-    if (el) el.textContent = firstName ? g + ', ' + firstName + '!' : g + '!';
+    if (el) el.textContent = firstName ? (g + ', ' + firstName + '!') : (g + '!');
   } catch(e) {}
 })();
 </script>
