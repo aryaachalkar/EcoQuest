@@ -226,7 +226,7 @@
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="back-btn"><svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to Tasks</button>
+      <button class="back-btn" onclick="window.location.href='tasks.html'"><svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to Tasks</button>
       <div style="width:1px;height:28px;background:var(--g-border);margin:0 4px;"></div>
       <div><div class="topbar-title">Upload Proof</div><div class="topbar-sub">Make an Eco-Friendly Gudi · April 2026</div></div>
     </div>
@@ -555,7 +555,10 @@ function submitProof(){
   document.getElementById('successOverlay').classList.add('show');
 }
 
-function closeSuccess(){document.getElementById('successOverlay').classList.remove('show');}
+function closeSuccess(){
+  document.getElementById('successOverlay').classList.remove('show');
+  window.location.href = 'tasks.html';
+}
 </script>
 
   <script src="api.js"></script>
