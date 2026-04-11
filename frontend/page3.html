@@ -592,21 +592,21 @@
         <h1 class="hero-title">Learn through<br><em>Nature's Lens</em></h1>
         <p class="hero-sub">All lessons are drawn from your NCERT textbooks and linked to real eco-tasks and quizzes. Complete a lesson to unlock its quiz and monthly festival task.</p>
         <div class="hero-actions">
-          <button class="h-btn solid" onclick="document.getElementById('featured').scrollIntoView({behavior:'smooth'})">Continue Lesson</button>
+          <button class="h-btn solid" onclick="continueLastLesson()">Continue Lesson</button>
           <button class="h-btn outline">Download Notes</button>
         </div>
       </div>
       <div class="hero-right">
         <div class="hero-stat-box">
-          <div class="hero-stat-val">6/9</div>
-          <div class="hero-stat-label">Lessons done</div>
+          <div class="hero-stat-val" id="heroLessonsDone">6/24</div>
+          <div class="hero-stat-label">Nodes done</div>
         </div>
         <div class="hero-stat-box">
-          <div class="hero-stat-val">78%</div>
+          <div class="hero-stat-val" id="heroAvgProg">78%</div>
           <div class="hero-stat-label">Avg. progress</div>
         </div>
         <div class="hero-stat-box">
-          <div class="hero-stat-val">+480</div>
+          <div class="hero-stat-val" id="heroXP">+480</div>
           <div class="hero-stat-label">XP from lessons</div>
         </div>
       </div>
@@ -697,12 +697,12 @@
         <div class="lesson-title">Forests: Our Lifeline</div>
         <div class="lesson-desc">Why forests are vital ecosystems — producers, consumers, decomposers and the water cycle.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:85%;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>85%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-forests" style="width:0%;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-forests">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eaf3de;color:#27500a;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">2 tasks linked</span>
+          <span class="lesson-tag" id="tag-forests" style="background:#eaf3de;color:#27500a;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
 
@@ -714,12 +714,12 @@
         <div class="lesson-title">Wastewater Story</div>
         <div class="lesson-desc">How sewage is treated, water conservation methods, and preventing water pollution in cities.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#378add;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>60%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-water" style="width:0%;background:#378add;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-water">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eff6ff;color:#0c447c;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">1 task linked</span>
+          <span class="lesson-tag" id="tag-water" style="background:#eff6ff;color:#0c447c;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
 
@@ -731,12 +731,12 @@
         <div class="lesson-title">Soil — Our Natural Resource</div>
         <div class="lesson-desc">Types of soil, soil erosion, how microbes keep soil fertile — linked to composting tasks.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#ef9f27;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-soil" style="width:0%;background:#ef9f27;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-soil">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#faeeda;color:#633806;">Completed ✓</span>
-          <span style="font-size:11px;color:#7a9a7c;">3 tasks linked</span>
+          <span class="lesson-tag" id="tag-soil" style="background:#faeeda;color:#633806;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
     </div>
@@ -949,6 +949,64 @@ function renderPage() {
 }
 
 renderPage();
+
+function continueLastLesson() {
+  let last = localStorage.getItem('lastPlayedLesson') || 'forests';
+  window.location.href = 'lesson-' + last + '-detail.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    let prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}');
+    let ecoXP = localStorage.getItem('ecoXP') || '1240';
+    
+    // Nodes calculation
+    let fCount = (prog['forests'] || []).length;
+    let wCount = (prog['water'] || []).length;
+    let sCount = (prog['soil'] || []).length;
+    let totalNodes = fCount + wCount + sCount;
+    let maxNodes = 24; // 8 * 3
+    let avgProg = Math.round((totalNodes / maxNodes) * 100);
+    
+    const hDone = document.getElementById('heroLessonsDone');
+    if (hDone) hDone.textContent = totalNodes + '/' + maxNodes;
+    
+    const hAvg = document.getElementById('heroAvgProg');
+    if (hAvg) hAvg.textContent = avgProg + '%';
+    
+    const hXP = document.getElementById('heroXP');
+    if (hXP) hXP.textContent = '+' + ecoXP;
+    
+    // Update Header Global XP in topbar if it exists
+    const hx = document.getElementById('headerXp');
+    if(hx) hx.textContent = ecoXP;
+    
+    // Progress cards update function
+    const updateCard = (key, count) => {
+       let pct = Math.round((count/8) * 100);
+       let elProg = document.getElementById('prog-' + key);
+       let elTxt = document.getElementById('progtxt-' + key);
+       let elTag = document.getElementById('tag-' + key);
+       if(elProg) elProg.style.width = pct + '%';
+       if(elTxt) elTxt.textContent = pct + '%';
+       if(elTag) {
+          if (pct === 100) {
+              elTag.textContent = 'Completed ✓';
+              elTag.style.background = '#faeeda';
+              elTag.style.color = '#633806';
+          } else if (pct > 0) {
+              elTag.textContent = 'In Progress';
+          } else {
+              elTag.textContent = 'Not Started';
+              elTag.style.background = '#eee';
+              elTag.style.color = '#777';
+          }
+       }
+    };
+    
+    updateCard('forests', fCount);
+    updateCard('water', wCount);
+    updateCard('soil', sCount);
+});
 </script>
   <script src="api.js"></script>
 </body>

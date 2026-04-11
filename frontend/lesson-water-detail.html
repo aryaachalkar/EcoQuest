@@ -329,6 +329,7 @@
 
 
 
+
 <script>
 // Retrieve progress from localStorage
 const prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}')['water'] || [];
@@ -430,6 +431,12 @@ function createMapConfetti(target) {
 }
 
 function showChapterCelebration() {
+  if (!localStorage.getItem('bonus_claimed_chapter_' + 'water')) {
+     localStorage.setItem('bonus_claimed_chapter_' + 'water', 'true');
+     let currentXP = parseInt(localStorage.getItem('ecoXP') || '1240');
+     localStorage.setItem('ecoXP', currentXP + 500);
+  }
+
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.inset = '0';

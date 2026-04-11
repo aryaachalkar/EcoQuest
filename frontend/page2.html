@@ -757,7 +757,7 @@
               <div class="lb-info-name">Aarav S. <span style="font-size:10px;color:#2d7a38;background:#eaf3de;padding:1px 7px;border-radius:8px;margin-left:4px;">You</span></div>
               <div class="lb-info-school">Class 7 · Pune Municipal</div>
             </div>
-            <div class="lb-pts-badge">1240 pts</div>
+            <div class="lb-pts-badge" id="myLbBadge">1240 pts</div>
           </div>
           <div class="lb-row">
             <div class="lb-rank">5</div>
@@ -799,12 +799,12 @@
         <div class="lesson-title">Forests: Our Lifeline</div>
         <div class="lesson-desc">Why forests are vital ecosystems — producers, consumers, decomposers and the water cycle.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:85%;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>85%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-forests" style="width:0%;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-forests">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eaf3de;color:#27500a;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">2 tasks linked</span>
+          <span class="lesson-tag" id="tag-forests" style="background:#eaf3de;color:#27500a;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
 
@@ -816,12 +816,12 @@
         <div class="lesson-title">Wastewater Story</div>
         <div class="lesson-desc">How sewage is treated, water conservation methods, and preventing water pollution in cities.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:60%;background:#378add;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>60%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-water" style="width:0%;background:#378add;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-water">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#eff6ff;color:#0c447c;">In Progress</span>
-          <span style="font-size:11px;color:#7a9a7c;">1 task linked</span>
+          <span class="lesson-tag" id="tag-water" style="background:#eff6ff;color:#0c447c;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
 
@@ -833,12 +833,12 @@
         <div class="lesson-title">Soil — Our Natural Resource</div>
         <div class="lesson-desc">Types of soil, soil erosion, how microbes keep soil fertile — linked to composting tasks.</div>
         <div class="lesson-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#ef9f27;"></div></div>
-          <div class="progress-label"><span>Progress</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-soil" style="width:0%;background:#ef9f27;"></div></div>
+          <div class="progress-label"><span>Progress</span><span id="progtxt-soil">0%</span></div>
         </div>
         <div class="lesson-footer">
-          <span class="lesson-tag" style="background:#faeeda;color:#633806;">Completed ✓</span>
-          <span style="font-size:11px;color:#7a9a7c;">3 tasks linked</span>
+          <span class="lesson-tag" id="tag-soil" style="background:#faeeda;color:#633806;">In Progress</span>
+          <span style="font-size:11px;color:#7a9a7c;">8 nodes linked</span>
         </div>
       </div>
     </div>
@@ -995,10 +995,53 @@
 </div>
 
 <script>
-  document.querySelectorAll('.progress-fill').forEach(el => {
-    const w = el.style.width;
-    el.style.width = '0%';
-    setTimeout(() => { el.style.width = w; }, 400);
+  document.addEventListener('DOMContentLoaded', () => {
+      let prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}');
+      let ecoXP = localStorage.getItem('ecoXP') || '1240';
+      
+      // Update Header Global XP in topbar if it exists
+      const hx = document.getElementById('headerXp');
+      if(hx) hx.textContent = ecoXP;
+      
+      const headerXPUI = document.querySelectorAll('.xp-pill')[0];
+      if(headerXPUI) headerXPUI.innerHTML = '<span id="headerXp">' + ecoXP + '</span> XP';
+      
+      // Also update leaderboard UI for "You"
+      const myLb = document.getElementById('myLbBadge');
+      if(myLb) myLb.textContent = ecoXP + ' pts';
+      
+      let fCount = (prog['forests'] || []).length;
+      let wCount = (prog['water'] || []).length;
+      let sCount = (prog['soil'] || []).length;
+
+      // Progress cards update function
+      const updateCard = (key, count) => {
+         let pct = Math.round((count/8) * 100);
+         let elProg = document.getElementById('prog-' + key);
+         let elTxt = document.getElementById('progtxt-' + key);
+         let elTag = document.getElementById('tag-' + key);
+         if(elProg) elProg.style.width = pct + '%';
+         if(elTxt) elTxt.textContent = pct + '%';
+         if(elTag) {
+            if (pct === 100) {
+                elTag.textContent = 'Completed ✓';
+                elTag.style.background = '#faeeda';
+                elTag.style.color = '#633806';
+            } else if (pct > 0) {
+                elTag.textContent = 'In Progress';
+                elTag.style.background = '#eaf3de';
+                elTag.style.color = '#27500a';
+            } else {
+                elTag.textContent = 'Not Started';
+                elTag.style.background = '#eee';
+                elTag.style.color = '#777';
+            }
+         }
+      };
+      
+      updateCard('forests', fCount);
+      updateCard('water', wCount);
+      updateCard('soil', sCount);
   });
 </script>
   <script src="api.js"></script>

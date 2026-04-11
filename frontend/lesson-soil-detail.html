@@ -326,6 +326,7 @@
 
 
 
+
 <script>
 // Retrieve progress from localStorage
 const prog = JSON.parse(localStorage.getItem('ecoProgress') || '{}')['soil'] || [];
@@ -427,6 +428,12 @@ function createMapConfetti(target) {
 }
 
 function showChapterCelebration() {
+  if (!localStorage.getItem('bonus_claimed_chapter_' + 'soil')) {
+     localStorage.setItem('bonus_claimed_chapter_' + 'soil', 'true');
+     let currentXP = parseInt(localStorage.getItem('ecoXP') || '1240');
+     localStorage.setItem('ecoXP', currentXP + 500);
+  }
+
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.inset = '0';

@@ -768,7 +768,6 @@ function showSuccessView() {
     let finalXP = Math.max(baseXP, 10); // Minimum 10 XP floor
     document.getElementById('sXp').textContent = '+' + finalXP;
     
-    
     // Add Joy Conffeti Animation logic
     createConfetti();
     
@@ -777,6 +776,14 @@ function showSuccessView() {
     if(!prog[lessonKey]) prog[lessonKey] = [];
     if(!prog[lessonKey].includes(nodeId)) prog[lessonKey].push(nodeId);
     localStorage.setItem('ecoProgress', JSON.stringify(prog));
+    
+    // Track Last Played Lesson for Continue Button
+    localStorage.setItem('lastPlayedLesson', lessonKey);
+    
+    // Add to Global XP
+    let currentGlobalXP = parseInt(localStorage.getItem('ecoXP') || '1240');
+    localStorage.setItem('ecoXP', currentGlobalXP + finalXP);
+    
     sessionStorage.setItem('justCompleted_' + lessonKey, nodeId);
     
   }, 300);
