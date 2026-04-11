@@ -1020,28 +1020,41 @@
 
       if (!identifier || !password) { showToast('Please fill in all fields'); return; }
 
-      try {
-        const res = await fetch('http://localhost:5000/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier, password, role })
-        });
-        const data = await res.json();
-        
-        if (data.success) {
-          showToast('Welcome back! Loading your dashboard…');
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = 'page2.html'; }, 1000);
-        } else {
-          showToast(data.message || 'Login failed');
-        }
-      } catch (err) {
-        showToast('Error connecting to server');
+      // Demo credentials — work without backend on Vercel
+      const DEMO = [
+        { id: 'aarav@school.edu',  roll: 'ROLL2025001', pass: 'password123', name: 'Aarav Sharma' },
+        { id: 'priya@school.edu',  roll: 'ROLL2025002', pass: 'password123', name: 'Priya Patel' },
+        { id: 'rohan@school.edu',  roll: 'ROLL2025003', pass: 'password123', name: 'Rohan Gupta' },
+      ];
+      const matched = DEMO.find(u => (u.id === identifier || u.roll === identifier) && u.pass === password);
+      if (matched) {
+        localStorage.setItem('user', JSON.stringify({ name: matched.name, role }));
+        showToast('Welcome back, ' + matched.name + '! Loading dashboard…');
+        setTimeout(() => { window.location.href = 'page2.html'; }, 1000);
+        return;
+      }
+
+      // Live backend (only works on localhost)
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        try {
+          const res = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier, password, role })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Welcome back! Loading your dashboard…');
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            setTimeout(() => { window.location.href = 'page2.html'; }, 1000);
+          } else { showToast(data.message || 'Login failed'); }
+        } catch (err) { showToast('Cannot connect. Try: ROLL2025001 / password123'); }
+      } else {
+        showToast('Invalid credentials. Try: ROLL2025001 / password123');
       }
     }
 
-    async function handleSignup() {
+async function handleSignup() {
       const firstName = document.getElementById('su-fname').value.trim();
       const lastName = document.getElementById('su-lname').value.trim();
       const schoolName = document.getElementById('su-school').value.trim();
@@ -1054,29 +1067,22 @@
         showToast('Please fill in all fields and select your class');
         return;
       }
+      if (password.length < 8) { showToast('Password must be at least 8 characters'); return; }
 
-      try {
-        const res = await fetch('http://localhost:5000/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName, lastName, schoolName, classStandard, email, rollNumber, password, role: 'student' })
-        });
-        const data = await res.json();
-        
-        if (data.success) {
-          showToast('Account created! Welcome to EarthWise, ' + firstName + '!');
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = 'page2.html'; }, 1500);
-        } else {
-          if (data.errors && data.errors.length > 0) {
-            showToast(data.errors[0].msg);
-          } else {
-            showToast(data.message || 'Signup failed');
-          }
-        }
-      } catch (err) {
-        showToast('Error connecting to server');
+      // Demo mode - works on Vercel without backend
+      const user = { name: firstName + ' ' + lastName, email, rollNumber, school: schoolName, class: classStandard, role: 'student' };
+      localStorage.setItem('user', JSON.stringify(user));
+      showToast('Welcome to EcoQuest, ' + firstName + '! Starting your journey...');
+      setTimeout(() => { window.location.href = 'page2.html'; }, 1500);
+
+      // Also try backend if on localhost
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        try {
+          await fetch('http://localhost:5000/api/auth/register', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstName, lastName, schoolName, classStandard, email, rollNumber, password, role: 'student' })
+          });
+        } catch (err) { /* backend not available - demo mode */ }
       }
     }
 
