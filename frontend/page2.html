@@ -656,6 +656,22 @@
     .node-icon { font-size: 18px !important; }
   }
 
+
+  @media (max-width: 900px) {
+    #mobileMenuBtn { display: flex !important; align-items: center; }
+    .topbar-greeting { font-size: 13px !important; }
+    .topbar-title { font-size: 15px !important; }
+    .stats-row { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+    .stat-val { font-size: 22px !important; }
+    .hero-title { font-size: 22px !important; }
+    .hero-banner { padding: 1.25rem !important; }
+    .hero-actions { flex-direction: column !important; gap: 0.5rem; }
+    .hero-actions .h-btn { width: 100% !important; text-align: center !important; }
+  }
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -728,7 +744,7 @@
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-left">
-      <div class="topbar-greeting">Good morning, Aarav!</div>
+      <div class="topbar-greeting" id="topbar-greeting">Good morning!</div>
       <div class="topbar-title">Your Eco Dashboard</div>
     </div>
     <div class="topbar-right">
@@ -1210,5 +1226,18 @@
   });
 </script>
   <script src="api.js"></script>
+
+// Dynamic greeting for demo users
+(function() {
+  try {
+    const u = JSON.parse(localStorage.getItem('user') || '{}');
+    const firstName = u.firstName || (u.name ? u.name.split(' ')[0] : '');
+    const hour = new Date().getHours();
+    const g = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+    const el = document.getElementById('topbar-greeting');
+    if (el) el.textContent = firstName ? g + ', ' + firstName + '!' : g + '!';
+  } catch(e) {}
+})();
+
 </body>
 </html>
